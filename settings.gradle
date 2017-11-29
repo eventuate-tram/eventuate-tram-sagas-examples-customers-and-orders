@@ -1,0 +1,4 @@
+include 'common'
+include 'customer-service'
+include 'order-service'
+include 'end-to-end-tests'
