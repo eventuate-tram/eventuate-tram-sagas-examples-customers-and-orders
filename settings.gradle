@@ -1,4 +1,8 @@
 include 'common'
+include 'common-swagger'
+include 'customer-common'
 include 'customer-service'
+include 'order-common'
 include 'order-service'
+include 'integration-tests'
 include 'end-to-end-tests'

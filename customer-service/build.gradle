@@ -1,4 +1,7 @@
 dependencies {
     compile project(":common")
+    compile project(":common-swagger")
+    compile project(":customer-common")
 }
 
+apply plugin: 'spring-boot'

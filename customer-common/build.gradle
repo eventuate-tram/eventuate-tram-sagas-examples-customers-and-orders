@@ -1,9 +1,4 @@
 dependencies {
     compile project(":common")
     compile project(":common-swagger")
-    compile project(":order-common")
 }
-
-apply plugin: 'spring-boot'
-
-
