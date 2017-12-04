@@ -25,6 +25,7 @@ orderservice:
     EVENTUATELOCAL_CDC_BINLOG_CLIENT_ID: 1234567890
     EVENTUATELOCAL_CDC_SOURCE_TABLE_NAME: message
     SPRING_PROFILES_ACTIVE: EventuatePolling
+    EVENTUATE_DATABASE_SCHEMA: none
 
 customerservice:
   build: ./customer-service/
@@ -53,6 +54,7 @@ customerservice:
     EVENTUATELOCAL_CDC_BINLOG_CLIENT_ID: 1234567890
     EVENTUATELOCAL_CDC_SOURCE_TABLE_NAME: message
     SPRING_PROFILES_ACTIVE: EventuatePolling
+    EVENTUATE_DATABASE_SCHEMA: none
 
 zookeeper:
   image: eventuateio/eventuateio-local-zookeeper:0.14.0
@@ -106,3 +108,4 @@ cdcservice:
     EVENTUATELOCAL_CDC_BINLOG_CLIENT_ID: 1234567890
     EVENTUATELOCAL_CDC_SOURCE_TABLE_NAME: message
     SPRING_PROFILES_ACTIVE: EventuatePolling
+    EVENTUATE_DATABASE_SCHEMA: none
