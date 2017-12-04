@@ -57,7 +57,7 @@ kafka:
 
 
 mysql:
-  build: ./mysql
+  image: eventuateio/eventuate-tram-sagas-mysql:0.2.0.RELEASE
   ports:
     - 3306:3306
   environment:
