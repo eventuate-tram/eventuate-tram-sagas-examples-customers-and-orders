@@ -8,7 +8,7 @@ The application consists of two services:
 * `Order Service` - creates orders
 * `Customer Service` - manages customers
 
-Both services are implemented using Spring Boot and JPA.
+Both services are implemented using Spring Boot, JPA and the https://github.com/eventuate-tram/eventuate-tram-sagas[Eventuate Tram Saga framework]
 
 The `Order Service` uses a saga to enforce the customer's credit limit when creating orders.
 
