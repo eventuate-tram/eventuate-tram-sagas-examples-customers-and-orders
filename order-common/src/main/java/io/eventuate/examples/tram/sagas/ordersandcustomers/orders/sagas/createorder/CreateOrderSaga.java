@@ -1,12 +1,12 @@
-package io.eventuate.examples.tram.sagas.ordersandcustomers.sagas.createorder;
+package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas.createorder;
 
 import io.eventuate.examples.tram.sagas.ordersandcustomers.commondomain.Money;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.sagas.rejectorder.RejectOrderCommand;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.sagas.participants.ApproveOrderCommand;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.sagas.participants.ReserveCreditCommand;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.commands.ReserveCreditCommand;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.commandsandreplies.ApproveOrderCommand;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.commandsandreplies.RejectOrderCommand;
 import io.eventuate.tram.commands.consumer.CommandWithDestination;
-import io.eventuate.tram.sagas.simpledsl.SimpleSaga;
 import io.eventuate.tram.sagas.orchestration.SagaDefinition;
+import io.eventuate.tram.sagas.simpledsl.SimpleSaga;
 
 import static io.eventuate.tram.commands.consumer.CommandWithDestinationBuilder.send;
 

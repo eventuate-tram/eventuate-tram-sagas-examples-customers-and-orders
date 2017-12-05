@@ -2,6 +2,9 @@ dependencies {
     compile project(":common")
     compile project(":common-swagger")
     compile project(":order-common")
+
+    compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
+
 }
 
 apply plugin: 'spring-boot'

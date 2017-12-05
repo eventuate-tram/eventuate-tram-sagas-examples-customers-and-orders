@@ -1,4 +1,4 @@
-package io.eventuate.examples.tram.sagas.ordersandcustomers.sagas.cancelorder;
+package io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.commands;
 
 import io.eventuate.tram.commands.common.Command;
 

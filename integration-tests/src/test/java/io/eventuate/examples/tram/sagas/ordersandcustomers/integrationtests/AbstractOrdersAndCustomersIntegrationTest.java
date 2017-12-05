@@ -6,7 +6,7 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.service.Cus
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.Order;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderRepository;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderState;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.commondomain.OrderDetails;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.OrderDetails;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.service.OrderService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

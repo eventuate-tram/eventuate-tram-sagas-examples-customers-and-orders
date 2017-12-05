@@ -1,6 +1,6 @@
-package io.eventuate.examples.tram.sagas.ordersandcustomers.sagas.createorder;
+package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas.createorder;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.commondomain.OrderDetails;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.OrderDetails;
 
 public class CreateOrderSagaData  {
 

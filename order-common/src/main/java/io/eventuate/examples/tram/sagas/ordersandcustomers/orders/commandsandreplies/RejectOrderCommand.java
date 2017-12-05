@@ -1,4 +1,4 @@
-package io.eventuate.examples.tram.sagas.ordersandcustomers.sagas.rejectorder;
+package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.commandsandreplies;
 
 import io.eventuate.tram.commands.common.Command;
 

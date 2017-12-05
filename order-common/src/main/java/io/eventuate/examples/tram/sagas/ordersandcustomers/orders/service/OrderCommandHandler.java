@@ -1,9 +1,9 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.service;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.sagas.rejectorder.RejectOrderCommand;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.commandsandreplies.RejectOrderCommand;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.Order;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderRepository;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.sagas.participants.ApproveOrderCommand;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.commandsandreplies.ApproveOrderCommand;
 import io.eventuate.tram.commands.consumer.CommandHandlers;
 import io.eventuate.tram.commands.consumer.CommandMessage;
 import io.eventuate.tram.messaging.common.Message;

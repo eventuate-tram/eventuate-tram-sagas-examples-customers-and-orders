@@ -1,14 +1,3 @@
-buildscript {
-    ext {
-        springBootVersion = "1.4.1.RELEASE"
-    }
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-    }
-}
 
 dependencies {
     compile "io.eventuate.tram.sagas:eventuate-jpa-sagas-framework:$eventuateTramSagasVersion"

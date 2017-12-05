@@ -1,6 +1,5 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.customers;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.TramCommandsAndEventsIntegrationData;
 import io.eventuate.jdbckafka.TramJdbcKafkaConfiguration;
 import io.eventuate.tram.commands.common.ChannelMapping;
 import io.eventuate.tram.commands.common.DefaultChannelMapping;
@@ -23,21 +22,13 @@ import org.springframework.context.annotation.Import;
         TramJdbcKafkaConfiguration.class})
 @ComponentScan
 public class CustomersServiceMain {
+
+  @Bean
+  public ChannelMapping channelMapping() {
+    return DefaultChannelMapping.builder().build();
+  }
+
   public static void main(String[] args) {
     SpringApplication.run(CustomersServiceMain.class, args);
-  }
-
-  @Bean
-  public ChannelMapping channelMapping(TramCommandsAndEventsIntegrationData data) {
-    return DefaultChannelMapping.builder()
-            .with("CustomerAggregate", data.getAggregateDestination())
-            .with("customerService", data.getCommandChannel())
-            .build();
-  }
-
-
-  @Bean
-  public TramCommandsAndEventsIntegrationData tramCommandsAndEventsIntegrationData() {
-    return new TramCommandsAndEventsIntegrationData();
   }
 }
