@@ -75,7 +75,7 @@ kafka:
 
 
 postgres:
-  build: ./postgres
+  image: eventuateio/eventuate-tram-sagas-postgres:0.3.0.RELEASE
   ports:
     - 5432:5432
   environment:
