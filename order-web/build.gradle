@@ -1,0 +1,6 @@
+dependencies {
+    compile project(":common-swagger")
+    compile project(":order-backend")
+}
+
+

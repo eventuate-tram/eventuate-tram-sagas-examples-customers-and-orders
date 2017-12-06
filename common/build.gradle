@@ -11,10 +11,5 @@ dependencies {
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
-    compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
-    compile 'javax.el:javax.el-api:2.2.5'
-
-    compile "com.fasterxml.jackson.core:jackson-core:2.4.3"
-    compile "com.fasterxml.jackson.core:jackson-databind:2.4.3"
 }
 

@@ -1,8 +1,5 @@
 dependencies {
-    compile project(":common")
-    compile project(":common-swagger")
-    compile project(":customer-common")
-
+    compile project(":customer-web")
 
     compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
 

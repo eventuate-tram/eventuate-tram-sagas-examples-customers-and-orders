@@ -1,0 +1,5 @@
+dependencies {
+    compile project(":common")
+    compile project(":customer-api")
+    compile project(":common-swagger")
+}
