@@ -11,6 +11,8 @@ docker-compose -f docker-compose-${DATABASE?}.yml up -d --build zookeeper ${DATA
 
 ./wait-for-${DATABASE?}.sh
 
+./wait-for-services.sh $DOCKER_HOST_IP "8099"
+
 ./gradlew -x :end-to-end-tests:test build
 
 docker-compose -f docker-compose-${DATABASE?}.yml up -d --build 
