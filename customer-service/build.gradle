@@ -1,5 +1,5 @@
 dependencies {
-    compile project(":customer-web")
+    compile project(":customer-web-api")
 
     compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
 
