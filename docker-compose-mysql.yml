@@ -66,7 +66,7 @@ mysql:
     - MYSQL_PASSWORD=mysqlpw
 
 cdcservice:
-  image: test-eventuate-tram-cdc-mysql-service
+  image: eventuateio/eventuate-tram-cdc-mysql-service:0.3.0.RELEASE
   ports:
     - "8099:8080"
   links:
@@ -74,7 +74,6 @@ cdcservice:
     - kafka
     - zookeeper
   environment:
-    LOGGING_LEVEL_ : DEBUG
     SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
     SPRING_DATASOURCE_USERNAME: mysqluser
     SPRING_DATASOURCE_PASSWORD: mysqlpw
