@@ -1,4 +1,3 @@
 dependencies {
-    compile project(":common-swagger")
-    compile project(":customer-backend")
+    compile project(":common")
 }

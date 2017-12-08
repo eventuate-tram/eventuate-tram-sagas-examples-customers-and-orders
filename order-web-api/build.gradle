@@ -1,5 +1,5 @@
 dependencies {
-    compile project(":common-swagger")
+    compile project(":common")
     compile project(":order-backend")
 }
 
