@@ -12,13 +12,59 @@ Both services are implemented using Spring Boot, JPA and the https://github.com/
 
 The `Order Service` uses a saga to enforce the customer's credit limit when creating orders.
 
-== Learn more
+== About sagas
+
+http://microservices.io/patterns/data/saga.html[Sagas] are a mechanism for maintaining data consistency in a http://microservices.io/patterns/microservices.html[microservice architecture].
+A saga is a sequence of transactions, each of which is local to a service.
+
+There are two main ways to coordinate sagas: orchestration and choreography.
+Please see https://github.com/eventuate-tram/eventuate-tram-examples-customers-and-orders[example] to learn about choreography-based sagas.
+This example uses orchestration-based sagas, where a saga (orchestration) object invokes the participants.
+
+A saga orchestrator is a persistent object that does one of two things:
+
+1. On startup, it sends a command message to a participant
+2. When it receives a reply, it updates its state and sends a command message to the next participant.
 
 To learn more about why you need sagas if you are using microservices:
 
 * the http://microservices.io/patterns/data/saga.html[Saga pattern]
 * my http://microservices.io/microservices/general/2018/03/22/microxchg-sagas.html[microXchg 2018 presentation]
 * read about sagas in my https://www.manning.com/books/microservice-patterns[Microservice patterns book]
+
+== The Create Order Saga
+
+The following diagrams shows how the saga for creating an `Order` works:
+
+image::./images/Orchestration_flow.jpeg[]
+
+It consists of the follow steps:
+
+. The `Order Service` creates an `Order` in a pending state
+. The `Order Service` creates a `CreateOrderSaga` to coordinate the creation of the order.
+. The `CreateOrderSaga` sends a `ReserveCredit` command to the `CustomerService`
+. The `Customer Service` receives the command and attempts to reserve credit for that `Order`. It replies with a message indicating the outcome.
+. The `CreateOrderSaga` receives the reply
+. It send either an `ApproveOrder` or a `RejectOrder` command to the `OrderService`
+. The `Order Service` receives the command and changes state of the order to either `approved` or `rejected`.
+
+=== Architecture
+
+The following diagram shows the architecture of the Customers and Orders application.
+
+image::./images/Eventuate_Tram_Customer_and_Order_Orchestration_Architecture.png[]
+
+The application consists of two services:
+
+* `Customer Service` - implements the REST endpoints for managing customers.
+The service persists the `Customer` JPA entity in a MySQL/Postgres database.
+Using the https://github.com/eventuate-tram/eventuate-tram-sagas[Eventuate Tram Saga framework], it processes command messages, updates its the `Customer` entity, and sends back a reply message.
+
+* `Order Service` - implements a REST endpoint for managing orders.
+The service persists the `Order` JPA entity and the `CreateOrderSaga` in MySQL/Postgres database.
+Using the https://github.com/eventuate-tram/eventuate-tram-sagas[Eventuate Tram Saga framework], it sends command messages and processes replies.
+
+The Eventuate Tram CDC service tracks inserts into the `MESSAGE` table using the MySQL binlog and publishes messages to Apache Kafka.
 
 == Building and running
 
