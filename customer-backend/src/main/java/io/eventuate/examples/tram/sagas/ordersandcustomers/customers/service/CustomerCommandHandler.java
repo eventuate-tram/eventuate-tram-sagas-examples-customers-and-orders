@@ -12,6 +12,8 @@ import io.eventuate.tram.messaging.common.Message;
 import io.eventuate.tram.sagas.participant.SagaCommandHandlersBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Optional;
+
 import static io.eventuate.tram.commands.consumer.CommandHandlerReplyBuilder.withFailure;
 import static io.eventuate.tram.commands.consumer.CommandHandlerReplyBuilder.withSuccess;
 
@@ -30,10 +32,11 @@ public class CustomerCommandHandler {
   public Message reserveCredit(CommandMessage<ReserveCreditCommand> cm) {
     ReserveCreditCommand cmd = cm.getCommand();
     long customerId = cmd.getCustomerId();
-    Customer customer = customerRepository.findOne(customerId);
-    // TODO null check
+    Optional<Customer> customer = customerRepository.findById(customerId);
     try {
-      customer.reserveCredit(cmd.getOrderId(), cmd.getOrderTotal());
+      customer
+              .orElseThrow(() -> new IllegalArgumentException(String.format("customer with id %s is not found", customerId)))
+              .reserveCredit(cmd.getOrderId(), cmd.getOrderTotal());
       return withSuccess(new CustomerCreditReserved());
     } catch (CustomerCreditLimitExceededException e) {
       return withFailure(new CustomerCreditReservationFailed());

@@ -51,7 +51,9 @@ public abstract class AbstractOrdersAndCustomersIntegrationTest {
   private void assertOrderState(Long id, OrderState expectedState) throws InterruptedException {
     Order order = null;
     for (int i = 0; i < 30; i++) {
-      order = transactionTemplate.execute(s -> orderRepository.findOne(id));
+      order = transactionTemplate
+              .execute(s -> orderRepository.findById(id))
+              .orElseThrow(() -> new IllegalArgumentException(String.format("Order with id %s is not found", id)));
       if (order.getState() == expectedState)
         break;
       TimeUnit.MILLISECONDS.sleep(400);

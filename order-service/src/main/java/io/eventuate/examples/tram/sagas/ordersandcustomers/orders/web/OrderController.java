@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 public class OrderController {
 
@@ -32,13 +34,9 @@ public class OrderController {
 
   @RequestMapping(value="/orders/{orderId}", method= RequestMethod.GET)
   public ResponseEntity<GetOrderResponse> getOrder(@PathVariable Long orderId) {
-
-    Order order = orderRepository.findOne(orderId);
-
-    if (order == null) {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    } else {
-        return new ResponseEntity<>(new GetOrderResponse(order.getId(), order.getState()), HttpStatus.OK);
-    }
+    return orderRepository
+            .findById(orderId)
+            .map(o -> new ResponseEntity<>(new GetOrderResponse(o.getId(), o.getState()), HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
 }
