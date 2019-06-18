@@ -1,9 +1,9 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.customers;
 
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.web.CustomerWebConfiguration;
-import io.eventuate.jdbckafka.TramJdbcKafkaConfiguration;
 import io.eventuate.tram.commands.producer.TramCommandProducerConfiguration;
 import io.eventuate.tram.events.publisher.TramEventsPublisherConfiguration;
+import io.eventuate.tram.jdbckafka.TramJdbcKafkaConfiguration;
 import io.eventuate.tram.messaging.common.ChannelMapping;
 import io.eventuate.tram.messaging.common.DefaultChannelMapping;
 import io.eventuate.tram.sagas.orchestration.SagaOrchestratorConfiguration;
