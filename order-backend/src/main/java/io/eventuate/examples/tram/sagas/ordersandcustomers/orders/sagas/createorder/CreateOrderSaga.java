@@ -2,23 +2,29 @@ package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas.createo
 
 import io.eventuate.examples.tram.sagas.ordersandcustomers.commondomain.Money;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.commands.ReserveCreditCommand;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.commandsandreplies.ApproveOrderCommand;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.commandsandreplies.RejectOrderCommand;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.Order;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderRepository;
 import io.eventuate.tram.commands.consumer.CommandWithDestination;
+import io.eventuate.tram.events.publisher.ResultWithEvents;
 import io.eventuate.tram.sagas.orchestration.SagaDefinition;
 import io.eventuate.tram.sagas.simpledsl.SimpleSaga;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static io.eventuate.tram.commands.consumer.CommandWithDestinationBuilder.send;
 
 public class CreateOrderSaga implements SimpleSaga<CreateOrderSagaData> {
 
+  @Autowired
+  private OrderRepository orderRepository;
+
   private SagaDefinition<CreateOrderSagaData> sagaDefinition =
           step()
+            .invokeLocal(this::create)
             .withCompensation(this::reject)
           .step()
             .invokeParticipant(this::reserveCredit)
           .step()
-            .invokeParticipant(this::approve)
+            .invokeLocal(this::approve)
           .build();
 
 
@@ -27,6 +33,12 @@ public class CreateOrderSaga implements SimpleSaga<CreateOrderSagaData> {
     return this.sagaDefinition;
   }
 
+  private void create(CreateOrderSagaData data) {
+    ResultWithEvents<Order> oe = Order.createOrder(data.getOrderDetails());
+    Order order = oe.result;
+    orderRepository.save(order);
+    data.setOrderId(order.getId());
+  }
 
   private CommandWithDestination reserveCredit(CreateOrderSagaData data) {
     long orderId = data.getOrderId();
@@ -37,17 +49,14 @@ public class CreateOrderSaga implements SimpleSaga<CreateOrderSagaData> {
             .build();
   }
 
-  public CommandWithDestination reject(CreateOrderSagaData data) {
-    return send(new RejectOrderCommand(data.getOrderId()))
-            .to("orderService")
-            .build();
+  private void approve(CreateOrderSagaData data) {
+    orderRepository.findById(data.getOrderId()).get().noteCreditReserved();
   }
 
-  private CommandWithDestination approve(CreateOrderSagaData data) {
-    return send(new ApproveOrderCommand(data.getOrderId()))
-            .to("orderService")
-            .build();
+  public void reject(CreateOrderSagaData data) {
+    orderRepository.findById(data.getOrderId()).get().noteCreditReservationFailed();
   }
+
 
 
 }

@@ -11,11 +11,6 @@ public class CreateOrderSagaData  {
   public CreateOrderSagaData() {
   }
 
-  public CreateOrderSagaData(Long orderId, OrderDetails orderDetails) {
-    this.orderId = orderId;
-    this.orderDetails = orderDetails;
-  }
-
   public CreateOrderSagaData(OrderDetails orderDetails) {
     this.orderDetails = orderDetails;
   }

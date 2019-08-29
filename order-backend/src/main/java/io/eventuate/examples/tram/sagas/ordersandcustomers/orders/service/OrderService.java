@@ -19,12 +19,9 @@ public class OrderService {
 
   @Transactional
   public Order createOrder(OrderDetails orderDetails) {
-    ResultWithEvents<Order> oe = Order.createOrder(orderDetails);
-    Order order = oe.result;
-    orderRepository.save(order);
-    CreateOrderSagaData data = new CreateOrderSagaData(order.getId(), orderDetails);
-    createOrderSagaManager.create(data, Order.class, order.getId());
-    return order;
+    CreateOrderSagaData data = new CreateOrderSagaData(orderDetails);
+    createOrderSagaManager.create(data);
+    return orderRepository.findById(data.getOrderId()).get();
   }
 
 }

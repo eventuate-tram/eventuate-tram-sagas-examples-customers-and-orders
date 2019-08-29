@@ -13,6 +13,11 @@ dependencies {
 
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
+
+    testCompile "io.eventuate.tram.sagas:eventuate-tram-sagas-testing-support:$eventuateTramSagasVersion"
+    testCompile "junit:junit:4.12"
+    testCompile "org.mockito:mockito-core:2.23.0"
+
 }
 
 

@@ -5,6 +5,8 @@ set -e
 
 . ./set-env-${DATABASE?}.sh
 
+./gradlew testClasses
+
 docker-compose -f docker-compose-${DATABASE?}.yml down -v
 
 docker-compose -f docker-compose-${DATABASE?}.yml up -d --build zookeeper ${DATABASE?} kafka

@@ -2,7 +2,6 @@ package io.eventuate.examples.tram.sagas.ordersandcustomers.orders;
 
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas.createorder.CreateOrderSaga;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas.createorder.CreateOrderSagaData;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.service.OrderCommandHandler;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.service.OrderService;
 import io.eventuate.tram.commands.consumer.CommandDispatcher;
 import io.eventuate.tram.sagas.orchestration.Saga;
@@ -37,17 +36,6 @@ public class OrderConfiguration {
   @Bean
   public CreateOrderSaga createOrderSaga() {
     return new CreateOrderSaga();
-  }
-
-  @Bean
-  public OrderCommandHandler orderCommandHandler() {
-    return new OrderCommandHandler();
-  }
-
-  @Bean
-  public CommandDispatcher orderCommandDispatcher(SagaCommandDispatcherFactory sagaCommandDispatcherFactory,
-                                                  OrderCommandHandler target) {
-    return sagaCommandDispatcherFactory.make("orderCommandDispatcher", target.commandHandlerDefinitions());
   }
 
 }
