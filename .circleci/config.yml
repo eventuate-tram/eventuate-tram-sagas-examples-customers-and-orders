@@ -6,14 +6,22 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: eventuate-tram-sagas-examples-customers-and-orders-{{ checksum "gradle.properties" }}
+          keys:
+            - eventuate-tram-sagas-examples-customers-and-orders-
+            - eventuate-tram-sagas-examples-customers-and-orders-{{ checksum "gradle.properties" }}
       - run: TERM=dumb ./gradlew testClasses
       - save_cache:
           paths:
             - ~/.gradle
           key: eventuate-tram-sagas-examples-customers-and-orders-{{ checksum "gradle.properties" }}
-      - run: TERM=dumb ./build-and-test-all-mysql.sh
-      - run: TERM=dumb ./build-and-test-all-postgres.sh
+      - run:
+          command: |
+            . ./.circleci/setenv-circle-ci.sh
+            ./build-and-test-all-mysql.sh
+      - run:
+          command: |
+            . ./.circleci/setenv-circle-ci.sh
+            ./build-and-test-all-postgres.sh
       - run:
           name: Save JUNIT test results
           command: |
