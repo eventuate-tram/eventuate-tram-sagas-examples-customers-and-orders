@@ -5,8 +5,8 @@ dependencies {
 
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
+    compile "org.springframework.hateoas:spring-hateoas:0.25.0.RELEASE"
 }
 
-apply plugin: 'spring-boot'
-
+apply plugin: "org.springframework.boot"
 

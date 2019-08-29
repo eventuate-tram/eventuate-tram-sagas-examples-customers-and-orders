@@ -2,7 +2,7 @@ package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain;
 
 
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.OrderDetails;
-import io.eventuate.tram.events.ResultWithEvents;
+import io.eventuate.tram.events.publisher.ResultWithEvents;
 
 import javax.persistence.*;
 import java.util.Collections;

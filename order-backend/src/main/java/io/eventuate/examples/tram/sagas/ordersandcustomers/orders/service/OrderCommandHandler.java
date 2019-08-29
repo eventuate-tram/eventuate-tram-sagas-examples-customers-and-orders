@@ -27,16 +27,22 @@ public class OrderCommandHandler {
 
   public Message approve(CommandMessage<ApproveOrderCommand> cm) {
     long orderId = cm.getCommand().getOrderId();
-    Order order = orderRepository.findOne(orderId);
+    Order order = tryToFindOrder(orderId);
     order.noteCreditReserved();
     return withSuccess();
   }
 
   public Message reject(CommandMessage<RejectOrderCommand> cm) {
     long orderId = cm.getCommand().getOrderId();
-    Order order = orderRepository.findOne(orderId);
+    Order order = tryToFindOrder(orderId);
     order.noteCreditReservationFailed();
     return withSuccess();
+  }
+
+  private Order tryToFindOrder(long orderId) {
+    return orderRepository
+            .findById(orderId)
+            .orElseThrow(() -> new IllegalArgumentException(String.format("Order with id %s is not found", orderId)));
   }
 
 }
