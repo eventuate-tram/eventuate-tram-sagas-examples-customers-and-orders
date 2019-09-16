@@ -81,13 +81,13 @@ Next, launch the services using https://docs.docker.com/compose/[Docker Compose]
 
 ```
 export DOCKER_HOST_IP=...
-docker-compose -f docker-compose-mysql.yml build
-docker-compose -f docker-compose-mysql.yml up -d
+./gradlew mysqlComposeBuild
+./gradlew mysqlComposeUp
 ```
 
 Note:
 
-1. You can also run the Postgres version using `docker-compose-eventuate-postgres.yml`
+1. You can also run the Postgres version using `./gradlew postgresComposeBuild` and `./gradlew postgresComposeUp`
 2. You need to set `DOCKER_HOST_IP` before running Docker Compose.
 This must be an IP address or resolvable hostname.
 It cannot be `localhost`.
