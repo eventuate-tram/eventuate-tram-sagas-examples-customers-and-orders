@@ -2,10 +2,8 @@ package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain;
 
 
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.OrderDetails;
-import io.eventuate.tram.events.publisher.ResultWithEvents;
 
 import javax.persistence.*;
-import java.util.Collections;
 
 @Entity
 @Table(name="orders")
@@ -20,6 +18,7 @@ public class Order {
 
   @Embedded
   private OrderDetails orderDetails;
+  private RejectionReason rejectionReason;
 
   public Order() {
   }
@@ -29,23 +28,32 @@ public class Order {
     this.state = OrderState.PENDING;
   }
 
-  public static ResultWithEvents<Order> createOrder(OrderDetails orderDetails) {
-    return new ResultWithEvents<Order>(new Order(orderDetails), Collections.emptyList());
+  public static Order createOrder(OrderDetails orderDetails) {
+    return new Order(orderDetails);
   }
 
   public Long getId() {
     return id;
   }
 
-  public void noteCreditReserved() {
+  public void setId(long id) {
+    this.id = id;
+  }
+
+  public void approve() {
     this.state = OrderState.APPROVED;
   }
 
-  public void noteCreditReservationFailed() {
+  public void reject(RejectionReason rejectionReason) {
     this.state = OrderState.REJECTED;
+    this.rejectionReason = rejectionReason;
   }
 
   public OrderState getState() {
     return state;
+  }
+
+  public RejectionReason getRejectionReason() {
+    return rejectionReason;
   }
 }

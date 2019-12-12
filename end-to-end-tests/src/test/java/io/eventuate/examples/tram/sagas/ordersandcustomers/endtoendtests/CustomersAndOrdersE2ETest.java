@@ -4,9 +4,11 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.commondomain.Money;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.webapi.CreateCustomerRequest;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.webapi.CreateCustomerResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderState;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.RejectionReason;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.CreateOrderRequest;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.CreateOrderResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.GetOrderResponse;
+import io.eventuate.util.test.async.Eventually;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +21,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.TimeUnit;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = CustomersAndOrdersE2ETestConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -39,38 +43,45 @@ public class CustomersAndOrdersE2ETest{
   RestTemplate restTemplate;
 
   @Test
-  public void shouldApprove() throws Exception {
-    CreateCustomerResponse createCustomerResponseResponse = restTemplate.postForObject(baseUrlCustomers("customers"),
+  public void shouldApprove() {
+    CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(baseUrlCustomers("customers"),
             new CreateCustomerRequest("Fred", new Money("15.00")), CreateCustomerResponse.class);
 
     CreateOrderResponse createOrderResponse = restTemplate.postForObject(baseUrlOrders("orders"),
-            new CreateOrderRequest(createCustomerResponseResponse.getCustomerId(), new Money("12.34")), CreateOrderResponse.class);
+            new CreateOrderRequest(createCustomerResponse.getCustomerId(), new Money("12.34")), CreateOrderResponse.class);
 
-    assertOrderState(createOrderResponse.getOrderId(), OrderState.APPROVED);
+    assertOrderState(createOrderResponse.getOrderId(), OrderState.APPROVED, null);
   }
 
   @Test
-  public void shouldReject() throws Exception {
-    CreateCustomerResponse createCustomerResponseResponse = restTemplate.postForObject(baseUrlCustomers("customers"),
+  public void shouldRejectBecauseOfInsufficientCredit() {
+    CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(baseUrlCustomers("customers"),
             new CreateCustomerRequest("Fred", new Money("15.00")), CreateCustomerResponse.class);
 
     CreateOrderResponse createOrderResponse = restTemplate.postForObject(baseUrlOrders("orders"),
-            new CreateOrderRequest(createCustomerResponseResponse.getCustomerId(), new Money("123.40")), CreateOrderResponse.class);
+            new CreateOrderRequest(createCustomerResponse.getCustomerId(), new Money("123.40")), CreateOrderResponse.class);
 
-    assertOrderState(createOrderResponse.getOrderId(), OrderState.REJECTED);
+    assertOrderState(createOrderResponse.getOrderId(), OrderState.REJECTED, RejectionReason.INSUFFICIENT_CREDIT);
   }
 
-  private void assertOrderState(Long id, OrderState expectedState) throws InterruptedException {
-    GetOrderResponse order = null;
-    for (int i = 0; i < 30; i++) {
+  @Test
+  public void shouldRejectBecauseOfUnknownCustomer() {
+
+    CreateOrderResponse createOrderResponse = restTemplate.postForObject(baseUrlOrders("orders"),
+            new CreateOrderRequest(Long.MAX_VALUE, new Money("123.40")), CreateOrderResponse.class);
+
+    assertOrderState(createOrderResponse.getOrderId(), OrderState.REJECTED, RejectionReason.UNKNOWN_CUSTOMER);
+  }
+
+  private void assertOrderState(Long id, OrderState expectedState, RejectionReason expectedRejectionReason) {
+    Eventually.eventually(() -> {
       ResponseEntity<GetOrderResponse> getOrderResponseEntity = restTemplate.getForEntity(baseUrlOrders("orders/" + id), GetOrderResponse.class);
-      Assert.assertEquals(HttpStatus.OK, getOrderResponseEntity.getStatusCode());
-      order = getOrderResponseEntity.getBody();
-      if (order.getOrderState() == expectedState)
-        break;
-      TimeUnit.MILLISECONDS.sleep(400);
-    }
+      assertEquals(HttpStatus.OK, getOrderResponseEntity.getStatusCode());
+      GetOrderResponse order = getOrderResponseEntity.getBody();
+      assertEquals(expectedState, order.getOrderState());
+      assertEquals(expectedRejectionReason, order.getRejectionReason());
+    });
 
-    Assert.assertEquals(expectedState, order.getOrderState());
   }
+
 }

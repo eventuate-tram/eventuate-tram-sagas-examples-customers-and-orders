@@ -1,5 +1,6 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.customers;
 
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.domain.CustomerRepository;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.service.CustomerCommandHandler;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.service.CustomerService;
 import io.eventuate.tram.commands.consumer.CommandDispatcher;
@@ -18,13 +19,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class CustomerConfiguration {
 
   @Bean
-  public CustomerService customerService() {
-    return new CustomerService();
+  public CustomerService customerService(CustomerRepository customerRepository) {
+    return new CustomerService(customerRepository);
   }
 
   @Bean
-  public CustomerCommandHandler customerCommandHandler() {
-    return new CustomerCommandHandler();
+  public CustomerCommandHandler customerCommandHandler(CustomerService customerService) {
+    return new CustomerCommandHandler(customerService);
   }
 
   // TODO Exception handler for CustomerCreditLimitExceededException

@@ -36,7 +36,7 @@ public class OrderController {
   public ResponseEntity<GetOrderResponse> getOrder(@PathVariable Long orderId) {
     return orderRepository
             .findById(orderId)
-            .map(o -> new ResponseEntity<>(new GetOrderResponse(o.getId(), o.getState()), HttpStatus.OK))
+            .map(o -> new ResponseEntity<>(new GetOrderResponse(o.getId(), o.getState(), o.getRejectionReason()), HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
 }

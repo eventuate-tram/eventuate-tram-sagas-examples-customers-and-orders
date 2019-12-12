@@ -2,20 +2,24 @@ package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas.createo
 
 import io.eventuate.examples.tram.sagas.ordersandcustomers.commondomain.Money;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.commands.ReserveCreditCommand;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.replies.CustomerCreditLimitExceeded;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.replies.CustomerNotFound;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.Order;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderRepository;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.RejectionReason;
 import io.eventuate.tram.commands.consumer.CommandWithDestination;
-import io.eventuate.tram.events.publisher.ResultWithEvents;
 import io.eventuate.tram.sagas.orchestration.SagaDefinition;
 import io.eventuate.tram.sagas.simpledsl.SimpleSaga;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static io.eventuate.tram.commands.consumer.CommandWithDestinationBuilder.send;
 
 public class CreateOrderSaga implements SimpleSaga<CreateOrderSagaData> {
 
-  @Autowired
   private OrderRepository orderRepository;
+
+  public CreateOrderSaga(OrderRepository orderRepository) {
+    this.orderRepository = orderRepository;
+  }
 
   private SagaDefinition<CreateOrderSagaData> sagaDefinition =
           step()
@@ -23,9 +27,19 @@ public class CreateOrderSaga implements SimpleSaga<CreateOrderSagaData> {
             .withCompensation(this::reject)
           .step()
             .invokeParticipant(this::reserveCredit)
+            .onReply(CustomerNotFound.class, this::handleCustomerNotFound)
+            .onReply(CustomerCreditLimitExceeded.class, this::handleCustomerCreditLimitExceeded)
           .step()
             .invokeLocal(this::approve)
           .build();
+
+  private void handleCustomerNotFound(CreateOrderSagaData data, CustomerNotFound reply) {
+    data.setRejectionReason(RejectionReason.UNKNOWN_CUSTOMER);
+  }
+
+  private void handleCustomerCreditLimitExceeded(CreateOrderSagaData data, CustomerCreditLimitExceeded reply) {
+    data.setRejectionReason(RejectionReason.INSUFFICIENT_CREDIT);
+  }
 
 
   @Override
@@ -34,8 +48,7 @@ public class CreateOrderSaga implements SimpleSaga<CreateOrderSagaData> {
   }
 
   private void create(CreateOrderSagaData data) {
-    ResultWithEvents<Order> oe = Order.createOrder(data.getOrderDetails());
-    Order order = oe.result;
+    Order order = Order.createOrder(data.getOrderDetails());
     orderRepository.save(order);
     data.setOrderId(order.getId());
   }
@@ -50,11 +63,11 @@ public class CreateOrderSaga implements SimpleSaga<CreateOrderSagaData> {
   }
 
   private void approve(CreateOrderSagaData data) {
-    orderRepository.findById(data.getOrderId()).get().noteCreditReserved();
+    orderRepository.findById(data.getOrderId()).get().approve();
   }
 
   public void reject(CreateOrderSagaData data) {
-    orderRepository.findById(data.getOrderId()).get().noteCreditReservationFailed();
+    orderRepository.findById(data.getOrderId()).get().reject(data.getRejectionReason());
   }
 
 

@@ -1,18 +1,19 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas.createorder;
 
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.OrderDetails;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.RejectionReason;
 
 public class CreateOrderSagaData  {
 
-  private Long orderId;
-
   private OrderDetails orderDetails;
-
-  public CreateOrderSagaData() {
-  }
+  private Long orderId;
+  private RejectionReason rejectionReason;
 
   public CreateOrderSagaData(OrderDetails orderDetails) {
     this.orderDetails = orderDetails;
+  }
+
+  public CreateOrderSagaData() {
   }
 
   public Long getOrderId() {
@@ -25,5 +26,13 @@ public class CreateOrderSagaData  {
 
   public void setOrderId(Long orderId) {
     this.orderId = orderId;
+  }
+
+  public void setRejectionReason(RejectionReason rejectionReason) {
+    this.rejectionReason = rejectionReason;
+  }
+
+  public RejectionReason getRejectionReason() {
+    return rejectionReason;
   }
 }

@@ -2,16 +2,16 @@ package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi;
 
 
 public class CreateOrderResponse {
-  private Long orderId;
+  private long orderId;
 
   public CreateOrderResponse() {
   }
 
-  public CreateOrderResponse(Long orderId) {
+  public CreateOrderResponse(long orderId) {
     this.orderId = orderId;
   }
 
-  public Long getOrderId() {
+  public long getOrderId() {
     return orderId;
   }
 }
