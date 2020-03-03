@@ -1,6 +1,6 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.integrationtests;
 
-import io.eventuate.tram.inmemory.TramInMemoryConfiguration;
+import io.eventuate.tram.spring.inmemory.TramInMemoryConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
