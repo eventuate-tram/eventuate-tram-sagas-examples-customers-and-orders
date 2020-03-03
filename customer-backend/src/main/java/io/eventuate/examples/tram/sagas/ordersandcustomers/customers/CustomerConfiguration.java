@@ -5,7 +5,7 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.service.Cus
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.service.CustomerService;
 import io.eventuate.tram.commands.consumer.CommandDispatcher;
 import io.eventuate.tram.sagas.participant.SagaCommandDispatcherFactory;
-import io.eventuate.tram.sagas.participant.SagaParticipantConfiguration;
+import io.eventuate.tram.sagas.spring.participant.SagaParticipantConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

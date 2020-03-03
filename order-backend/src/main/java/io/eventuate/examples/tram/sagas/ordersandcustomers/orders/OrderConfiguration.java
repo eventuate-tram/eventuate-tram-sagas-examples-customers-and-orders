@@ -4,7 +4,7 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderRe
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas.createorder.CreateOrderSaga;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.service.OrderService;
 import io.eventuate.tram.sagas.orchestration.SagaInstanceFactory;
-import io.eventuate.tram.sagas.orchestration.SagaOrchestratorConfiguration;
+import io.eventuate.tram.sagas.spring.orchestration.SagaOrchestratorConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
