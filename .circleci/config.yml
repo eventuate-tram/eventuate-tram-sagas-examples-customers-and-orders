@@ -7,8 +7,8 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - eventuate-tram-sagas-examples-customers-and-orders-
             - eventuate-tram-sagas-examples-customers-and-orders-{{ checksum "gradle.properties" }}
+            - eventuate-tram-sagas-examples-customers-and-orders-
       - run: TERM=dumb ./gradlew testClasses
       - save_cache:
           paths:

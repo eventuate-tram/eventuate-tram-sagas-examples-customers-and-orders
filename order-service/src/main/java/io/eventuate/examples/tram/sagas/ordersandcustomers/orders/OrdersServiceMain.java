@@ -1,9 +1,9 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.orders;
 
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.web.OrderWebConfiguration;
-import io.eventuate.tram.commands.producer.TramCommandProducerConfiguration;
-import io.eventuate.tram.events.publisher.TramEventsPublisherConfiguration;
-import io.eventuate.tram.jdbckafka.TramJdbcKafkaConfiguration;
+import io.eventuate.tram.spring.commands.producer.TramCommandProducerConfiguration;
+import io.eventuate.tram.spring.events.publisher.TramEventsPublisherConfiguration;
+import io.eventuate.tram.spring.jdbckafka.TramJdbcKafkaConfiguration;
 import io.eventuate.tram.messaging.common.ChannelMapping;
 import io.eventuate.tram.messaging.common.DefaultChannelMapping;
 import org.springframework.boot.SpringApplication;
