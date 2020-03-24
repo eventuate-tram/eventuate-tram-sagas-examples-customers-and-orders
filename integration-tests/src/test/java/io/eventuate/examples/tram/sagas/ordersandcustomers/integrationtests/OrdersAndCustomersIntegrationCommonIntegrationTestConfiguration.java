@@ -27,15 +27,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class OrdersAndCustomersIntegrationCommonIntegrationTestConfiguration {
 
   @Bean
-  public ChannelMapping channelMapping(TramCommandsAndEventsIntegrationData data) {
-    return DefaultChannelMapping.builder()
-            .with("CustomerAggregate", data.getAggregateDestination())
-            .with("customerService", data.getCommandChannel())
-            .build();
-  }
-
-
-  @Bean
   public TramCommandsAndEventsIntegrationData tramCommandsAndEventsIntegrationData() {
     return new TramCommandsAndEventsIntegrationData();
   }
