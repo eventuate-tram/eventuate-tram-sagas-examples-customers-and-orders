@@ -5,6 +5,7 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas.createor
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.service.OrderService;
 import io.eventuate.tram.sagas.orchestration.SagaInstanceFactory;
 import io.eventuate.tram.sagas.spring.orchestration.SagaOrchestratorConfiguration;
+import io.eventuate.tram.spring.messaging.producer.jdbc.TramMessageProducerJdbcConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @EnableJpaRepositories
 @EnableAutoConfiguration
-@Import(SagaOrchestratorConfiguration.class)
+@Import({SagaOrchestratorConfiguration.class, })
 public class OrderConfiguration {
 
   @Bean
