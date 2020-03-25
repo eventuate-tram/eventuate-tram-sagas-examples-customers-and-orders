@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@Import(SagaParticipantConfiguration.class)
+@Import({SagaParticipantConfiguration.class})
 @EnableJpaRepositories
 @EnableAutoConfiguration
 public class CustomerConfiguration {
