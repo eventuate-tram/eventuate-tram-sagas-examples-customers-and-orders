@@ -22,6 +22,9 @@ public class Customer {
   @ElementCollection
   private Map<Long, Money> creditReservations;
 
+  @Version
+  private Long version;
+
   Money availableCredit() {
     return creditLimit.subtract(creditReservations.values().stream().reduce(Money.ZERO, Money::add));
   }
