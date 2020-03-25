@@ -20,6 +20,9 @@ public class Order {
   private OrderDetails orderDetails;
   private RejectionReason rejectionReason;
 
+  @Version
+  private Long version;
+
   public Order() {
   }
 
