@@ -15,7 +15,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @EnableJpaRepositories
 @EnableAutoConfiguration
-@Import({SagaOrchestratorConfiguration.class, })
 public class OrderConfiguration {
 
   @Bean
