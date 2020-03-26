@@ -6,6 +6,7 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.service.Cus
 import io.eventuate.tram.commands.consumer.CommandDispatcher;
 import io.eventuate.tram.sagas.participant.SagaCommandDispatcherFactory;
 import io.eventuate.tram.sagas.spring.participant.SagaParticipantConfiguration;
+import io.eventuate.tram.spring.optimisticlocking.OptimisticLockingDecoratorConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +14,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@Import({SagaParticipantConfiguration.class})
+@Import({SagaParticipantConfiguration.class, OptimisticLockingDecoratorConfiguration.class})
 @EnableJpaRepositories
 @EnableAutoConfiguration
 public class CustomerConfiguration {

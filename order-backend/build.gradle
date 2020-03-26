@@ -7,6 +7,7 @@ dependencies {
     compile "io.eventuate.tram.core:eventuate-tram-spring-producer-jdbc:$eventuateTramVersion"
     compile "io.eventuate.tram.core:eventuate-tram-spring-consumer-kafka:$eventuateTramVersion"
     compile "io.eventuate.tram.core:eventuate-tram-spring-consumer-jdbc:$eventuateTramVersion"
+    compile "io.eventuate.tram.core:eventuate-tram-spring-optimistic-locking:$eventuateTramVersion"
 
     compile 'mysql:mysql-connector-java:5.1.36'
     compile ('org.postgresql:postgresql:9.4-1200-jdbc41') {
