@@ -21,7 +21,7 @@ elif [ "${DATABASE}" == "postgres" ]; then
   echo '\l' | ./postgres-cli.sh -i
 else
   echo "Unknown Database"
-  exit
+  exit 99
 fi
 
 ./gradlew -x :end-to-end-tests:test build
