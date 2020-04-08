@@ -13,6 +13,7 @@ jobs:
             - eventuate-tram-sagas-examples-customers-and-orders-
       - run:
           command: |
+            ./.circleci/upgrade-docker-compose.sh
             . ./.circleci/setenv-circle-ci.sh
             ./gradlew testClasses
       - save_cache:

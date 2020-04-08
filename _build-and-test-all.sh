@@ -3,8 +3,6 @@
 set -e
 
 
-. ./set-env-${DATABASE?}.sh
-
 ./gradlew testClasses
 
 dockercdc="./gradlew ${DATABASE?}cdcCompose"
@@ -14,14 +12,24 @@ ${dockerall}Down
 ${dockercdc}Build
 ${dockercdc}Up
 
-./wait-for-services.sh $DOCKER_HOST_IP "8099"
+./wait-for-services.sh localhost "8099"
+
+#Testing db cli
+if [ "${DATABASE}" == "mysql" ]; then
+  echo 'show databases;' | ./mysql-cli.sh -i
+elif [ "${DATABASE}" == "postgres" ]; then
+  echo '\l' | ./postgres-cli.sh -i
+else
+  echo "Unknown Database"
+  exit 99
+fi
 
 ./gradlew -x :end-to-end-tests:test build
 
 ${dockerall}Build
 ${dockerall}Up
 
-./wait-for-services.sh $DOCKER_HOST_IP "8081 8082"
+./wait-for-services.sh localhost "8081 8082"
 
 ./gradlew :end-to-end-tests:cleanTest :end-to-end-tests:test
 
