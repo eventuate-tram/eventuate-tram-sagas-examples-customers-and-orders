@@ -5,11 +5,16 @@ jobs:
     working_directory: ~/eventuate-tram-sagas-examples-customers-and-orders
     steps:
       - checkout
+      - run:
+          command: .circleci/install-jdk-14.sh
       - restore_cache:
           keys:
             - eventuate-tram-sagas-examples-customers-and-orders-{{ checksum "gradle.properties" }}
             - eventuate-tram-sagas-examples-customers-and-orders-
-      - run: TERM=dumb ./gradlew testClasses
+      - run:
+          command: |
+            . ./.circleci/setenv-circle-ci.sh
+            ./gradlew testClasses
       - save_cache:
           paths:
             - ~/.gradle

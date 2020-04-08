@@ -1,11 +1,11 @@
+apply plugin: "org.springframework.boot"
+apply plugin: "io.spring.dependency-management"
+
 dependencies {
     compile project(":common-swagger")
     compile project(":customer-backend")
     compile project(":customer-web-api")
 
-    compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
-    compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
-    compile "org.springframework.hateoas:spring-hateoas:0.25.0.RELEASE"
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile "org.springframework.boot:spring-boot-starter-web"
 }
-
-apply plugin: "org.springframework.boot"
