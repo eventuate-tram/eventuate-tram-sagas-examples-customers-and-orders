@@ -57,7 +57,7 @@ services:
 
 
   postgres:
-    image: eventuateio/eventuate-tram-sagas-postgres:0.13.0.RELEASE
+    image: eventuateio/eventuate-tram-sagas-postgres:$EVENTUATE_SAGA_VERSION
     ports:
       - 5432:5432
     environment:

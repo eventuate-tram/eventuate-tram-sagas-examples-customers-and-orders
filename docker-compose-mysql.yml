@@ -56,7 +56,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
   mysql:
-    image: eventuateio/eventuate-tram-sagas-mysql:0.13.0.RELEASE
+    image: eventuateio/eventuate-tram-sagas-mysql:$EVENTUATE_SAGA_VERSION
     ports:
       - 3306:3306
     environment:
