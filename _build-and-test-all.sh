@@ -12,8 +12,6 @@ ${dockerall}Down
 ${dockercdc}Build
 ${dockercdc}Up
 
-./wait-for-services.sh localhost "8099"
-
 #Testing db cli
 if [ "${DATABASE}" == "mysql" ]; then
   echo 'show databases;' | ./mysql-cli.sh -i
@@ -28,8 +26,6 @@ fi
 
 ${dockerall}Build
 ${dockerall}Up
-
-./wait-for-services.sh localhost "8081 8082"
 
 ./gradlew :end-to-end-tests:cleanTest :end-to-end-tests:test
 

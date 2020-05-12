@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 @SpringBootTest(classes = CustomersAndOrdersE2ETestConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class CustomersAndOrdersE2ETest{
 
-  @Value("localhost")
+  @Value("${host.name}")
   private String hostName;
 
   private String baseUrlOrders(String path) {
