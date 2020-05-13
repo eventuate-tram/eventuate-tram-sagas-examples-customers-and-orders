@@ -12,7 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class OrderController {
@@ -38,5 +39,14 @@ public class OrderController {
             .findById(orderId)
             .map(o -> new ResponseEntity<>(new GetOrderResponse(o.getId(), o.getState(), o.getRejectionReason()), HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+  }
+
+  @RequestMapping(value="/orders/customer/{customerId}", method= RequestMethod.GET)
+  public ResponseEntity<List<GetOrderResponse>> getOrdersByCustomerId(@PathVariable Long customerId) {
+    return new ResponseEntity<List<GetOrderResponse>>(orderRepository
+            .findAllByOrderDetailsCustomerId(customerId)
+            .stream()
+            .map(o -> new GetOrderResponse(o.getId(), o.getState(), o.getRejectionReason()))
+            .collect(Collectors.toList()), HttpStatus.OK);
   }
 }

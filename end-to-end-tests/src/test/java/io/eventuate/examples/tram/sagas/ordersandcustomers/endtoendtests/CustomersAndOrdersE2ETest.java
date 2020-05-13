@@ -9,7 +9,6 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.CreateO
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.CreateOrderResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.GetOrderResponse;
 import io.eventuate.util.test.async.Eventually;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.concurrent.TimeUnit;
-
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -31,12 +28,8 @@ public class CustomersAndOrdersE2ETest{
   @Value("${host.name}")
   private String hostName;
 
-  private String baseUrlOrders(String path) {
-    return "http://"+hostName+":8081/" + path;
-  }
-
-  private String baseUrlCustomers(String path) {
-    return "http://"+hostName+":8082/" + path;
+  private String baseUrl(String path) {
+    return "http://"+hostName+":8083/" + path;
   }
 
   @Autowired
@@ -44,10 +37,10 @@ public class CustomersAndOrdersE2ETest{
 
   @Test
   public void shouldApprove() {
-    CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(baseUrlCustomers("customers"),
+    CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(baseUrl("customers"),
             new CreateCustomerRequest("Fred", new Money("15.00")), CreateCustomerResponse.class);
 
-    CreateOrderResponse createOrderResponse = restTemplate.postForObject(baseUrlOrders("orders"),
+    CreateOrderResponse createOrderResponse = restTemplate.postForObject(baseUrl("orders"),
             new CreateOrderRequest(createCustomerResponse.getCustomerId(), new Money("12.34")), CreateOrderResponse.class);
 
     assertOrderState(createOrderResponse.getOrderId(), OrderState.APPROVED, null);
@@ -55,10 +48,10 @@ public class CustomersAndOrdersE2ETest{
 
   @Test
   public void shouldRejectBecauseOfInsufficientCredit() {
-    CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(baseUrlCustomers("customers"),
+    CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(baseUrl("customers"),
             new CreateCustomerRequest("Fred", new Money("15.00")), CreateCustomerResponse.class);
 
-    CreateOrderResponse createOrderResponse = restTemplate.postForObject(baseUrlOrders("orders"),
+    CreateOrderResponse createOrderResponse = restTemplate.postForObject(baseUrl("orders"),
             new CreateOrderRequest(createCustomerResponse.getCustomerId(), new Money("123.40")), CreateOrderResponse.class);
 
     assertOrderState(createOrderResponse.getOrderId(), OrderState.REJECTED, RejectionReason.INSUFFICIENT_CREDIT);
@@ -67,21 +60,47 @@ public class CustomersAndOrdersE2ETest{
   @Test
   public void shouldRejectBecauseOfUnknownCustomer() {
 
-    CreateOrderResponse createOrderResponse = restTemplate.postForObject(baseUrlOrders("orders"),
+    CreateOrderResponse createOrderResponse = restTemplate.postForObject(baseUrl("orders"),
             new CreateOrderRequest(Long.MAX_VALUE, new Money("123.40")), CreateOrderResponse.class);
 
     assertOrderState(createOrderResponse.getOrderId(), OrderState.REJECTED, RejectionReason.UNKNOWN_CUSTOMER);
   }
 
+  @Test
+  public void shouldSupportHistory() {
+    CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(baseUrl("customers"),
+            new CreateCustomerRequest("John", new Money("1000.00")), CreateCustomerResponse.class);
+
+    CreateOrderResponse createOrderResponse = restTemplate.postForObject(baseUrl("orders"),
+            new CreateOrderRequest(createCustomerResponse.getCustomerId(), new Money("100.00")),
+            CreateOrderResponse.class);
+
+    Eventually.eventually(() -> {
+      ResponseEntity<GetCustomerHistoryResponse> customerResponseEntity =
+              restTemplate.getForEntity(baseUrl("customers/orderhistory/" + createCustomerResponse.getCustomerId()),
+                      GetCustomerHistoryResponse.class);
+
+      assertEquals(HttpStatus.OK, customerResponseEntity.getStatusCode());
+
+      GetCustomerHistoryResponse customerResponse = customerResponseEntity.getBody();
+
+      assertEquals(new Money("1000.00").getAmount().setScale(2), customerResponse.getCreditLimit().getAmount().setScale(2));
+      assertEquals(createCustomerResponse.getCustomerId(), customerResponse.getCustomerId());
+      assertEquals("John", customerResponse.getName());
+      assertEquals(1, customerResponse.getOrders().size());
+      assertEquals((Long)createOrderResponse.getOrderId(), customerResponse.getOrders().get(0).getOrderId());
+      assertEquals(OrderState.APPROVED, customerResponse.getOrders().get(0).getOrderState());
+    });
+  }
+
   private void assertOrderState(Long id, OrderState expectedState, RejectionReason expectedRejectionReason) {
     Eventually.eventually(() -> {
-      ResponseEntity<GetOrderResponse> getOrderResponseEntity = restTemplate.getForEntity(baseUrlOrders("orders/" + id), GetOrderResponse.class);
+      ResponseEntity<GetOrderResponse> getOrderResponseEntity = restTemplate.getForEntity(baseUrl("orders/" + id), GetOrderResponse.class);
       assertEquals(HttpStatus.OK, getOrderResponseEntity.getStatusCode());
       GetOrderResponse order = getOrderResponseEntity.getBody();
       assertEquals(expectedState, order.getOrderState());
       assertEquals(expectedRejectionReason, order.getRejectionReason());
     });
-
   }
 
 }
