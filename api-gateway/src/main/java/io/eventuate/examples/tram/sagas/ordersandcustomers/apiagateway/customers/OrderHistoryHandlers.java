@@ -23,7 +23,7 @@ public class OrderHistoryHandlers {
     this.customerService = customerService;
   }
 
-  public Mono<ServerResponse> getOrderDetails(ServerRequest serverRequest) {
+  public Mono<ServerResponse> getOrderHistory(ServerRequest serverRequest) {
     String customerId = serverRequest.pathVariable("customerId");
 
     Mono<CustomerResponse> customer = customerService.findCustomerById(customerId);
