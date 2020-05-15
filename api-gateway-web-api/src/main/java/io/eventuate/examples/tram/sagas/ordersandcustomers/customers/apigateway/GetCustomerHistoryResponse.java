@@ -1,20 +1,20 @@
-package io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.customers;
+package io.eventuate.examples.tram.sagas.ordersandcustomers.customers.apigateway;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.orders.OrderResponse;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.common.Money;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.commondomain.Money;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.GetOrderResponse;
 
 import java.util.List;
 
-public class CustomerResponse {
+public class GetCustomerHistoryResponse {
   private Long customerId;
   private String name;
   private Money creditLimit;
-  private List<OrderResponse> orders;
+  private List<GetOrderResponse> orders;
 
-  public CustomerResponse() {
+  public GetCustomerHistoryResponse() {
   }
 
-  public CustomerResponse(Long customerId, String name, Money creditLimit, List<OrderResponse> orders) {
+  public GetCustomerHistoryResponse(Long customerId, String name, Money creditLimit, List<GetOrderResponse> orders) {
     this.customerId = customerId;
     this.name = name;
     this.creditLimit = creditLimit;
@@ -45,11 +45,11 @@ public class CustomerResponse {
     this.creditLimit = creditLimit;
   }
 
-  public List<OrderResponse> getOrders() {
+  public List<GetOrderResponse> getOrders() {
     return orders;
   }
 
-  public void setOrders(List<OrderResponse> orders) {
+  public void setOrders(List<GetOrderResponse> orders) {
     this.orders = orders;
   }
 }

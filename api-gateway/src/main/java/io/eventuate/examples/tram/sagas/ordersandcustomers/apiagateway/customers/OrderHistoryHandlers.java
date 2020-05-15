@@ -1,9 +1,11 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.customers;
 
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.proxies.CustomerNotFoundException;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.orders.OrderResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.proxies.CustomerServiceProxy;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.proxies.OrderServiceProxy;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.apigateway.GetCustomerHistoryResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.webapi.GetCustomerResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.GetOrderResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -26,16 +28,16 @@ public class OrderHistoryHandlers {
   public Mono<ServerResponse> getOrderHistory(ServerRequest serverRequest) {
     String customerId = serverRequest.pathVariable("customerId");
 
-    Mono<CustomerResponse> customer = customerService.findCustomerById(customerId);
+    Mono<GetCustomerResponse> customer = customerService.findCustomerById(customerId);
 
-    Mono<List<OrderResponse>> orders = orderService.findOrdersByCustomerId(customerId);
+    Mono<List<GetOrderResponse>> orders = orderService.findOrdersByCustomerId(customerId);
 
     return Mono
             .zip(customer, orders)
             .map(objects -> {
-              CustomerResponse c = objects.getT1();
-              c.setOrders(objects.getT2());
-              return c;
+              GetCustomerResponse c = objects.getT1();
+              List<GetOrderResponse> os = objects.getT2();
+              return new GetCustomerHistoryResponse(c.getCustomerId(), c.getName(), c.getCreditLimit(), os);
             })
             .flatMap(c ->
               ServerResponse.ok()

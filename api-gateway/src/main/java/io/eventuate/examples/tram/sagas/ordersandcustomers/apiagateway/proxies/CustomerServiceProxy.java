@@ -1,7 +1,7 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.proxies;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.customers.CustomerResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.customers.CustomerDestinations;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.webapi.GetCustomerResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -18,7 +18,7 @@ public class CustomerServiceProxy {
     this.client = client;
   }
 
-  public Mono<CustomerResponse> findCustomerById(String customerId) {
+  public Mono<GetCustomerResponse> findCustomerById(String customerId) {
     Mono<ClientResponse> response = client
             .get()
             .uri(customerDestinations.getCustomerServiceUrl() + "/customers/{customerId}", customerId)
@@ -26,7 +26,7 @@ public class CustomerServiceProxy {
     return response.flatMap(resp -> {
       switch (resp.statusCode()) {
         case OK:
-          return resp.bodyToMono(CustomerResponse.class);
+          return resp.bodyToMono(GetCustomerResponse.class);
         case NOT_FOUND:
           return Mono.error(new CustomerNotFoundException());
         default:

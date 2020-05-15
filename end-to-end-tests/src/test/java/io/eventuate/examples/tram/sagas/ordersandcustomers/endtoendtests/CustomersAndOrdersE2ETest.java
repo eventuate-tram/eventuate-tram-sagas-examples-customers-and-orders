@@ -1,10 +1,11 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests;
 
 import io.eventuate.examples.tram.sagas.ordersandcustomers.commondomain.Money;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.apigateway.GetCustomerHistoryResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.webapi.CreateCustomerRequest;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.webapi.CreateCustomerResponse;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderState;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.RejectionReason;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.ordercommon.OrderState;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.ordercommon.RejectionReason;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.CreateOrderRequest;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.CreateOrderResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.GetOrderResponse;
@@ -25,6 +26,8 @@ import static org.junit.Assert.assertEquals;
 @SpringBootTest(classes = CustomersAndOrdersE2ETestConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class CustomersAndOrdersE2ETest{
 
+  private static final String CUSTOMER_NAME = "John";
+
   @Value("${host.name}")
   private String hostName;
 
@@ -38,7 +41,7 @@ public class CustomersAndOrdersE2ETest{
   @Test
   public void shouldApprove() {
     CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(baseUrl("customers"),
-            new CreateCustomerRequest("Fred", new Money("15.00")), CreateCustomerResponse.class);
+            new CreateCustomerRequest(CUSTOMER_NAME, new Money("15.00")), CreateCustomerResponse.class);
 
     CreateOrderResponse createOrderResponse = restTemplate.postForObject(baseUrl("orders"),
             new CreateOrderRequest(createCustomerResponse.getCustomerId(), new Money("12.34")), CreateOrderResponse.class);
@@ -49,7 +52,7 @@ public class CustomersAndOrdersE2ETest{
   @Test
   public void shouldRejectBecauseOfInsufficientCredit() {
     CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(baseUrl("customers"),
-            new CreateCustomerRequest("Fred", new Money("15.00")), CreateCustomerResponse.class);
+            new CreateCustomerRequest(CUSTOMER_NAME, new Money("15.00")), CreateCustomerResponse.class);
 
     CreateOrderResponse createOrderResponse = restTemplate.postForObject(baseUrl("orders"),
             new CreateOrderRequest(createCustomerResponse.getCustomerId(), new Money("123.40")), CreateOrderResponse.class);
@@ -69,7 +72,7 @@ public class CustomersAndOrdersE2ETest{
   @Test
   public void shouldSupportHistory() {
     CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(baseUrl("customers"),
-            new CreateCustomerRequest("John", new Money("1000.00")), CreateCustomerResponse.class);
+            new CreateCustomerRequest(CUSTOMER_NAME, new Money("1000.00")), CreateCustomerResponse.class);
 
     CreateOrderResponse createOrderResponse = restTemplate.postForObject(baseUrl("orders"),
             new CreateOrderRequest(createCustomerResponse.getCustomerId(), new Money("100.00")),
@@ -86,7 +89,7 @@ public class CustomersAndOrdersE2ETest{
 
       assertEquals(new Money("1000.00").getAmount().setScale(2), customerResponse.getCreditLimit().getAmount().setScale(2));
       assertEquals(createCustomerResponse.getCustomerId(), customerResponse.getCustomerId());
-      assertEquals("John", customerResponse.getName());
+      assertEquals(CUSTOMER_NAME, customerResponse.getName());
       assertEquals(1, customerResponse.getOrders().size());
       assertEquals((Long)createOrderResponse.getOrderId(), customerResponse.getOrders().get(0).getOrderId());
       assertEquals(OrderState.APPROVED, customerResponse.getOrders().get(0).getOrderState());

@@ -1,7 +1,7 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.proxies;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.orders.OrderResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.orders.OrderDestinations;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.GetOrderResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -21,7 +21,7 @@ public class OrderServiceProxy {
     this.client = client;
   }
 
-  public Mono<List<OrderResponse>> findOrdersByCustomerId(String customerId) {
+  public Mono<List<GetOrderResponse>> findOrdersByCustomerId(String customerId) {
     Mono<ClientResponse> response = client
             .get()
             .uri(orderDestinations.getOrderServiceUrl() + "/orders/customer/{customerId}", customerId)
@@ -30,7 +30,7 @@ public class OrderServiceProxy {
     return response.flatMap(resp -> {
       switch (resp.statusCode()) {
         case OK:
-          return resp.bodyToMono(OrderResponse[].class).map(Arrays::asList);
+          return resp.bodyToMono(GetOrderResponse[].class).map(Arrays::asList);
         default:
           return Mono.error(new RuntimeException("Unknown" + resp.statusCode()));
       }

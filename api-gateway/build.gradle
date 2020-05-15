@@ -16,6 +16,8 @@ configurations.all {
 dependencies {
     compile "commons-lang:commons-lang:2.6"
 
+    compile project(":api-gateway-web-api")
+
     compile "org.springframework.boot:spring-boot-starter-webflux"
     compile 'org.springframework.cloud:spring-cloud-starter-gateway'
     compile "org.apache.commons:commons-lang3:3.6"
