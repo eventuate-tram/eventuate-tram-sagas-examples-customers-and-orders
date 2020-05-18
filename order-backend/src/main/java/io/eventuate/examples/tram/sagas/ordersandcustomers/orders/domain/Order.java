@@ -1,6 +1,8 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain;
 
 
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.OrderState;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.RejectionReason;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.OrderDetails;
 
 import javax.persistence.*;
