@@ -5,7 +5,7 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.domain.Cust
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.service.CustomerService;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.Order;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderRepository;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.ordercommon.OrderState;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.OrderState;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.OrderDetails;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.service.OrderService;
 import org.junit.Test;

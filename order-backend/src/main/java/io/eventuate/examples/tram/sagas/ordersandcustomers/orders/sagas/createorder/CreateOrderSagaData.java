@@ -1,7 +1,7 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas.createorder;
 
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.OrderDetails;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.ordercommon.RejectionReason;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.RejectionReason;
 
 public class CreateOrderSagaData  {
 

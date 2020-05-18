@@ -6,7 +6,7 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.replies
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.replies.CustomerNotFound;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.Order;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderRepository;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.ordercommon.RejectionReason;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.RejectionReason;
 import io.eventuate.tram.commands.consumer.CommandWithDestination;
 import io.eventuate.tram.sagas.orchestration.SagaDefinition;
 import io.eventuate.tram.sagas.simpledsl.SimpleSaga;

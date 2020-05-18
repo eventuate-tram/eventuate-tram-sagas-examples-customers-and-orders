@@ -6,8 +6,8 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.replies
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.OrderDetails;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.Order;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderRepository;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.ordercommon.OrderState;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.ordercommon.RejectionReason;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.OrderState;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.RejectionReason;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.stubbing.Answer;

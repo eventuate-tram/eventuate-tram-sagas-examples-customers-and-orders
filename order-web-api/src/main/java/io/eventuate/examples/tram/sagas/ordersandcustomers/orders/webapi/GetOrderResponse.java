@@ -1,7 +1,7 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.ordercommon.OrderState;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.ordercommon.RejectionReason;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.OrderState;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.RejectionReason;
 
 public class GetOrderResponse {
   private Long orderId;
