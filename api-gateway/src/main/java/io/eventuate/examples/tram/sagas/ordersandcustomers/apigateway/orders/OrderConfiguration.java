@@ -1,4 +1,4 @@
-package io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.orders;
+package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.orders;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.gateway.route.RouteLocator;

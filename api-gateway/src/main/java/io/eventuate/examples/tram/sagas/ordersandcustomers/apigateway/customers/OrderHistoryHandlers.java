@@ -1,8 +1,8 @@
-package io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.customers;
+package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.customers;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.proxies.CustomerNotFoundException;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.proxies.CustomerServiceProxy;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.proxies.OrderServiceProxy;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.CustomerNotFoundException;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.CustomerServiceProxy;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.OrderServiceProxy;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.apigateway.GetCustomerHistoryResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.webapi.GetCustomerResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.GetOrderResponse;

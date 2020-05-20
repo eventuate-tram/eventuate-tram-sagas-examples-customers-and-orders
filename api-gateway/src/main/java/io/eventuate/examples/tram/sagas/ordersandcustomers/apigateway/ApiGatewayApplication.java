@@ -1,4 +1,4 @@
-package io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway;
+package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway;
 
 
 import org.springframework.boot.SpringApplication;

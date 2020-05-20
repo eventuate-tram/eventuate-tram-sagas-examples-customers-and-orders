@@ -1,6 +1,6 @@
-package io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.proxies;
+package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.orders.OrderDestinations;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.orders.OrderDestinations;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.GetOrderResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ClientResponse;
