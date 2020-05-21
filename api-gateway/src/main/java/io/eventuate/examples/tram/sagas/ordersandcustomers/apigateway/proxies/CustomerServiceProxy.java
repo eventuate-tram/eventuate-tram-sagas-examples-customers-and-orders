@@ -44,9 +44,9 @@ public class CustomerServiceProxy {
           return Mono.error(new UnknownProxyException("Unknown: " + resp.statusCode()));
       }
     })
-            .transformDeferred(TimeLimiterOperator.of(timeLimiter))
-            .transformDeferred(CircuitBreakerOperator.of(cb))
-            //.onErrorResume(CallNotPermittedException.class, e -> Mono.just(null))
-            ;
+    .transformDeferred(TimeLimiterOperator.of(timeLimiter))
+    .transformDeferred(CircuitBreakerOperator.of(cb))
+    //.onErrorResume(CallNotPermittedException.class, e -> Mono.just(null))
+    ;
   }
 }

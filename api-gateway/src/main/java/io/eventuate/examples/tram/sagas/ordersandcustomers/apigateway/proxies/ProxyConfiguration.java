@@ -21,7 +21,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 
 @Configuration
 @Import({CommonConfiguration.class, OrderConfiguration.class, CustomerConfiguration.class})
@@ -33,8 +32,8 @@ public class ProxyConfiguration {
   private long apiGatewayTimeoutMillis;
 
   @Bean
-  public OrderServiceProxy orderServiceProxy(OrderDestinations orderDestinations, WebClient client) {
-    return new OrderServiceProxy(orderDestinations, client);
+  public OrderServiceProxy orderServiceProxy(OrderDestinations orderDestinations, WebClient client, CircuitBreakerRegistry circuitBreakerRegistry, TimeLimiterRegistry timeLimiterRegistry) {
+    return new OrderServiceProxy(orderDestinations, client, circuitBreakerRegistry, timeLimiterRegistry);
   }
 
   @Bean

@@ -18,6 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import static org.junit.Assert.assertEquals;
@@ -25,7 +27,7 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = CustomersAndOrdersE2ETestConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
-public class CustomersAndOrdersE2ETest{
+public class CustomersAndOrdersE2ETest {
 
   private static final String CUSTOMER_NAME = "John";
 
@@ -85,7 +87,7 @@ public class CustomersAndOrdersE2ETest{
   }
 
   @Test
-  public void shouldSupportHistory() {
+  public void shouldSupportOrderHistory() {
     CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(baseUrl("customers"),
             new CreateCustomerRequest(CUSTOMER_NAME, new Money("1000.00")), CreateCustomerResponse.class);
 
@@ -106,7 +108,7 @@ public class CustomersAndOrdersE2ETest{
       assertEquals(createCustomerResponse.getCustomerId(), customerResponse.getCustomerId());
       assertEquals(CUSTOMER_NAME, customerResponse.getName());
       assertEquals(1, customerResponse.getOrders().size());
-      assertEquals((Long)createOrderResponse.getOrderId(), customerResponse.getOrders().get(0).getOrderId());
+      assertEquals((Long) createOrderResponse.getOrderId(), customerResponse.getOrders().get(0).getOrderId());
       assertEquals(OrderState.APPROVED, customerResponse.getOrders().get(0).getOrderState());
     });
   }
@@ -121,4 +123,9 @@ public class CustomersAndOrdersE2ETest{
     });
   }
 
+  @Test(expected = HttpClientErrorException.NotFound.class)
+  public void shouldHandleOrderHistoryQueryForUnknownCustomer() {
+    restTemplate.getForEntity(baseUrl("customers", Long.toString(System.currentTimeMillis()), "orderhistory"),
+            GetCustomerHistoryResponse.class);
+  }
 }

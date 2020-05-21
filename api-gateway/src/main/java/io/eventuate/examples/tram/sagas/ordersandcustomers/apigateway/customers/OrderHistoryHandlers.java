@@ -34,9 +34,9 @@ public class OrderHistoryHandlers {
 
     Mono<Optional<GetCustomerHistoryResponse>> map = Mono
             .zip(customer, orders)
-            .map(objects ->
-                    objects.getT1().map(c -> {
-                      List<GetOrderResponse> os = objects.getT2();
+            .map(possibleCustomerAndOrders ->
+                    possibleCustomerAndOrders.getT1().map(c -> {
+                      List<GetOrderResponse> os = possibleCustomerAndOrders.getT2();
                       return new GetCustomerHistoryResponse(c.getCustomerId(), c.getName(), c.getCreditLimit(), os);
                     }));
     return map.flatMap(maybe ->
