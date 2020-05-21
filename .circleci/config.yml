@@ -34,7 +34,7 @@ jobs:
             mkdir -p ~/junit/
             find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
           when: always
-     - run:
+      - run:
           name: Print container logs
           command: |
             export TERM=dumb
