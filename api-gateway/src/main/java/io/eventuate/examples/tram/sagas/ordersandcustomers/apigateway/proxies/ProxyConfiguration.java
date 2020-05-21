@@ -8,6 +8,7 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.orders.Ord
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import io.github.resilience4j.timelimiter.TimeLimiterConfig;
 import io.github.resilience4j.timelimiter.TimeLimiterRegistry;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -19,6 +20,9 @@ import java.time.temporal.ChronoUnit;
 @Configuration
 @Import({CommonConfiguration.class, OrderConfiguration.class, CustomerConfiguration.class})
 public class ProxyConfiguration {
+
+  @Value("${apigateway.timeout.millis}")
+  private long apiGatewayTimeoutMillis;
 
   @Bean
   public OrderServiceProxy orderServiceProxy(OrderDestinations orderDestinations, WebClient client) {
@@ -32,7 +36,8 @@ public class ProxyConfiguration {
 
   @Bean
   public TimeLimiterRegistry timeLimiterRegistry() {
-    return TimeLimiterRegistry.of(TimeLimiterConfig.custom().timeoutDuration(Duration.of(1000, ChronoUnit.MILLIS)).build());
+    return TimeLimiterRegistry.of(TimeLimiterConfig.custom()
+            .timeoutDuration(Duration.of(apiGatewayTimeoutMillis, ChronoUnit.MILLIS)).build());
   }
 
 }

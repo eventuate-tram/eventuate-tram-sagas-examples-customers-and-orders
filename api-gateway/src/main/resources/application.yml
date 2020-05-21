@@ -2,8 +2,9 @@ logging:
   level:
     io:
       github:
-        resilience4j=TRACE:
+        resilience4j: DEBUG
 
+apigateway.timeout.millis: 1000
 
 customer:
   destinations:
