@@ -70,17 +70,16 @@ public class CustomerServiceProxyTest {
             .willReturn(aResponse()
                     .withStatus(500)
                     .withHeader("Content-Type", "application/json")
-                    .withUniformRandomDelay(5000, 5000)
                     .withBody(expectedResponse)));
 
 
     IntStream.range(0, 100).forEach(i -> {
               try {
                 customerServiceProxy.findCustomerById("99").block();
-              } catch (RuntimeException e) {
-                if (!(e.getCause() instanceof TimeoutException))
-                  throw e;
-
+              } catch (CallNotPermittedException e) {
+                throw e;
+              } catch (UnknownProxyException e) {
+                //
               }
             }
     );

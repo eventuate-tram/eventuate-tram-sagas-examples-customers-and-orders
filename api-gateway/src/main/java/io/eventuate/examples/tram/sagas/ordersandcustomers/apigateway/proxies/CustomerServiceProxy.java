@@ -41,7 +41,7 @@ public class CustomerServiceProxy {
           Mono<Optional<GetCustomerResponse>> notFound = Mono.just(Optional.empty());
           return notFound;
         default:
-          return Mono.error(new UnknownProxyException("Unknown" + resp.statusCode()));
+          return Mono.error(new UnknownProxyException("Unknown: " + resp.statusCode()));
       }
     })
             .transformDeferred(TimeLimiterOperator.of(timeLimiter))

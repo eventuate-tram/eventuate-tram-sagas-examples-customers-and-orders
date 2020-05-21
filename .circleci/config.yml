@@ -34,7 +34,15 @@ jobs:
             mkdir -p ~/junit/
             find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
           when: always
+     - run:
+          name: Print container logs
+          command: |
+            export TERM=dumb
+            ./.circleci/print-container-logs.sh
+          when: always
       - store_test_results:
           path: ~/junit
       - store_artifacts:
           path: ~/junit
+      - store_artifacts:
+          path: ~/container-logs
