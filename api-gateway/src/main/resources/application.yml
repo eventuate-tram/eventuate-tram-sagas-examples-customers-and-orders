@@ -1,0 +1,48 @@
+logging:
+  level:
+    io:
+      github:
+        resilience4j=TRACE:
+
+
+customer:
+  destinations:
+    customerServiceUrl: http://localhost:9090
+order:
+  destinations:
+    orderServiceUrl: http://localhost:9090
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 10
+      permittedNumberOfCallsInHalfOpenState: 10
+      waitDurationInOpenState: 10000
+      failureRateThreshold: 60
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: create_customer
+          uri: ${customer.destinations.customerServiceUrl}
+          predicates:
+            - Method=POST
+            - Path=/customers
+          filters:
+            - CircuitBreaker=myCircuitBreaker
+        - id: create_order
+          uri: ${order.destinations.orderServiceUrl}
+          predicates:
+            - Method=POST
+            - Path=/orders
+          filters:
+            - CircuitBreaker=myCircuitBreaker
+        - id: get_order
+          uri: ${order.destinations.orderServiceUrl}
+          predicates:
+            - Method=get
+            - Path=/orders/{orderId}
+          filters:
+            - CircuitBreaker=myCircuitBreaker
+

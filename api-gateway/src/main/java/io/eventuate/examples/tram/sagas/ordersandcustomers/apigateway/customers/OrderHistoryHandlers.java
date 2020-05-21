@@ -1,6 +1,5 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.customers;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.CustomerNotFoundException;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.CustomerServiceProxy;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.OrderServiceProxy;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.apigateway.GetCustomerHistoryResponse;
@@ -12,8 +11,9 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 
-import static org.springframework.web.reactive.function.BodyInserters.fromObject;
+import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 
 public class OrderHistoryHandlers {
 
@@ -28,21 +28,22 @@ public class OrderHistoryHandlers {
   public Mono<ServerResponse> getOrderHistory(ServerRequest serverRequest) {
     String customerId = serverRequest.pathVariable("customerId");
 
-    Mono<GetCustomerResponse> customer = customerService.findCustomerById(customerId);
+    Mono<Optional<GetCustomerResponse>> customer = customerService.findCustomerById(customerId);
 
     Mono<List<GetOrderResponse>> orders = orderService.findOrdersByCustomerId(customerId);
 
-    return Mono
+    Mono<Optional<GetCustomerHistoryResponse>> map = Mono
             .zip(customer, orders)
-            .map(objects -> {
-              GetCustomerResponse c = objects.getT1();
-              List<GetOrderResponse> os = objects.getT2();
-              return new GetCustomerHistoryResponse(c.getCustomerId(), c.getName(), c.getCreditLimit(), os);
-            })
-            .flatMap(c ->
-              ServerResponse.ok()
-                      .contentType(MediaType.APPLICATION_JSON)
-                      .body(fromObject(c))
-            ).onErrorResume(CustomerNotFoundException.class, e -> ServerResponse.notFound().build());
+            .map(objects ->
+                    objects.getT1().map(c -> {
+                      List<GetOrderResponse> os = objects.getT2();
+                      return new GetCustomerHistoryResponse(c.getCustomerId(), c.getName(), c.getCreditLimit(), os);
+                    }));
+    return map.flatMap(maybe ->
+            maybe.map(c ->
+                    ServerResponse.ok()
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body(fromValue(c)))
+                    .orElseGet(() -> ServerResponse.notFound().build()));
   }
 }

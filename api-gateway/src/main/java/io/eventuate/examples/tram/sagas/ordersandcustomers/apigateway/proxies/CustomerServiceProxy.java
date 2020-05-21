@@ -2,36 +2,51 @@ package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies;
 
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.customers.CustomerDestinations;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.webapi.GetCustomerResponse;
-import org.springframework.stereotype.Service;
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
+import io.github.resilience4j.reactor.circuitbreaker.operator.CircuitBreakerOperator;
+import io.github.resilience4j.reactor.timelimiter.TimeLimiterOperator;
+import io.github.resilience4j.timelimiter.TimeLimiter;
+import io.github.resilience4j.timelimiter.TimeLimiterRegistry;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-@Service
+import java.util.Optional;
+
 public class CustomerServiceProxy {
-  private CustomerDestinations customerDestinations;
+  private final CircuitBreaker cb;
 
   private WebClient client;
+  private String customerServiceUrl;
+  private TimeLimiter timeLimiter;
 
-  public CustomerServiceProxy(CustomerDestinations customerDestinations, WebClient client) {
-    this.customerDestinations = customerDestinations;
+  public CustomerServiceProxy(WebClient client, CircuitBreakerRegistry circuitBreakerRegistry, String customerServiceUrl, TimeLimiterRegistry timeLimiterRegistry) {
     this.client = client;
+    this.cb = circuitBreakerRegistry.circuitBreaker("MY_CIRCUIT_BREAKER");
+    this.timeLimiter = timeLimiterRegistry.timeLimiter("MY_TIME_LIMITER");
+    this.customerServiceUrl = customerServiceUrl;
   }
 
-  public Mono<GetCustomerResponse> findCustomerById(String customerId) {
+  public Mono<Optional<GetCustomerResponse>> findCustomerById(String customerId) {
     Mono<ClientResponse> response = client
             .get()
-            .uri(customerDestinations.getCustomerServiceUrl() + "/customers/{customerId}", customerId)
+            .uri(customerServiceUrl + "/customers/{customerId}", customerId)
             .exchange();
     return response.flatMap(resp -> {
       switch (resp.statusCode()) {
         case OK:
-          return resp.bodyToMono(GetCustomerResponse.class);
+          return resp.bodyToMono(GetCustomerResponse.class).map(Optional::of);
         case NOT_FOUND:
-          return Mono.error(new CustomerNotFoundException());
+          Mono<Optional<GetCustomerResponse>> notFound = Mono.just(Optional.empty());
+          return notFound;
         default:
-          return Mono.error(new RuntimeException("Unknown" + resp.statusCode()));
+          return Mono.error(new UnknownProxyException("Unknown" + resp.statusCode()));
       }
-    });
+    })
+            .transformDeferred(TimeLimiterOperator.of(timeLimiter))
+            .transformDeferred(CircuitBreakerOperator.of(cb))
+            //.onErrorResume(CallNotPermittedException.class, e -> Mono.just(null))
+            ;
   }
 }

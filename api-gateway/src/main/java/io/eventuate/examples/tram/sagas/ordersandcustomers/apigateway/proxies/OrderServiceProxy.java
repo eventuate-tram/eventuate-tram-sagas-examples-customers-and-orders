@@ -2,7 +2,6 @@ package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies;
 
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.orders.OrderDestinations;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.GetOrderResponse;
-import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -10,7 +9,6 @@ import reactor.core.publisher.Mono;
 import java.util.Arrays;
 import java.util.List;
 
-@Service
 public class OrderServiceProxy {
   private OrderDestinations orderDestinations;
 

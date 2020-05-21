@@ -1,4 +1,4 @@
-package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway;
+package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.common;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
