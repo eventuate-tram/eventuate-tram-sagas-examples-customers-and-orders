@@ -17,7 +17,7 @@ public class CustomerConfiguration {
 
   @Bean
   public RouterFunction<ServerResponse> orderHistoryHandlerRouting(OrderHistoryHandlers orderHistoryHandlers) {
-    return RouterFunctions.route(GET("/customers/orderhistory/{customerId}"), orderHistoryHandlers::getOrderHistory);
+    return RouterFunctions.route(GET("/customers/{customerId}/orderhistory"), orderHistoryHandlers::getOrderHistory);
   }
 
   @Bean

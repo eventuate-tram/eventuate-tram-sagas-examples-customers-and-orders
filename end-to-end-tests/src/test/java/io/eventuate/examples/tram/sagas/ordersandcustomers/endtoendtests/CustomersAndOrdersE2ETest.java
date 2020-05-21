@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = CustomersAndOrdersE2ETestConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -31,8 +32,22 @@ public class CustomersAndOrdersE2ETest{
   @Value("${host.name}")
   private String hostName;
 
-  private String baseUrl(String path) {
-    return "http://"+hostName+":8083/" + path;
+  private String baseUrl(String path, String... pathElements) {
+    assertNotNull("host", hostName);
+
+    StringBuilder sb = new StringBuilder("http://");
+    sb.append(hostName);
+    sb.append(":");
+    sb.append(8083);
+    sb.append("/");
+    sb.append(path);
+
+    for (String pe : pathElements) {
+      sb.append("/");
+      sb.append(pe);
+    }
+    String s = sb.toString();
+    return s;
   }
 
   @Autowired
@@ -80,7 +95,7 @@ public class CustomersAndOrdersE2ETest{
 
     Eventually.eventually(() -> {
       ResponseEntity<GetCustomerHistoryResponse> customerResponseEntity =
-              restTemplate.getForEntity(baseUrl("customers/orderhistory/" + createCustomerResponse.getCustomerId()),
+              restTemplate.getForEntity(baseUrl("customers", Long.toString(createCustomerResponse.getCustomerId()), "orderhistory"),
                       GetCustomerHistoryResponse.class);
 
       assertEquals(HttpStatus.OK, customerResponseEntity.getStatusCode());
