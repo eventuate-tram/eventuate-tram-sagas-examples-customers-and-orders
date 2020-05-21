@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 services:
   orderservice:
     build: ./order-service/
@@ -16,6 +16,11 @@ services:
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.jdbc.Driver
       EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING: zookeeper:2181
+      SPRING_SLEUTH_ENABLED: "true"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
+      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
+    networks:
+      - eventuate_network
 
   customerservice:
     build: ./customer-service/
@@ -33,6 +38,11 @@ services:
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.jdbc.Driver
       EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING: zookeeper:2181
+      SPRING_SLEUTH_ENABLED: "true"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
+      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
+    networks:
+      - eventuate_network
 
   apigateway:
     build: ./api-gateway
@@ -41,6 +51,11 @@ services:
     environment:
       ORDER_DESTINATIONS_ORDERSERVICEURL: http://orderservice:8080
       CUSTOMER_DESTINATIONS_CUSTOMERSERVICEURL: http://customerservice:8080
+      SPRING_SLEUTH_ENABLED: "true"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
+      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
+    networks:
+      - eventuate_network
 
   zookeeper:
     image: confluentinc/cp-zookeeper:5.2.4
@@ -48,6 +63,8 @@ services:
       - 2181:2181
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
+    networks:
+      - eventuate_network
 
   kafka:
     image: "confluentinc/cp-enterprise-kafka:5.2.4"
@@ -62,6 +79,8 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: LC
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - eventuate_network
 
   mysql:
     image: eventuateio/eventuate-tram-sagas-mysql:$EVENTUATE_SAGA_VERSION
@@ -71,6 +90,8 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=mysqluser
       - MYSQL_PASSWORD=mysqlpw
+    networks:
+      - eventuate_network
 
   cdcservice:
     image: eventuateio/eventuate-cdc-service:$EVENTUATE_CDC_VERSION
@@ -93,3 +114,19 @@ services:
       EVENTUATELOCAL_CDC_OFFSET_STORE_KEY: MySqlBinlog
       EVENTUATELOCAL_CDC_MYSQL_BINLOG_CLIENT_UNIQUE_ID: 1234567890
       EVENTUATELOCAL_CDC_READ_OLD_DEBEZIUM_DB_OFFSET_STORAGE_TOPIC: "false"
+    networks:
+      - eventuate_network
+
+  zipkin:
+    image: openzipkin/zipkin:2.21
+    ports:
+      - "9411:9411"
+    environment:
+      JAVA_OPTS: -Xmx128m
+    networks:
+      - eventuate_network
+
+networks:
+  eventuate_network:
+    external:
+      name: eventuate_network

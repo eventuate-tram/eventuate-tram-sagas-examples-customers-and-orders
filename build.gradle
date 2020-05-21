@@ -16,8 +16,8 @@ apply plugin: 'docker-compose'
 subprojects {
 
     apply plugin: "java"
-    sourceCompatibility = 8
-    targetCompatibility = 8
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
     repositories {
         mavenCentral()
@@ -36,17 +36,17 @@ dockerCompose {
     environment.put "EVENTUATE_CDC_VERSION", eventuateCdcImageVersion
     environment.put "EVENTUATE_SAGA_VERSION", eventuateTramSagasImageVersion
 
-    mysqlcdc {
+    mysqlinfrastructure {
         projectName = null
         useComposeFiles = ["docker-compose-mysql.yml"]
-        startedServices = ["cdcservice"]
+        startedServices = ["cdcservice", "zipkin"]
     }
     mysql {
         projectName = null
         useComposeFiles = ["docker-compose-mysql.yml"]
     }
 
-    postgrescdc {
+    postgresinfrastructure {
         projectName = null
         useComposeFiles = ["docker-compose-postgres.yml"]
         startedServices = ["cdcservice"]
@@ -55,4 +55,30 @@ dockerCompose {
         projectName = null
         useComposeFiles = ["docker-compose-postgres.yml"]
     }
+
+    javaDevelopment {
+        projectName = null
+        useComposeFiles = ["docker-compose-java-development-build.yml"]
+    }
+
+    javaDevelopmentImage {
+        projectName = null
+        useComposeFiles = ["java-development/docker-compose-java-development-build.yml"]
+    }
+}
+
+task prepareJavaDevelopmentDockerImage(type:Exec) {
+    commandLine './prepare-java-development-docker-image.sh'
+}
+
+javaDevelopmentImageComposeBuild.dependsOn(prepareJavaDevelopmentDockerImage)
+
+task buildAndStartServicesMySql(type: GradleBuild) {
+    List<String> t = []
+
+    t.add("mysqlinfrastructureComposeUp")
+    t.addAll(subprojects.collect { it.name }.collect { ":" + it + ":assemble" })
+    t.add("mysqlComposeUp")
+
+    tasks = t
 }
