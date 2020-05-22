@@ -73,12 +73,21 @@ task prepareJavaDevelopmentDockerImage(type:Exec) {
 
 javaDevelopmentImageComposeBuild.dependsOn(prepareJavaDevelopmentDockerImage)
 
+subprojects.each {
+  if (it.name.endsWith("-service") || it.name.endsWith("-gateway")) {
+    mysqlComposeUp.dependsOn(":" + it.name + ":assemble")
+  }
+ }
+
+mysqlComposeUp.dependsOn(mysqlinfrastructureComposeUp)
+
 task buildAndStartServicesMySql(type: GradleBuild) {
-    List<String> t = []
-
-    t.add("mysqlinfrastructureComposeUp")
-    t.addAll(subprojects.collect { it.name }.collect { ":" + it + ":assemble" })
-    t.add("mysqlComposeUp")
-
-    tasks = t
+    tasks = ["mysqlComposeUp"]
 }
+
+task endToEndTests(type: GradleBuild) {
+    tasks = [":end-to-end-tests:test"]
+}
+
+endToEndTests.dependsOn(mysqlComposeUp)
+endToEndTests.dependsOn(":end-to-end-tests:cleanTest")
