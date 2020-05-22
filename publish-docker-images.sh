@@ -6,8 +6,6 @@ export DOCKER_IMAGE_TAG=latest
 
 docker login -u ${DOCKER_USER_ID?} -p ${DOCKER_PASSWORD?}
 
-./gradlew assemble mysqlComposeBuild mysqlComposePush
-
 ./gradlew javaDevelopmentComposePull || echo no image to pull
 
 ./gradlew javaDevelopmentImageComposeBuild
