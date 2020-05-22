@@ -1,4 +1,4 @@
-package io.eventuate.examples.tram.sagas.ordersandcustomers.apiagateway.customers;
+package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.customers;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

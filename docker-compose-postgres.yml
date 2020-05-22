@@ -41,6 +41,8 @@ services:
     environment:
       ORDER_DESTINATIONS_ORDERSERVICEURL: http://orderservice:8080
       CUSTOMER_DESTINATIONS_CUSTOMERSERVICEURL: http://customerservice:8080
+      JAVA_OPTS: -Ddebug
+      APIGATEWAY_TIMEOUT_MILLIS: ${APIGATEWAY_TIMEOUT_MILLIS:-1000}
 
   zookeeper:
     image: confluentinc/cp-zookeeper:5.2.4

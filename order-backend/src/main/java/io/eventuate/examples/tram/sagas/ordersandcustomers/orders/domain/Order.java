@@ -16,10 +16,13 @@ public class Order {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Enumerated(EnumType.STRING)
   private OrderState state;
 
   @Embedded
   private OrderDetails orderDetails;
+
+  @Enumerated(EnumType.STRING)
   private RejectionReason rejectionReason;
 
   @Version
