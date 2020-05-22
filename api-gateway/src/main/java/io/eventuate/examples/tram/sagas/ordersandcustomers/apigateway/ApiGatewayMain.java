@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
-public class ApiGatewayApplication {
+public class ApiGatewayMain {
 
   public static void main(String[] args) {
-    SpringApplication.run(ApiGatewayApplication.class, args);
+    SpringApplication.run(ApiGatewayMain.class, args);
   }
 }
 

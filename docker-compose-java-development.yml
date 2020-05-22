@@ -1,0 +1,8 @@
+version: '3.5'
+services:
+
+  java-development:
+    image: eventuateio/eventuate-tram-sagas-examples-customers-and-orders-java-development:latest
+    volumes:
+      - .:/eventuate-tram-sagas-examples-customers-and-orders-java-development
+      - /var/run/docker.sock:/var/run/docker.sock

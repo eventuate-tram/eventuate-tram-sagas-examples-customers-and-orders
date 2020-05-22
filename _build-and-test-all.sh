@@ -5,12 +5,11 @@ set -e
 
 ./gradlew testClasses
 
-dockercdc="./gradlew ${DATABASE?}cdcCompose"
+dockerinfrastructure="./gradlew ${DATABASE?}infrastructureCompose"
 dockerall="./gradlew ${DATABASE?}Compose"
 
 ${dockerall}Down
-${dockercdc}Build
-${dockercdc}Up
+${dockerinfrastructure}Up
 
 #Testing db cli
 if [ "${DATABASE}" == "mysql" ]; then
@@ -24,7 +23,6 @@ fi
 
 ./gradlew -x :end-to-end-tests:test build
 
-${dockerall}Build
 ${dockerall}Up
 
 ./gradlew :end-to-end-tests:cleanTest :end-to-end-tests:test
