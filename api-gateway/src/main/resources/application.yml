@@ -1,5 +1,12 @@
+spring.application.name: api-gateway
+
 logging.level.io.github.resilience4j: DEBUG
 logging.level.io.eventuate.examples: INFO
+
+spring.sleuth.enabled: true
+spring.sleuth.sampler.probability: 1
+spring.zipkin.base.url: http://${DOCKER_HOST_IP:localhost}:9411/
+
 
 apigateway.timeout.millis: 1000
 
@@ -43,4 +50,3 @@ spring:
             - Path=/orders/{orderId}
           filters:
             - CircuitBreaker=myCircuitBreaker
-

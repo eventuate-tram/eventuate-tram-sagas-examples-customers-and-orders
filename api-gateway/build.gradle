@@ -7,6 +7,7 @@ dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-gateway:$springCloudGatewayVersion"
         mavenBom "org.springframework.cloud:spring-cloud-contract-dependencies:$springCloudContractDependenciesVersion"
+        mavenBom "org.springframework.cloud:spring-cloud-sleuth:${project.ext.springCloudSleuthVersion}"
     }
 }
 
@@ -25,6 +26,10 @@ dependencies {
     compile "io.github.resilience4j:resilience4j-spring-boot2:1.1.0"
     compile "org.apache.commons:commons-lang3:3.6"
     compile "org.springframework.boot:spring-boot-starter-actuator"
+
+    compile 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    compile 'org.springframework.cloud:spring-cloud-starter-zipkin'
+    compile 'io.zipkin.brave:brave-bom:4.17.1'
 
     testCompile "org.springframework.cloud:spring-cloud-contract-wiremock"
     testCompile "junit:junit:4.12"
