@@ -1,3 +1,7 @@
+plugins {
+    id "de.undercouch.download" version "4.0.0"
+}
+
 apply plugin: "io.spring.dependency-management"
 
 apply plugin: "java"
@@ -13,6 +17,37 @@ dependencyManagement {
 
 configurations.all {
     exclude  module: "spring-boot-starter-web"
+}
+
+task swaggerUiDownload {
+    doLast {
+        download {
+            src "https://github.com/swagger-api/swagger-ui/archive/v${swaggerUiVersion}.zip"
+            dest "${buildDir}/swagger-ui.zip"
+            onlyIfNewer true
+        }
+    }
+}
+
+task unzipSwaggerUi(type: Copy) {
+    dependsOn swaggerUiDownload
+    from zipTree(file("${buildDir}/swagger-ui.zip"))
+    include "*/dist/**"
+    into file("${buildDir}")
+}
+
+bootJar {
+    dependsOn unzipSwaggerUi
+
+    from("${buildDir}/swagger-ui-${swaggerUiVersion}/dist") {
+        into "BOOT-INF/classes/swagger-ui"
+        exclude "index.html"
+    }
+
+    from("${buildDir}/swagger-ui-${swaggerUiVersion}/dist/index.html") {
+        into "BOOT-INF/classes/swagger-ui"
+        filter {it.replaceAll("\"https://petstore.swagger.io/v2/swagger.json\"", "window.location.origin + \"/swagger-ui/swagger.yml\"") }
+    }
 }
 
 dependencies {
@@ -34,5 +69,4 @@ dependencies {
     testCompile "org.springframework.cloud:spring-cloud-contract-wiremock"
     testCompile "junit:junit:4.12"
     testCompile "org.springframework.boot:spring-boot-starter-test"
-
 }

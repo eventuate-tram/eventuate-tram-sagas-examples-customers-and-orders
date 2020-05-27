@@ -1,3 +1,5 @@
+spring.webflux.static-path-pattern: /swagger-ui/**
+
 spring.application.name: api-gateway
 
 logging.level.io.github.resilience4j: DEBUG
@@ -26,6 +28,8 @@ resilience4j.circuitbreaker:
       failureRateThreshold: 60
 
 spring:
+  resources:
+    static-locations: classpath:/swagger-ui
   cloud:
     gateway:
       routes:
