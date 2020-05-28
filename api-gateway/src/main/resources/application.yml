@@ -1,4 +1,4 @@
-spring.webflux.static-path-pattern: /swagger-ui/**
+spring.webflux.static-path-pattern: /swagger/**
 
 spring.application.name: api-gateway
 
@@ -29,7 +29,7 @@ resilience4j.circuitbreaker:
 
 spring:
   resources:
-    static-locations: classpath:/swagger-ui
+    static-locations: classpath:/swagger, classpath:META-INF/swagger-ui
   cloud:
     gateway:
       routes:
