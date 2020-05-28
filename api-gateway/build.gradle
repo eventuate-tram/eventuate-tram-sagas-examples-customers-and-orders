@@ -20,6 +20,8 @@ dependencies {
 
     compile project(":api-gateway-web-api")
 
+    compile "io.eventuate.util:eventuate-util-swagger-ui:$eventuateUtilVersion"
+
     compile "org.springframework.boot:spring-boot-starter-webflux"
     compile "org.springframework.cloud:spring-cloud-starter-gateway:$springCloudGatewayVersion"
     compile "org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j:1.0.2.RELEASE"
@@ -34,5 +36,4 @@ dependencies {
     testCompile "org.springframework.cloud:spring-cloud-contract-wiremock"
     testCompile "junit:junit:4.12"
     testCompile "org.springframework.boot:spring-boot-starter-test"
-
 }
