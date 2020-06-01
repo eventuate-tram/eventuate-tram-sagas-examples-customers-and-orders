@@ -1,7 +1,10 @@
 version: '3'
 services:
   orderservice:
-    build: ./order-service/
+    build:
+      context: ./order-service/
+      args:
+        baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION?}
     ports:
       - "8081:8080"
     depends_on:
@@ -16,13 +19,12 @@ services:
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
       EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING: zookeeper:2181
-      JAVA_OPTS: -Xmx64m
 
   customerservice:
     build:
-        context: ./customer-service/
-        args:
-          baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION?}
+      context: ./customer-service/
+      args:
+        baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION?}
     ports:
       - "8082:8080"
     depends_on:
@@ -37,16 +39,18 @@ services:
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
       EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING: zookeeper:2181
-      JAVA_OPTS: -Xmx64m
 
   apigateway:
-    build: ./api-gateway
+    build:
+      context: ./api-gateway/
+      args:
+        baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION?}
     ports:
       - "8083:8080"
     environment:
       ORDER_DESTINATIONS_ORDERSERVICEURL: http://orderservice:8080
       CUSTOMER_DESTINATIONS_CUSTOMERSERVICEURL: http://customerservice:8080
-      JAVA_OPTS: -Ddebug -Xmx64m
+      JAVA_OPTS: -Ddebug
       APIGATEWAY_TIMEOUT_MILLIS: ${APIGATEWAY_TIMEOUT_MILLIS:-1000}
 
   zookeeper:
@@ -58,7 +62,7 @@ services:
       KAFKA_HEAP_OPTS: -Xmx64m
 
   kafka:
-    image: "confluentinc/cp-enterprise-kafka:5.2.4"
+    image: "confluentinc/cp-kafka:5.2.4"
     ports:
       - 9092:9092
     depends_on:

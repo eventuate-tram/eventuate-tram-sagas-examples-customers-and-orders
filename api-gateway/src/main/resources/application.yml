@@ -1,4 +1,4 @@
-spring.webflux.static-path-pattern: /swagger/**
+spring.webflux.static-path-pattern: /**
 
 spring.application.name: api-gateway
 
@@ -14,10 +14,10 @@ apigateway.timeout.millis: 1000
 
 customer:
   destinations:
-    customerServiceUrl: http://localhost:9090
+    customerServiceUrl: http://${DOCKER_HOST_IP:localhost}:8082
 order:
   destinations:
-    orderServiceUrl: http://localhost:9090
+    orderServiceUrl: http://${DOCKER_HOST_IP:localhost}:8081
 
 resilience4j.circuitbreaker:
   configs:
@@ -29,7 +29,7 @@ resilience4j.circuitbreaker:
 
 spring:
   resources:
-    static-locations: classpath:/swagger, classpath:META-INF/swagger-ui
+    static-locations: classpath:/static, classpath:META-INF/swagger-ui
   cloud:
     gateway:
       routes:
