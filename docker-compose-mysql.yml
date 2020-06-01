@@ -22,7 +22,10 @@ services:
       JAVA_OPTS: -Xmx64m
 
   customerservice:
-    build: ./customer-service/
+    build:
+        context: ./customer-service/
+        args:
+          baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION?}
     ports:
       - "8082:8080"
     depends_on:
