@@ -1,9 +1,0 @@
-dependencies {
-    compile project(":customer-backend")
-    compile project(":order-service")
-
-    testCompile "io.eventuate.tram.core:eventuate-tram-spring-in-memory:$eventuateTramVersion"
-    testCompile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-in-memory:$eventuateTramSagasVersion"
-    testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-}
-

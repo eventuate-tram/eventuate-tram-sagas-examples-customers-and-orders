@@ -4,9 +4,9 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.Order;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderRepository;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.service.OrderSagaService;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.apiweb.CreateOrderRequest;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.apiweb.CreateOrderResponse;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.apiweb.GetOrderResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.CreateOrderRequest;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.CreateOrderResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrderResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

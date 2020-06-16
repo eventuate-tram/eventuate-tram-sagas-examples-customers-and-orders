@@ -1,6 +1,6 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.webapi.GetCustomerResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.GetCustomerResponse;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import org.json.JSONException;
 import org.json.JSONObject;

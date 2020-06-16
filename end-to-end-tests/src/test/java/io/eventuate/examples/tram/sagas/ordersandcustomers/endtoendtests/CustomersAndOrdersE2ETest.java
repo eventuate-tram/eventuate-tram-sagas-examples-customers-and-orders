@@ -1,14 +1,14 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests;
 
 import io.eventuate.examples.tram.sagas.ordersandcustomers.commondomain.Money;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.apigateway.GetCustomerHistoryResponse;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.webapi.CreateCustomerRequest;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.webapi.CreateCustomerResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.api.web.GetCustomerHistoryResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.CreateCustomerRequest;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.CreateCustomerResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.OrderState;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.RejectionReason;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.apiweb.CreateOrderRequest;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.apiweb.CreateOrderResponse;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.apiweb.GetOrderResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.CreateOrderRequest;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.CreateOrderResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrderResponse;
 import io.eventuate.util.test.async.Eventually;
 import org.junit.Test;
 import org.junit.runner.RunWith;

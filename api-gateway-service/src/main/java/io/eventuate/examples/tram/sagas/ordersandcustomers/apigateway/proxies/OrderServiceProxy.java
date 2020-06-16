@@ -1,7 +1,7 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies;
 
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.orders.OrderDestinations;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.apiweb.GetOrderResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrderResponse;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import io.github.resilience4j.reactor.circuitbreaker.operator.CircuitBreakerOperator;
