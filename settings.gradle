@@ -1,14 +1,16 @@
 include 'common'
 include 'common-swagger'
-include 'customer-api'
-include 'customer-backend'
-include 'customer-web-api'
+
+include 'customer-service-api-web'
+include 'customer-service-api-messaging'
 include 'customer-service'
-include 'order-backend'
-include 'order-common'
-include 'order-web-api'
+
+include 'order-service-api-web'
+include 'order-service-api-messaging'
 include 'order-service'
-include 'api-gateway-web-api'
-include 'api-gateway'
-include 'integration-tests'
+
+include 'api-gateway-service-api-web'
+include 'api-gateway-service'
+
+//include 'integration-tests'
 include 'end-to-end-tests'
