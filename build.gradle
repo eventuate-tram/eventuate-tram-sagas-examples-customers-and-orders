@@ -28,6 +28,9 @@ subprojects {
         eventuateMavenRepoUrl.split(',').each { repoUrl -> maven { url repoUrl } }
     }
 
+    dependencies {
+        implementation(platform("io.eventuate.platform:platform-dependencies:$eventuateBomVersion"))
+    }
 }
 
 dockerCompose {
@@ -68,17 +71,17 @@ dockerCompose {
     }
 }
 
-task prepareJavaDevelopmentDockerImage(type:Exec) {
+task prepareJavaDevelopmentDockerImage(type: Exec) {
     commandLine './prepare-java-development-docker-image.sh'
 }
 
 javaDevelopmentImageComposeBuild.dependsOn(prepareJavaDevelopmentDockerImage)
 
 subprojects.each {
-  if (it.name.endsWith("-service")) {
-    mysqlComposeUp.dependsOn(":" + it.name + ":assemble")
-  }
- }
+    if (it.name.endsWith("-service")) {
+        mysqlComposeUp.dependsOn(":" + it.name + ":assemble")
+    }
+}
 
 mysqlComposeUp.dependsOn(mysqlinfrastructureComposeUp)
 
