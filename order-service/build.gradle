@@ -5,12 +5,10 @@ dependencies {
     compile project(":order-service-api-messaging")
     compile project(":order-service-api-web")
 
-    compile "io.eventuate.tram.core:eventuate-tram-spring-producer-jdbc"
-    compile "io.eventuate.tram.core:eventuate-tram-spring-consumer-kafka"
-    compile "io.eventuate.tram.core:eventuate-tram-spring-consumer-jdbc"
     compile "io.eventuate.tram.core:eventuate-tram-spring-optimistic-locking"
 
-    compile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-orchestration-simple-dsl"
+    compile "io.eventuate.tram.core:eventuate-tram-spring-jdbc-kafka"
+    compile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-orchestration-simple-dsl-starter:0.15.0-SNAPSHOT" //TODO: remove version when BOM is updated
 
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"

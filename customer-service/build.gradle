@@ -6,10 +6,8 @@ dependencies {
     compile project(":customer-service-api-web")
     compile project(":customer-service-api-messaging")
 
-    compile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-participant"
-    compile "io.eventuate.tram.core:eventuate-tram-spring-producer-jdbc"
-    compile "io.eventuate.tram.core:eventuate-tram-spring-consumer-kafka"
-    compile "io.eventuate.tram.core:eventuate-tram-spring-consumer-jdbc"
+    compile "io.eventuate.tram.core:eventuate-tram-spring-jdbc-kafka"
+    compile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-participant-starter:0.15.0-SNAPSHOT" //TODO: remove version when BOM is updated
     compile "io.eventuate.tram.core:eventuate-tram-spring-optimistic-locking"
 
     compile 'mysql:mysql-connector-java:5.1.36'
