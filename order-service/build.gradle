@@ -8,7 +8,6 @@ dependencies {
     compile "io.eventuate.tram.core:eventuate-tram-spring-optimistic-locking"
 
     compile "io.eventuate.tram.core:eventuate-tram-spring-jdbc-kafka"
-    compile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-orchestration-simple-dsl"
     compile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-orchestration-simple-dsl-starter:0.15.0.BUILD-SNAPSHOT" //TODO: remove version when BOM is updated
 
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
