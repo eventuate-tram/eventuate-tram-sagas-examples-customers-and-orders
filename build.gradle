@@ -45,6 +45,9 @@ dockerCompose {
     mysql {
         projectName = null
         useComposeFiles = ["docker-compose-mysql.yml"]
+
+        if (project.hasProperty('startedServices'))
+          startedServices= project.ext.startedServices.split(',')
     }
 
     postgresinfrastructure {
