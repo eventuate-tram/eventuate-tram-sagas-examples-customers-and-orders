@@ -1,0 +1,6 @@
+dependencies {
+    compile project(":common")
+    compile project(":customer-service-api-messaging")
+}
+
+

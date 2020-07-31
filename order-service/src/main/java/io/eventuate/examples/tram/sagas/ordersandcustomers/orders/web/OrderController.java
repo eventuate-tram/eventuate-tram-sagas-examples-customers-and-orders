@@ -1,12 +1,12 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.web;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.OrderDetails;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.OrderDetails;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.Order;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderRepository;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.service.OrderService;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.CreateOrderRequest;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.CreateOrderResponse;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.GetOrderResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.service.OrderSagaService;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.CreateOrderRequest;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.CreateOrderResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrderResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,18 +18,18 @@ import java.util.stream.Collectors;
 @RestController
 public class OrderController {
 
-  private OrderService orderService;
+  private OrderSagaService orderSagaService;
   private OrderRepository orderRepository;
 
   @Autowired
-  public OrderController(OrderService orderService, OrderRepository orderRepository) {
-    this.orderService = orderService;
+  public OrderController(OrderSagaService orderSagaService, OrderRepository orderRepository) {
+    this.orderSagaService = orderSagaService;
     this.orderRepository = orderRepository;
   }
 
   @RequestMapping(value = "/orders", method = RequestMethod.POST)
   public CreateOrderResponse createOrder(@RequestBody CreateOrderRequest createOrderRequest) {
-    Order order = orderService.createOrder(new OrderDetails(createOrderRequest.getCustomerId(), createOrderRequest.getOrderTotal()));
+    Order order = orderSagaService.createOrder(new OrderDetails(createOrderRequest.getCustomerId(), createOrderRequest.getOrderTotal()));
     return new CreateOrderResponse(order.getId());
   }
 

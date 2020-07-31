@@ -40,7 +40,7 @@ dockerCompose {
     mysqlinfrastructure {
         projectName = null
         useComposeFiles = ["docker-compose-mysql.yml"]
-        startedServices = ["cdcservice", "zipkin"]
+        startedServices = ["cdc-service", "zipkin"]
     }
     mysql {
         projectName = null
@@ -50,7 +50,7 @@ dockerCompose {
     postgresinfrastructure {
         projectName = null
         useComposeFiles = ["docker-compose-postgres.yml"]
-        startedServices = ["cdcservice"]
+        startedServices = ["cdc-service"]
     }
     postgres {
         projectName = null
@@ -75,7 +75,7 @@ task prepareJavaDevelopmentDockerImage(type:Exec) {
 javaDevelopmentImageComposeBuild.dependsOn(prepareJavaDevelopmentDockerImage)
 
 subprojects.each {
-  if (it.name.endsWith("-service") || it.name.endsWith("-gateway")) {
+  if (it.name.endsWith("-service")) {
     mysqlComposeUp.dependsOn(":" + it.name + ":assemble")
   }
  }

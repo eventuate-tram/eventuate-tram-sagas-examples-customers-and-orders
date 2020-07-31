@@ -1,14 +1,14 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests;
 
 import io.eventuate.examples.tram.sagas.ordersandcustomers.commondomain.Money;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.apigateway.GetCustomerHistoryResponse;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.webapi.CreateCustomerRequest;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.webapi.CreateCustomerResponse;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.OrderState;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.RejectionReason;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.CreateOrderRequest;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.CreateOrderResponse;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.GetOrderResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.api.web.GetCustomerHistoryResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.CreateCustomerRequest;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.CreateCustomerResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.OrderState;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.RejectionReason;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.CreateOrderRequest;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.CreateOrderResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrderResponse;
 import io.eventuate.util.test.async.Eventually;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import static org.junit.Assert.assertEquals;

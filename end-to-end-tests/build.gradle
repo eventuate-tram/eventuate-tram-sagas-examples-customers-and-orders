@@ -1,7 +1,7 @@
 dependencies {
-    compile project(":customer-web-api")
-    compile project(":order-web-api")
-    compile project(":api-gateway-web-api")
+    compile project(":customer-service-api-web")
+    compile project(":order-service-api-web")
+    compile project(":api-gateway-service-api-web")
 
     testCompile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
     testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"

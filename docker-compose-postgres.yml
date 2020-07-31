@@ -1,6 +1,6 @@
 version: '3'
 services:
-  orderservice:
+  order-service:
     build:
       context: ./order-service/
       args:
@@ -11,7 +11,7 @@ services:
       - postgres
       - kafka
       - zookeeper
-      - cdcservice
+      - cdc-service
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres/eventuate
       SPRING_DATASOURCE_USERNAME: eventuate
@@ -20,7 +20,7 @@ services:
       EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING: zookeeper:2181
 
-  customerservice:
+  customer-service:
     build:
       context: ./customer-service/
       args:
@@ -31,7 +31,7 @@ services:
       - postgres
       - kafka
       - zookeeper
-      - cdcservice
+      - cdc-service
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres/eventuate
       SPRING_DATASOURCE_USERNAME: eventuate
@@ -40,16 +40,16 @@ services:
       EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING: zookeeper:2181
 
-  apigateway:
+  api-gateway-service:
     build:
-      context: ./api-gateway/
+      context: ./api-gateway-service/
       args:
         baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION?}
     ports:
       - "8083:8080"
     environment:
-      ORDER_DESTINATIONS_ORDERSERVICEURL: http://orderservice:8080
-      CUSTOMER_DESTINATIONS_CUSTOMERSERVICEURL: http://customerservice:8080
+      ORDER_DESTINATIONS_ORDERSERVICEURL: http://order-service:8080
+      CUSTOMER_DESTINATIONS_CUSTOMERSERVICEURL: http://customer-service:8080
       JAVA_OPTS: -Ddebug
       APIGATEWAY_TIMEOUT_MILLIS: ${APIGATEWAY_TIMEOUT_MILLIS:-1000}
 
@@ -85,7 +85,7 @@ services:
       POSTGRES_USER: eventuate
       POSTGRES_PASSWORD: eventuate
 
-  cdcservice:
+  cdc-service:
     image: eventuateio/eventuate-cdc-service:$EVENTUATE_CDC_VERSION
     ports:
       - "8099:8080"
