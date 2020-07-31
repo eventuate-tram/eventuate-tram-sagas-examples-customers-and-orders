@@ -16,7 +16,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @EnableJpaRepositories
 @EnableAutoConfiguration
-@Import({SagaOrchestratorConfiguration.class, OptimisticLockingDecoratorConfiguration.class})
+@Import(OptimisticLockingDecoratorConfiguration.class)
 public class OrderConfiguration {
 
   @Bean

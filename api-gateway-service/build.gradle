@@ -22,6 +22,8 @@ dependencies {
 
     compile "io.eventuate.util:eventuate-util-swagger-ui:$eventuateUtilVersion"
 
+    compile "io.projectreactor:reactor-tools:3.3.3.RELEASE"
+
     compile "org.springframework.boot:spring-boot-starter-webflux"
     compile "org.springframework.cloud:spring-cloud-starter-gateway:$springCloudGatewayVersion"
     compile "org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j:1.0.2.RELEASE"

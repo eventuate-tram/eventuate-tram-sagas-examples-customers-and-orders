@@ -5,12 +5,10 @@ dependencies {
     compile project(":order-service-api-messaging")
     compile project(":order-service-api-web")
 
-    compile "io.eventuate.tram.core:eventuate-tram-spring-producer-jdbc:$eventuateTramVersion"
-    compile "io.eventuate.tram.core:eventuate-tram-spring-consumer-kafka:$eventuateTramVersion"
-    compile "io.eventuate.tram.core:eventuate-tram-spring-consumer-jdbc:$eventuateTramVersion"
-    compile "io.eventuate.tram.core:eventuate-tram-spring-optimistic-locking:$eventuateTramVersion"
+    compile "io.eventuate.tram.core:eventuate-tram-spring-optimistic-locking"
 
-    compile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-orchestration-simple-dsl:$eventuateTramSagasVersion"
+    compile "io.eventuate.tram.core:eventuate-tram-spring-jdbc-kafka"
+    compile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-orchestration-simple-dsl-starter"
 
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
@@ -21,7 +19,7 @@ dependencies {
         exclude group: "org.slf4j", module: "slf4j-simple"
     }
 
-    testCompile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-testing-support:$eventuateTramSagasVersion"
+    testCompile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-testing-support"
     testCompile "junit:junit:4.12"
     testCompile "org.mockito:mockito-core:2.23.0"
 }
