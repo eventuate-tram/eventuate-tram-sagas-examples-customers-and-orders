@@ -1,14 +1,23 @@
 #! /bin/bash
 
-host=$1
-ports=$2
-
-shift 2
-
 done=false
+
+echo waiting for: $*
+
+host=${1?}
+shift
+health_url=${1?}
+shift
+ports=$*
+
+if [ -z "$ports" ] ; then
+	echo no ports
+	exit 99
+fi
+
 while [[ "$done" = false ]]; do
 	for port in $ports; do
-		curl -q http://${host}:${port}/health >& /dev/null
+		curl --fail http://${host}:${port}/${health_url} >& /dev/null
 		if [[ "$?" -eq "0" ]]; then
 			done=true
 		else
@@ -17,7 +26,7 @@ while [[ "$done" = false ]]; do
 		fi
 	done
 	if [[ "$done" = true ]]; then
-		echo services are started
+		echo connected
 		break;
   fi
 	echo -n .

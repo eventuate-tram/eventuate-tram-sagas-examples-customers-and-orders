@@ -1,6 +1,8 @@
 version: '3.5'
 services:
   order-service:
+    env_file:
+      - ${ENV_FILE:-docker-compose-env-files/empty.env}
     build:
       context: ./order-service/
       args:
@@ -24,6 +26,8 @@ services:
       SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
 
   customer-service:
+    env_file:
+      - ${ENV_FILE:-docker-compose-env-files/empty.env}
     build:
       context: ./customer-service/
       args:
@@ -115,6 +119,7 @@ services:
       EVENTUATELOCAL_CDC_OFFSET_STORE_KEY: MySqlBinlog
       EVENTUATELOCAL_CDC_MYSQL_BINLOG_CLIENT_UNIQUE_ID: 1234567890
       EVENTUATELOCAL_CDC_READ_OLD_DEBEZIUM_DB_OFFSET_STORAGE_TOPIC: "false"
+      EVENTUATE_OUTBOX_ID: 1
       JAVA_OPTS: -Xmx64m
 
   zipkin:
