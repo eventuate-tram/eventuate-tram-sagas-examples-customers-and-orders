@@ -3,6 +3,8 @@ package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas.createo
 import io.eventuate.examples.tram.sagas.ordersandcustomers.commondomain.Money;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.commands.ReserveCreditCommand;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.replies.CustomerCreditLimitExceeded;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.replies.CustomerCreditReserved;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.replies.CustomerNotFound;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.common.OrderDetails;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.Order;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderRepository;
@@ -57,14 +59,14 @@ public class CreateOrderSagaTest {
             command(new ReserveCreditCommand(customerId, orderId, orderTotal))
             .to("customerService")
             .andGiven()
-            .successReply()
+            .successReply(new CustomerCreditReserved())
             .expectCompletedSuccessfully();
 
     assertEquals(OrderState.APPROVED, order.getState());
   }
 
   @Test
-  public void shouldRejectCreateOrder() {
+  public void shouldRejectCreateOrderWithInsufficientCredit() {
     when(orderRepository.save(any(Order.class))).then((Answer<Order>) invocation -> {
       order = invocation.getArgument(0);
       order.setId(orderId);
@@ -91,5 +93,34 @@ public class CreateOrderSagaTest {
     assertEquals(OrderState.REJECTED, order.getState());
     assertEquals(RejectionReason.INSUFFICIENT_CREDIT, order.getRejectionReason());
 
+  }
+
+  @Test
+  public void shouldRejectCreateOrderWithCustomerNotFound() {
+    when(orderRepository.save(any(Order.class))).then((Answer<Order>) invocation -> {
+      order = invocation.getArgument(0);
+      order.setId(orderId);
+      return order;
+    });
+
+    when(orderRepository.findById(orderId)).then(invocation -> {
+      return Optional.of(order);
+    });
+
+    CreateOrderSagaData data = new CreateOrderSagaData(orderDetails);
+    given()
+            .saga(makeCreateOrderSaga(), data)
+            .expect()
+            .command(new ReserveCreditCommand(customerId, orderId, orderTotal))
+            .to("customerService")
+            .andGiven()
+            .failureReply(new CustomerNotFound())
+            .expectRolledBack()
+            .assertSagaData(sd -> {
+              assertEquals(RejectionReason.UNKNOWN_CUSTOMER, sd.getRejectionReason());
+            });
+
+    assertEquals(RejectionReason.UNKNOWN_CUSTOMER, order.getRejectionReason());
+    assertEquals(OrderState.REJECTED, order.getState());
   }
 }
