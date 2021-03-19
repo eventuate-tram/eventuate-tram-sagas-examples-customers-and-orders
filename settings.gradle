@@ -13,3 +13,5 @@ include 'api-gateway-service-api-web'
 include 'api-gateway-service'
 
 include 'end-to-end-tests'
+
+include 'migration-tests'

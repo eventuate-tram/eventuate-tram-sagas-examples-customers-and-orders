@@ -35,10 +35,13 @@ subprojects {
 
 dockerCompose {
     environment.put "EVENTUATE_COMMON_VERSION", eventuateCommonImageVersion
-    environment.put "EVENTUATE_KAFKA_VERSION", eventuateMessagingKafkaImageVersion
     environment.put "EVENTUATE_CDC_VERSION", eventuateCdcImageVersion
     environment.put "EVENTUATE_SAGA_VERSION", eventuateTramSagasImageVersion
     environment.put "EVENTUATE_JAVA_BASE_IMAGE_VERSION", eventuateExamplesBaseImageVersion
+
+    if (project.ext.has("envFile")) {
+        environment.put "ENV_FILE", project.ext.envFile
+    }
 
     mysqlinfrastructure {
         projectName = null
