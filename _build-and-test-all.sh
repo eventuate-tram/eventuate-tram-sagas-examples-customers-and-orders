@@ -29,20 +29,9 @@ ${dockerall}Up
 
 ./wait-for-services.sh localhost readers/${READER}/finished "8099"
 
-migration_file="migration_scripts/${DATABASE}/migration.sql"
 
-rm -f $migration_file
-if [ "${DATABASE}" == "mysql" ]; then
-  curl https://raw.githubusercontent.com/eventuate-foundation/eventuate-common/wip-db-id-gen/mysql/4.initialize-database-db-id.sql --output $migration_file --create-dirs
-  cat $migration_file | ./mysql-cli.sh -i
-elif [ "${DATABASE}" == "postgres" ]; then
-  curl https://raw.githubusercontent.com/eventuate-foundation/eventuate-common/wip-db-id-gen/postgres/5.initialize-database-db-id.sql --output $migration_file --create-dirs
-  cat $migration_file | ./postgres-cli.sh -i
-else
-  echo "Unknown Database"
-  exit 99
-fi
-rm -f $migration_file
+curl -s https://raw.githubusercontent.com/eventuate-foundation/eventuate-common/master/migration/db-id/migration.sh &> /dev/stdout | bash
+
 
 ${dockerall}Up -P envFile=docker-compose-env-files/db-id-gen.env
 
