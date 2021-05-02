@@ -5,7 +5,6 @@ buildscript {
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
         classpath "com.avast.gradle:gradle-docker-compose-plugin:0.9.2"
     }
 }
@@ -21,10 +20,7 @@ subprojects {
 
     repositories {
         mavenCentral()
-        jcenter()
-        maven {
-            url "https://dl.bintray.com/eventuateio-oss/eventuate-maven-release"
-        }
+
         eventuateMavenRepoUrl.split(',').each { repoUrl -> maven { url repoUrl } }
     }
 
