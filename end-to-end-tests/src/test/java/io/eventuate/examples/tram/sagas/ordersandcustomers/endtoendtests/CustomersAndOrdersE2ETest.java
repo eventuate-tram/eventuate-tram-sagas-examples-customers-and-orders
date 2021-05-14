@@ -10,6 +10,7 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.Create
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.CreateOrderResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrderResponse;
 import io.eventuate.util.test.async.Eventually;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -94,7 +100,7 @@ public class CustomersAndOrdersE2ETest {
             new CreateOrderRequest(createCustomerResponse.getCustomerId(), new Money("100.00")),
             CreateOrderResponse.class);
 
-    Eventually.eventually(() -> {
+    Eventually.eventually(60, 500, TimeUnit.MILLISECONDS, () -> {
       ResponseEntity<GetCustomerHistoryResponse> customerResponseEntity =
               restTemplate.getForEntity(baseUrl("customers", Long.toString(createCustomerResponse.getCustomerId()), "orderhistory"),
                       GetCustomerHistoryResponse.class);
@@ -112,8 +118,25 @@ public class CustomersAndOrdersE2ETest {
     });
   }
 
+  @Test
+  public void testSwaggerUiUrls() throws IOException {
+    testSwaggerUiUrl(8081, "swagger-ui/index.html");
+    testSwaggerUiUrl(8082, "swagger-ui/index.html");
+    testSwaggerUiUrl(8083, "swagger-ui.html");
+  }
+
+  private void testSwaggerUiUrl(int port, String relativeUrl) throws IOException {
+    assertUrlStatusIsOk(String.format("http://%s:%s/%s", hostName, port, relativeUrl));
+  }
+
+  private void assertUrlStatusIsOk(String url) throws IOException {
+    HttpURLConnection connection = (HttpURLConnection)new URL(url).openConnection();
+
+    Assert.assertEquals(200, connection.getResponseCode());
+  }
+
   private void assertOrderState(Long id, OrderState expectedState, RejectionReason expectedRejectionReason) {
-    Eventually.eventually(() -> {
+    Eventually.eventually(60, 500, TimeUnit.MILLISECONDS, () -> {
       ResponseEntity<GetOrderResponse> getOrderResponseEntity = restTemplate.getForEntity(baseUrl("orders/" + id), GetOrderResponse.class);
       assertEquals(HttpStatus.OK, getOrderResponseEntity.getStatusCode());
       GetOrderResponse order = getOrderResponseEntity.getBody();
