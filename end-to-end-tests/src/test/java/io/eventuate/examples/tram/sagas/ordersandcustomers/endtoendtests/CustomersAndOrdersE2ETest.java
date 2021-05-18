@@ -10,6 +10,7 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.CreateO
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.CreateOrderResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.webapi.GetOrderResponse;
 import io.eventuate.util.test.async.Eventually;
+import io.eventuate.util.test.async.UrlTesting;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -111,6 +114,17 @@ public class CustomersAndOrdersE2ETest {
       assertEquals((Long) createOrderResponse.getOrderId(), customerResponse.getOrders().get(0).getOrderId());
       assertEquals(OrderState.APPROVED, customerResponse.getOrders().get(0).getOrderState());
     });
+  }
+
+  @Test
+  public void testSwaggerUiUrls() throws IOException {
+    testSwaggerUiUrl(8081);
+    testSwaggerUiUrl(8082);
+    testSwaggerUiUrl(8083);
+  }
+
+  private void testSwaggerUiUrl(int port) throws IOException {
+    UrlTesting.assertUrlStatusIsOk("localhost", port, "/swagger-ui/index.html");
   }
 
   private void assertOrderState(Long id, OrderState expectedState, RejectionReason expectedRejectionReason) {

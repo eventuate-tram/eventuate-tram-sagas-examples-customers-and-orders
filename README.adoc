@@ -95,9 +95,9 @@ You can also run the Postgres version using `./gradlew postgresComposeBuild` and
 
 Once the application has started, you can use the application via the Swagger UI:
 
-* `Order Service` - `http://localhost:8081/swagger-ui.html`
-* `Customer Service` - `http://localhost:8082/swagger-ui.html`
-* `API Gateway` - `http://localhost:8083/swagger-ui.html`
+* `Order Service` - `http://localhost:8081/swagger-ui/index.html`
+* `Customer Service` - `http://localhost:8082/swagger-ui/index.html`
+* `API Gateway` - `http://localhost:8083/swagger-ui/index.html`
 
 You can also use `curl` to interact with the services.
 First, let's create a customer:

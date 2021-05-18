@@ -29,7 +29,7 @@ resilience4j.circuitbreaker:
 
 spring:
   resources:
-    static-locations: classpath:/static, classpath:META-INF/swagger-ui
+    static-locations: classpath:/static, classpath:META-INF/static-content
   cloud:
     gateway:
       routes:
