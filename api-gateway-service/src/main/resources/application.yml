@@ -37,7 +37,7 @@ management:
 
 spring:
   resources:
-    static-locations: classpath:/static, classpath:META-INF
+    static-locations: classpath:/static, classpath:META-INF/static-content
   cloud:
     gateway:
       routes:
