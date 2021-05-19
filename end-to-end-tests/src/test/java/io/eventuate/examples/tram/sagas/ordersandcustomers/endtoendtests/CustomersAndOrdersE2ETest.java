@@ -10,7 +10,7 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.Create
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.CreateOrderResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrderResponse;
 import io.eventuate.util.test.async.Eventually;
-import org.junit.Assert;
+import io.eventuate.util.test.async.UrlTesting;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
@@ -126,13 +124,7 @@ public class CustomersAndOrdersE2ETest {
   }
 
   private void testSwaggerUiUrl(int port) throws IOException {
-    assertUrlStatusIsOk(String.format("http://%s:%s/swagger-ui/index.html", hostName, port));
-  }
-
-  private void assertUrlStatusIsOk(String url) throws IOException {
-    HttpURLConnection connection = (HttpURLConnection)new URL(url).openConnection();
-
-    Assert.assertEquals(200, connection.getResponseCode());
+    UrlTesting.assertUrlStatusIsOk("localhost", port, "/swagger-ui/index.html");
   }
 
   private void assertOrderState(Long id, OrderState expectedState, RejectionReason expectedRejectionReason) {
