@@ -2,6 +2,7 @@ buildscript {
     repositories {
         mavenCentral()
         jcenter()
+        maven { url "https://repo.spring.io/snapshot" }
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
@@ -14,7 +15,8 @@ apply plugin: 'docker-compose'
 
 subprojects {
 
-    apply plugin: "java"
+    apply plugin: "java-library"
+
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
@@ -22,8 +24,21 @@ subprojects {
         mavenCentral()
 
         eventuateMavenRepoUrl.split(',').each { repoUrl -> maven { url repoUrl } }
+
+        maven { url "https://repo.spring.io/snapshot" }
     }
 
+    dependencies {
+      implementation(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")) {
+          exclude group: 'org.apache.kafka'
+          exclude group: 'ch.qos.logback'
+      }
+
+      implementation(platform("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"))
+
+      implementation 'ch.qos.logback:logback-classic:1.2.9'
+      implementation 'ch.qos.logback:logback-core:1.2.9'
+    }
 }
 
 dockerCompose {

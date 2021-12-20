@@ -18,10 +18,9 @@ public class CommonConfiguration {
     return WebClient.create();
   }
 
-  @Bean
   RouterFunction<ServerResponse> routerFunction() {
-    return  route(GET("/swagger-ui.html"), req ->
-            ServerResponse.temporaryRedirect(URI.create("/swagger-ui/index.html"))
+    return  route(GET("/swagger-ui/index.html"), req ->
+            ServerResponse.temporaryRedirect(URI.create("/swagger-ui.html"))
                     .build());
   }
 }
