@@ -31,6 +31,8 @@ ${dockerall}Up
 
 compose="docker-compose -f docker-compose-${DATABASE}.yml "
 
+. ./_set-image-version-env-vars.sh
+
 $compose stop cdc-service
 curl -s https://raw.githubusercontent.com/eventuate-foundation/eventuate-common/master/migration/db-id/migration.sh &> /dev/stdout | bash
 $compose start cdc-service
