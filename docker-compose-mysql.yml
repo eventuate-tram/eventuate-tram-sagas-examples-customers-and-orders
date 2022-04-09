@@ -123,7 +123,7 @@ services:
       JAVA_OPTS: -Xmx64m
 
   zipkin:
-    image: openzipkin/zipkin:2.21
+    image: openzipkin/zipkin:2.23
     ports:
       - "9411:9411"
     environment:
