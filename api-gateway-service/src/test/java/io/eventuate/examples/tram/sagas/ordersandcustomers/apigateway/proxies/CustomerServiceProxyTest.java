@@ -55,7 +55,7 @@ public class CustomerServiceProxyTest {
 
     GetCustomerResponse customer = customerServiceProxy.findCustomerById("101").block().get();
 
-    assertEquals(new Long(101L), customer.getCustomerId());
+    assertEquals(Long.valueOf(101L), customer.getCustomerId());
 
     verify(getRequestedFor(urlMatching("/customers/101")));
   }

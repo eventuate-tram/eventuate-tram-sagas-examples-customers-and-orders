@@ -1,4 +1,4 @@
-FROM amazoncorretto:17.0.1-al2
+FROM amazoncorretto:8u312-al2
 
 RUN amazon-linux-extras install docker && \
   curl -L "https://github.com/docker/compose/releases/download/v2.4.1/docker-compose-linux-$(uname -m)" -o /usr/local/bin/docker-compose && \
@@ -8,7 +8,3 @@ RUN amazon-linux-extras install docker && \
 
 WORKDIR /eventuate-tram-sagas-examples-customers-and-orders-java-development
 CMD echo Ready ; sleep 260000
-
-COPY build /tmp-src
-
-RUN echo "Building in image..." && (cd /tmp-src ; ./gradlew testClasses assemble ; cd ; rm -fr /tmp-src)

@@ -3,8 +3,8 @@ dependencies {
     compile project(":order-service-api-web")
     compile project(":api-gateway-service-api-web")
 
-    testCompile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
-    testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testCompile "org.springframework.boot:spring-boot-starter-web"
+    testCompile "org.springframework.boot:spring-boot-starter-test"
 
     testCompile "io.eventuate.util:eventuate-util-test:$eventuateUtilVersion"
 
