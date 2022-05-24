@@ -6,6 +6,7 @@ services:
     build:
       context: ./order-service/
       args:
+        serviceImageVersion: ${SERVICE_IMAGE_VERSION}
         baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION}
     ports:
       - "8081:8080"
@@ -31,6 +32,7 @@ services:
     build:
       context: ./customer-service/
       args:
+        serviceImageVersion: ${SERVICE_IMAGE_VERSION}
         baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION}
     ports:
       - "8082:8080"
@@ -54,6 +56,7 @@ services:
     build:
       context: ./api-gateway-service/
       args:
+        serviceImageVersion: ${SERVICE_IMAGE_VERSION}
         baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION}
     ports:
       - "8083:8080"
