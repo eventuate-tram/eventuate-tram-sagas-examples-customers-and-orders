@@ -29,6 +29,10 @@ ${dockerall}Up
 
 ./wait-for-services.sh localhost readers/${READER}/finished "8099"
 
+echo -------------------------------
+echo              RUNNING MIGRATION RELATED TESTS
+echo -------------------------------
+
 compose="docker-compose -f docker-compose-${DATABASE}.yml "
 
 . ./_set-image-version-env-vars.sh
