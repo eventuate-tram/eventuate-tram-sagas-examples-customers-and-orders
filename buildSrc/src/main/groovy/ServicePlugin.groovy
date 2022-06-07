@@ -11,6 +11,7 @@ class ServicePlugin implements Plugin<Project> {
         project.dependencies {
 
             compile "org.springframework.cloud:spring-cloud-starter-sleuth"
+            compile "org.springframework.cloud:spring-cloud-sleuth-zipkin"
             compile "io.eventuate.tram.springcloudsleuth:eventuate-tram-spring-cloud-sleuth-tram-starter"
             compile "org.springdoc:springdoc-openapi-ui"
 

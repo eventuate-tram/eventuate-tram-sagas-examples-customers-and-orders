@@ -24,6 +24,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-actuator"
 
     compile "org.springframework.cloud:spring-cloud-starter-sleuth"
+    compile "org.springframework.cloud:spring-cloud-sleuth-zipkin"
 
     testCompile "org.springframework.cloud:spring-cloud-contract-wiremock"
     testCompile "org.springframework.boot:spring-boot-starter-test"
