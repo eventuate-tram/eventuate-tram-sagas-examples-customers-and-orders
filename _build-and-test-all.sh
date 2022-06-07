@@ -38,10 +38,19 @@ compose="docker-compose -f docker-compose-${DATABASE}.yml "
 . ./_set-image-version-env-vars.sh
 
 $compose stop cdc-service
+
 curl -s https://raw.githubusercontent.com/eventuate-foundation/eventuate-common/master/migration/db-id/migration.sh &> /dev/stdout | bash
+
+echo === $compose cdc-service
+
 $compose start cdc-service
 
+echo === ${dockerall}Up
+
 ${dockerall}Up -P envFile=docker-compose-env-files/db-id-gen.env
+
+echo === Running end to end tests
+
 
 ./gradlew :end-to-end-tests:cleanTest :end-to-end-tests:test
 

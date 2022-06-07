@@ -60,6 +60,9 @@ services:
         baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION}
     ports:
       - "8083:8080"
+    depends_on:
+      - order-service
+      - customer-service
     environment:
       ORDER_DESTINATIONS_ORDERSERVICEURL: http://order-service:8080
       CUSTOMER_DESTINATIONS_CUSTOMERSERVICEURL: http://customer-service:8080
