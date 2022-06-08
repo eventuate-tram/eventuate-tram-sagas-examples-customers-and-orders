@@ -39,7 +39,7 @@ compose="docker-compose -f docker-compose-${DATABASE}.yml "
 
 ./.circleci/print-container-ips.sh
 
-$compose stop cdc-service
+$compose stop cdc-service api-gateway-service
 
 curl -s https://raw.githubusercontent.com/eventuate-foundation/eventuate-common/master/migration/db-id/migration.sh &> /dev/stdout | bash
 
