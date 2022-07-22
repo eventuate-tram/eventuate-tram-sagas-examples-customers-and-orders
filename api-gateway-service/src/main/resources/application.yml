@@ -1,9 +1,8 @@
-spring.webflux.static-path-pattern: /**
-
 spring.application.name: api-gateway
 
 logging.level.io.github.resilience4j: DEBUG
 logging.level.io.eventuate.examples: INFO
+logging.level.org.springframework.web: DEBUG
 
 spring.sleuth.enabled: true
 spring.sleuth.sampler.probability: 1
@@ -28,8 +27,6 @@ resilience4j.circuitbreaker:
       failureRateThreshold: 60
 
 spring:
-  resources:
-    static-locations: classpath:/static, classpath:META-INF/swagger-ui
   cloud:
     gateway:
       routes:
@@ -54,3 +51,6 @@ spring:
             - Path=/orders/{orderId}
           filters:
             - CircuitBreaker=myCircuitBreaker
+  web:
+    resources:
+      static-locations: classpath:/static,classpath:/META-INF/static-content

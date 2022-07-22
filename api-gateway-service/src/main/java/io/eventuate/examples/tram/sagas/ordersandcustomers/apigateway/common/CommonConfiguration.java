@@ -10,4 +10,5 @@ public class CommonConfiguration {
   public WebClient webClient() {
     return WebClient.create();
   }
+
 }

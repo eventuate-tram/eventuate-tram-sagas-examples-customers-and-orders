@@ -28,4 +28,6 @@ dependencies {
 
     testCompile "org.springframework.cloud:spring-cloud-contract-wiremock"
     testCompile "org.springframework.boot:spring-boot-starter-test"
+
+    compile group: 'io.netty', name: 'netty-resolver-dns-native-macos', version: '4.1.75.Final', classifier: 'osx-aarch_64'
 }
