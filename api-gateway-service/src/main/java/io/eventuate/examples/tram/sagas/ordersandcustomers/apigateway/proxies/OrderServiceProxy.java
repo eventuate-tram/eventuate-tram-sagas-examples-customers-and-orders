@@ -8,7 +8,7 @@ import io.github.resilience4j.reactor.circuitbreaker.operator.CircuitBreakerOper
 import io.github.resilience4j.reactor.timelimiter.TimeLimiterOperator;
 import io.github.resilience4j.timelimiter.TimeLimiter;
 import io.github.resilience4j.timelimiter.TimeLimiterRegistry;
-import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -30,21 +30,14 @@ public class OrderServiceProxy {
   }
 
   public Mono<List<GetOrderResponse>> findOrdersByCustomerId(String customerId) {
-    Mono<ClientResponse> response = client
+    return client
             .get()
             .uri(orderDestinations.getOrderServiceUrl() + "/orders/customer/{customerId}", customerId)
-            .exchange();
-
-    return response.flatMap(resp -> {
-      switch (resp.statusCode()) {
-        case OK:
-          return resp.bodyToMono(GetOrderResponse[].class).map(Arrays::asList);
-        default:
-          return Mono.error(new UnknownProxyException("Unknown: " + resp.statusCode()));
-      }
-    })
-    .transformDeferred(TimeLimiterOperator.of(timeLimiter))
-    .transformDeferred(CircuitBreakerOperator.of(circuitBreaker))
+            .retrieve()
+            .onStatus(status -> status != HttpStatus.OK, response -> Mono.error(new UnknownProxyException("Unknown: " + response.statusCode())))
+            .bodyToMono(GetOrderResponse[].class).map(Arrays::asList)
+            .transformDeferred(TimeLimiterOperator.of(timeLimiter))
+            .transformDeferred(CircuitBreakerOperator.of(circuitBreaker))
     ;
   }
 }
