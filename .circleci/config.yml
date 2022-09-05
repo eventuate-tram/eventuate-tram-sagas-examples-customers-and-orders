@@ -15,3 +15,6 @@ workflows:
       - eventuate-gradle-build-and-test/build-and-test:
           name: build-and-test-all-postgres
           script: ./build-and-test-all-postgres.sh
+      - eventuate-gradle-build-and-test/build-and-test:
+          name: build-and-test-all-mysql-sharded-outbox
+          script: ./build-and-test-all-mysql-sharded-outbox.sh

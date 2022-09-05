@@ -25,6 +25,7 @@ services:
       SPRING_SLEUTH_ENABLED: "true"
       SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
       SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
+      EVENTUATE_TRAM_OUTBOX_PARTITIONING_OUTBOX_TABLES: ${EVENTUATE_OUTBOX_TABLES}
 
   customer-service:
     env_file:
@@ -51,6 +52,7 @@ services:
       SPRING_SLEUTH_ENABLED: "true"
       SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
       SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
+      EVENTUATE_TRAM_OUTBOX_PARTITIONING_OUTBOX_TABLES: ${EVENTUATE_OUTBOX_TABLES}
 
   api-gateway-service:
     build:
@@ -103,6 +105,7 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=mysqluser
       - MYSQL_PASSWORD=mysqlpw
+      - EVENTUATE_OUTBOX_TABLES=${EVENTUATE_OUTBOX_TABLES}
 
   cdc-service:
     image: eventuateio/eventuate-cdc-service:$EVENTUATE_CDC_VERSION
@@ -127,6 +130,8 @@ services:
       EVENTUATELOCAL_CDC_READ_OLD_DEBEZIUM_DB_OFFSET_STORAGE_TOPIC: "false"
       EVENTUATE_OUTBOX_ID: 1
       JAVA_OPTS: -Xmx64m
+      SPRING_PROFILES_ACTIVE: ${EVENTUATE_CDC_PROFILES}
+      EVENTUATE_CDC_OUTBOX_PARTITIONING_OUTBOX_TABLES: ${EVENTUATE_OUTBOX_TABLES}
 
   zipkin:
     image: openzipkin/zipkin:2.23

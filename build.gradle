@@ -62,6 +62,17 @@ dockerCompose {
           startedServices= project.ext.startedServices.split(',')
     }
 
+    mysqlShardedOutboxes {
+        environment.put "EVENTUATE_OUTBOX_TABLES", "8"
+        environment.put "EVENTUATE_CDC_PROFILES", "EventuatePolling"
+
+        projectName = null
+        useComposeFiles = ["docker-compose-mysql.yml"]
+
+        if (project.hasProperty('startedServices'))
+          startedServices= project.ext.startedServices.split(',')
+    }
+
     postgresinfrastructure {
         projectName = null
         useComposeFiles = ["docker-compose-postgres.yml"]
