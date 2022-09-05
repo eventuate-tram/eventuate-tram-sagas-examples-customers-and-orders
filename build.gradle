@@ -1,7 +1,9 @@
 buildscript {
     repositories {
         mavenCentral()
-        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
@@ -85,11 +87,15 @@ dockerCompose {
 
 }
 
-subprojects.each {
-    if (it.name.endsWith("-service")) {
-        mysqlComposeUp.dependsOn(":" + it.name + ":assemble")
-    }
+tasks*.each { t ->
+    if (t.name.endsWith("ComposeUp") || t.name.endsWith("ComposeBuild"))
+        subprojects.each {
+            if (it.name.endsWith("-service")) {
+                t.dependsOn(":" + it.name + ":assemble")
+            }
+        }
 }
+
 
 mysqlComposeUp.dependsOn(mysqlinfrastructureComposeUp)
 
