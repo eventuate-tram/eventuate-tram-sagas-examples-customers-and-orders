@@ -1,0 +1,9 @@
+apply plugin: ServicePlugin
+
+dependencies {
+    compile project(":customer-service-web")
+    compile project(":customer-service-persistence")
+    compile project(":customer-service-messaging")
+
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+}

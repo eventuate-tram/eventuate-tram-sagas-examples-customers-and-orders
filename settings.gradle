@@ -5,6 +5,12 @@ include 'customer-service-api-web'
 include 'customer-service-api-messaging'
 include 'customer-service'
 
+include 'customer-service-domain'
+include 'customer-service-web'
+include 'customer-service-main'
+include 'customer-service-messaging'
+include 'customer-service-persistence'
+
 include 'order-service-api-web'
 include 'order-service-api-messaging'
 include 'order-service'

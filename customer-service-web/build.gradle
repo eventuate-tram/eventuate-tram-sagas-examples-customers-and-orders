@@ -1,0 +1,7 @@
+dependencies {
+    compile project(":common")
+    compile project(":customer-service-api-web")
+    compile project(":customer-service-domain")
+
+    compile "org.springframework.boot:spring-boot-starter-web"
+}

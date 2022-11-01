@@ -27,7 +27,7 @@ services:
     env_file:
       - ${ENV_FILE:-docker-compose-env-files/empty.env}
     build:
-      context: ./customer-service/
+      context: ./customer-service-main/
       args:
         serviceImageVersion: ${SERVICE_IMAGE_VERSION}
         baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION}

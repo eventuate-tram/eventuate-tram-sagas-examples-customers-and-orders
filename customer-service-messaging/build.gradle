@@ -1,0 +1,15 @@
+
+dependencies {
+    compile project(":common")
+    compile project(":customer-service-api-messaging")
+    compile project(":customer-service-domain")
+
+    compile "io.eventuate.tram.core:eventuate-tram-spring-jdbc-kafka"
+    compile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-participant-starter"
+    compile "io.eventuate.tram.core:eventuate-tram-spring-optimistic-locking"
+
+    compile ('org.postgresql:postgresql:9.4-1200-jdbc41') {
+        exclude group: "org.slf4j", module: "slf4j-simple"
+    }
+
+}
