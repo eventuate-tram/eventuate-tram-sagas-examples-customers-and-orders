@@ -5,19 +5,15 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.Order;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderRepository;
 import io.eventuate.tram.sagas.orchestration.SagaInstanceFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 public class OrderSagaService {
 
-  @Autowired
-  private OrderRepository orderRepository;
+  private final OrderRepository orderRepository;
 
-  @Autowired
-  private SagaInstanceFactory sagaInstanceFactory;
+  private final SagaInstanceFactory sagaInstanceFactory;
 
-  @Autowired
-  private CreateOrderSaga createOrderSaga;
+  private final CreateOrderSaga createOrderSaga;
 
   public OrderSagaService(OrderRepository orderRepository, SagaInstanceFactory sagaInstanceFactory, CreateOrderSaga createOrderSaga) {
     this.orderRepository = orderRepository;
