@@ -1,0 +1,12 @@
+apply plugin: ServicePlugin
+
+dependencies {
+    compile project(":order-service-web")
+    compile project(":order-service-sagas")
+    compile project(":order-service-persistence")
+
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+
+    testCompile "junit:junit:4.12"
+    testCompile "org.mockito:mockito-core:2.23.0"
+}

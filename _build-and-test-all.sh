@@ -3,7 +3,7 @@
 set -e
 
 
-./gradlew testClasses
+./gradlew testClasses assemble
 
 dockerinfrastructure="./gradlew ${DATABASE?}infrastructureCompose"
 dockerall="./gradlew ${DATABASE?}Compose"

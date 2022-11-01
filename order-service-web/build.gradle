@@ -1,0 +1,11 @@
+
+dependencies {
+    compile project(":order-service-api-web")
+    compile project(":order-service-domain")
+    compile project(":order-service-sagas")
+
+    compile "org.springframework.boot:spring-boot-starter-web"
+
+    testCompile "junit:junit:4.12"
+    testCompile "org.mockito:mockito-core:2.23.0"
+}

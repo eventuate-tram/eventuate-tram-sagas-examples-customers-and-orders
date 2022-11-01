@@ -1,0 +1,19 @@
+
+dependencies {
+    compile project(":order-service-api-messaging")
+    compile project(":order-service-domain")
+
+    compile "io.eventuate.tram.core:eventuate-tram-spring-optimistic-locking"
+
+    compile "io.eventuate.tram.core:eventuate-tram-spring-jdbc-kafka"
+    compile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-orchestration-simple-dsl-starter"
+
+
+    compile ('org.postgresql:postgresql:9.4-1200-jdbc41') {
+        exclude group: "org.slf4j", module: "slf4j-simple"
+    }
+
+    testCompile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-testing-support"
+    testCompile "junit:junit:4.12"
+    testCompile "org.mockito:mockito-core:2.23.0"
+}
