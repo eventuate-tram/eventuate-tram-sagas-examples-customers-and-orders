@@ -1,9 +1,7 @@
 include 'common'
-include 'common-swagger'
 
 include 'customer-service-api-web'
 include 'customer-service-api-messaging'
-include 'customer-service'
 
 include 'customer-service-domain'
 include 'customer-service-web'

@@ -90,7 +90,7 @@ dockerCompose {
 tasks*.each { t ->
     if (t.name.endsWith("ComposeUp") || t.name.endsWith("ComposeBuild"))
         subprojects.each {
-            if (it.name.endsWith("-service")) {
+            if (it.name.endsWith("-service") || it.name.endsWith("-service-main")) {
                 t.dependsOn(":" + it.name + ":assemble")
             }
         }
