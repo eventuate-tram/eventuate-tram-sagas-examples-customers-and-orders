@@ -6,6 +6,6 @@
 
 ./gradlew mysqlShardedOutboxesComposeUp
 
-./gradlew :end-to-end-tests:cleanTest :end-to-end-tests:test
+./gradlew cleanEndToEndTest endToEndTest
 
 ./gradlew mysqlShardedOutboxesComposeDown

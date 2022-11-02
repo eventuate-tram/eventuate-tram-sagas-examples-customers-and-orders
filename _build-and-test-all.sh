@@ -3,7 +3,7 @@
 set -e
 
 
-./gradlew testClasses assemble
+./gradlew compileAll test
 
 dockerinfrastructure="./gradlew ${DATABASE?}infrastructureCompose"
 dockerall="./gradlew ${DATABASE?}Compose"
@@ -21,11 +21,11 @@ else
   exit 99
 fi
 
-./gradlew -x :end-to-end-tests:test build
+./gradlew testServices
 
 ${dockerall}Up
 
-./gradlew :end-to-end-tests:cleanTest :end-to-end-tests:test
+./gradlew cleanEndToEndTest endToEndTest
 
 ./wait-for-services.sh localhost readers/${READER}/finished "8099"
 
@@ -56,7 +56,7 @@ ${dockerall}Up -P envFile=docker-compose-env-files/db-id-gen.env
 echo === Running end to end tests
 
 
-./gradlew :end-to-end-tests:cleanTest :end-to-end-tests:test
+./gradlew cleanEndToEndTest endToEndTest
 
 ./gradlew -P verifyDbIdMigration=true :migration-tests:cleanTest migration-tests:test
 

@@ -4,4 +4,5 @@ dependencies {
     compile project(":customer-service-domain")
 
     compile 'mysql:mysql-connector-java:8.0.21'
+    compile 'org.postgresql:postgresql:9.4-1200-jdbc41'
 }

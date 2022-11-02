@@ -116,3 +116,11 @@ endToEndTests.dependsOn(":end-to-end-tests:cleanTest")
 task stopServicesMySql(type: GradleBuild) {
     tasks = ["mysqlComposeDown"]
 }
+
+task compileAll(type: GradleBuild) {
+    tasks = ["endToEndTestClasses", "componentTestClasses", "integrationTestClasses", "testClasses", "assemble"]
+}
+
+task testServices(type: GradleBuild) {
+    tasks = ["test", "integrationTest", "componentTest"]
+}
