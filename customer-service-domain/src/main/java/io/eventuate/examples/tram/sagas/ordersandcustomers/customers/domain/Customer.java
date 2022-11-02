@@ -25,7 +25,7 @@ public class Customer {
   @Version
   private Long version;
 
-  Money availableCredit() {
+  public Money availableCredit() {
     return creditLimit.subtract(creditReservations.values().stream().reduce(Money.ZERO, Money::add));
   }
 

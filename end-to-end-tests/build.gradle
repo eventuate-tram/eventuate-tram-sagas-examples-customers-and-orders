@@ -1,12 +1,14 @@
+apply plugin: EndToEndTestsPlugin
+
 dependencies {
-    compile project(":customer-service-api-web")
-    compile project(":order-service-api-web")
-    compile project(":api-gateway-service-api-web")
+    testImplementation project(":customer-service-api-web")
+    testImplementation project(":order-service-api-web")
+    testImplementation project(":api-gateway-service-api-web")
 
-    testCompile "org.springframework.boot:spring-boot-starter-web"
-    testCompile "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.boot:spring-boot-starter-web"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 
-    testCompile "io.eventuate.util:eventuate-util-test:$eventuateUtilVersion"
+    testImplementation "io.eventuate.util:eventuate-util-test:$eventuateUtilVersion"
 
 }
 

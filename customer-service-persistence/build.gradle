@@ -1,3 +1,7 @@
+apply plugin: IntegrationTestsPlugin
+
 dependencies {
     compile project(":customer-service-domain")
+
+    compile 'mysql:mysql-connector-java:8.0.21'
 }

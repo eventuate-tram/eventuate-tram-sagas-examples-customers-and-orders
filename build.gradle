@@ -35,6 +35,9 @@ subprojects {
         constraints {
             implementation "org.springdoc:springdoc-openapi-ui:$springDocOpenApiUiVersion"
         }
+
+        testImplementation "org.springframework.boot:spring-boot-starter-test"
+
     }
 }
 
