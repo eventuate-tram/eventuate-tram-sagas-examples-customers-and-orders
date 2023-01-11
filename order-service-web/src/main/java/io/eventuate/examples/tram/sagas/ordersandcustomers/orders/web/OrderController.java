@@ -43,7 +43,7 @@ public class OrderController {
 
   @RequestMapping(value="/orders/customer/{customerId}", method= RequestMethod.GET)
   public ResponseEntity<List<GetOrderResponse>> getOrdersByCustomerId(@PathVariable Long customerId) {
-    return new ResponseEntity<List<GetOrderResponse>>(orderRepository
+    return new ResponseEntity<>(orderRepository
             .findAllByOrderDetailsCustomerId(customerId)
             .stream()
             .map(o -> new GetOrderResponse(o.getId(), o.getState(), o.getRejectionReason()))

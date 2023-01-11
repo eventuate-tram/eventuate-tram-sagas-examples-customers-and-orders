@@ -1,4 +1,4 @@
 dependencies {
-    compile project(":common")
-    compile "org.springframework.boot:spring-boot-starter-data-jpa"
+    api "io.eventuate.examples.common:eventuate-examples-common-money:$eventuateCommonExamplesVersion"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 }

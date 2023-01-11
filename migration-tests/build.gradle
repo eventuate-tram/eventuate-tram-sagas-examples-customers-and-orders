@@ -1,12 +1,12 @@
 dependencies {
-    testCompile "org.springframework.boot:spring-boot-starter-jdbc"
-    testCompile "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.boot:spring-boot-starter-jdbc"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 
-    testCompile 'mysql:mysql-connector-java:8.0.21'
-    testRuntime ('org.postgresql:postgresql:9.4-1200-jdbc41') {
+    testImplementation 'mysql:mysql-connector-java:8.0.21'
+    testRuntimeOnly ('org.postgresql:postgresql:9.4-1200-jdbc41') {
         exclude group: "org.slf4j", module: "slf4j-simple"
     }
-    testRuntime 'com.microsoft.sqlserver:mssql-jdbc:7.2.1.jre8'
+    testRuntimeOnly 'com.microsoft.sqlserver:mssql-jdbc:7.2.1.jre8'
 }
 
 test {

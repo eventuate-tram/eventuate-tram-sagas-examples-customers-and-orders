@@ -1,7 +1,41 @@
-dependencies {
-    compile project(":common")
-    compile project(":customer-service-api-web")
-    compile project(":customer-service-domain")
+apply plugin: 'spring-cloud-contract'
 
-    compile "org.springframework.boot:spring-boot-starter-web"
+apply plugin: 'maven-publish'
+
+contracts {
+    packageWithBaseClasses = 'io.eventuate.examples.tram.sagas.ordersandcustomers.customers.web'
 }
+
+publishing {
+    repositories {
+        maven { url "${project.rootDir}/build/repo" }
+    }
+    publications {
+        stubs(MavenPublication) {
+            artifactId "${project.name}-stubs"
+            artifact verifierStubsJar
+
+            pom {
+                packaging "jar"
+            }
+        }
+    }
+}
+
+contractTest {
+    useJUnitPlatform()
+}
+
+dependencies {
+    implementation "io.eventuate.examples.common:eventuate-examples-common-money:$eventuateCommonExamplesVersion"
+    implementation project(":customer-service-api-web")
+    implementation project(":customer-service-domain")
+
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+
+    testImplementation "org.springframework.cloud:spring-cloud-starter-contract-verifier"
+
+}
+
+check.dependsOn(contractTest)

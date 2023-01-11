@@ -1,6 +1,6 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.api.web;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.commondomain.Money;
+import io.eventuate.examples.common.money.Money;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrderResponse;
 
 import java.util.List;

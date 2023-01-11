@@ -7,8 +7,6 @@ class ComponentTestsPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
 
-    	project.apply(plugin: 'eclipse')
-
         project.sourceSets {
             componentTest {
                 java {
@@ -25,13 +23,13 @@ class ComponentTestsPlugin implements Plugin<Project> {
             componentTestRuntime.extendsFrom testRuntime
         }
 
-		project.eclipse.classpath.plusConfigurations << project.configurations.componentTestImplementation
-
         project.task("componentTest", type: Test) {
             testClassesDirs = project.sourceSets.componentTest.output.classesDirs
             classpath = project.sourceSets.componentTest.runtimeClasspath
             if (project.tasks.findByName("integrationTest"))
                 shouldRunAfter("integrationTest")
+            // Ensures that JAR is built prior to building images
+            dependsOn("assemble")
         }
         project.tasks.findByName("check").dependsOn(project.tasks.componentTest)
 

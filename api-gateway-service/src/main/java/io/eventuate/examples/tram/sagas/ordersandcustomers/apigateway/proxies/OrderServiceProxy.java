@@ -20,13 +20,13 @@ public class OrderServiceProxy {
   private final TimeLimiter timeLimiter;
   private final OrderDestinations orderDestinations;
 
-  private WebClient client;
+  private final WebClient client;
 
   public OrderServiceProxy(OrderDestinations orderDestinations, WebClient client, CircuitBreakerRegistry circuitBreakerRegistry, TimeLimiterRegistry timeLimiterRegistry) {
     this.orderDestinations = orderDestinations;
     this.client = client;
-    this.circuitBreaker = circuitBreakerRegistry.circuitBreaker("MY_CIRCUIT_BREAKER");
-    this.timeLimiter = timeLimiterRegistry.timeLimiter("MY_TIME_LIMITER");
+    this.circuitBreaker = circuitBreakerRegistry.circuitBreaker("ORDER_SERVICE_CIRCUIT_BREAKER");
+    this.timeLimiter = timeLimiterRegistry.timeLimiter("ORDER_SERVICE_CIRCUIT_BREAKER");
   }
 
   public Mono<List<GetOrderResponse>> findOrdersByCustomerId(String customerId) {
@@ -34,7 +34,7 @@ public class OrderServiceProxy {
             .get()
             .uri(orderDestinations.getOrderServiceUrl() + "/orders/customer/{customerId}", customerId)
             .retrieve()
-            .onStatus(status -> status != HttpStatus.OK, response -> Mono.error(new UnknownProxyException("Unknown: " + response.statusCode())))
+            .onStatus(status -> status != HttpStatus.OK, response -> Mono.error(UnknownProxyException.make("/orders/customer/", response.statusCode(), customerId)))
             .bodyToMono(GetOrderResponse[].class).map(Arrays::asList)
             .transformDeferred(TimeLimiterOperator.of(timeLimiter))
             .transformDeferred(CircuitBreakerOperator.of(circuitBreaker))

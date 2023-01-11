@@ -1,4 +1,5 @@
 dependencies {
-    compile project(":customer-service-api-web")
-    compile project(":order-service-api-web")
+    api project(":customer-service-api-web")
+    api project(":order-service-api-web")
+    api "io.eventuate.examples.common:eventuate-examples-common-money:$eventuateCommonExamplesVersion"
 }

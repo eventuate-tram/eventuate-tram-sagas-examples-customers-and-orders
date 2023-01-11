@@ -1,3 +1,5 @@
+import java.time.Duration
+
 buildscript {
     repositories {
         mavenCentral()
@@ -7,7 +9,8 @@ buildscript {
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
-        classpath "com.avast.gradle:gradle-docker-compose-plugin:0.9.2"
+        classpath "com.avast.gradle:gradle-docker-compose-plugin:$dockerComposePluginVersion"
+        classpath "org.springframework.cloud:spring-cloud-contract-gradle-plugin:$springCloudContractDependenciesVersion"
     }
 }
 
@@ -17,8 +20,12 @@ apply plugin: 'docker-compose'
 subprojects {
 
     apply plugin: "java-library"
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
 
     repositories {
         mavenCentral()
@@ -30,6 +37,8 @@ subprojects {
 
         implementation(platform("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"))
         implementation(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
+        implementation(platform("org.springframework.cloud:spring-cloud-contract-dependencies:$springCloudContractDependenciesVersion"))
+
         testImplementation "junit:junit:4.13.2"
 
         constraints {
@@ -39,6 +48,14 @@ subprojects {
         testImplementation "org.springframework.boot:spring-boot-starter-test"
 
     }
+
+    tasks.withType(Copy).all { duplicatesStrategy 'WARN' }
+
+    if (System.getenv("GRADLE_CACHE_CHANGING_VERSIONS_IN_MINUTES") != null)
+        configurations.all {
+            resolutionStrategy.cacheChangingModulesFor Integer.parseInt(System.getenv("GRADLE_CACHE_CHANGING_VERSIONS_IN_MINUTES")), 'minutes'
+        }
+
 }
 
 dockerCompose {
@@ -49,22 +66,30 @@ dockerCompose {
     environment.put "EVENTUATE_MESSAGING_KAFKA_IMAGE_VERSION", eventuateMessagingKafkaImageVersion
     environment.put "SERVICE_IMAGE_VERSION", version
 
+    retainContainersOnStartupFailure = true
+    dockerComposeStopTimeout = Duration.ofSeconds(1)
 
     if (project.ext.has("envFile")) {
         environment.put "ENV_FILE", project.ext.envFile
     }
 
+    mysqlOnly {
+        projectName = null
+        useComposeFiles = ["docker-compose-mysql.yml"]
+        startedServices= ["customer-service-mysql", "order-service-mysql"]
+    }
+
     mysqlinfrastructure {
         projectName = null
         useComposeFiles = ["docker-compose-mysql.yml"]
-        startedServices = ["cdc-service", "zipkin"]
+        startedServices = ["zipkin", "zookeeper", "kafka", "customer-service-mysql", "order-service-mysql"]
     }
+
     mysql {
         projectName = null
         useComposeFiles = ["docker-compose-mysql.yml"]
 
-        if (project.hasProperty('startedServices'))
-          startedServices= project.ext.startedServices.split(',')
+        startedServices = project.hasProperty('startedServices') ? project.ext.startedServices.split(',') : ["order-service", "customer-service", "api-gateway-service", "cdc-service"]
     }
 
     mysqlShardedOutboxes {
@@ -81,11 +106,18 @@ dockerCompose {
     postgresinfrastructure {
         projectName = null
         useComposeFiles = ["docker-compose-postgres.yml"]
-        startedServices = ["cdc-service"]
+        startedServices = ["zookeeper", "kafka", "customer-service-postgres", "order-service-postgres"]
     }
+
     postgres {
         projectName = null
         useComposeFiles = ["docker-compose-postgres.yml"]
+        startedServices = project.hasProperty('startedServices') ? project.ext.startedServices.split(',') : ["order-service", "customer-service", "api-gateway-service", "cdc-service"]
+    }
+    postgresOnly {
+        projectName = null
+        useComposeFiles = ["docker-compose-postgres.yml"]
+        startedServices = ["customer-service-postgres","order-service-postgres"]
     }
 
 }
@@ -102,16 +134,19 @@ tasks*.each { t ->
 
 mysqlComposeUp.dependsOn(mysqlinfrastructureComposeUp)
 
+task clean(type:Delete) {
+    delete 'build/repo'
+}
+
 task buildAndStartServicesMySql(type: GradleBuild) {
     tasks = ["mysqlComposeUp"]
 }
 
 task endToEndTests(type: GradleBuild) {
-    tasks = [":end-to-end-tests:test"]
+    tasks = [":end-to-end-tests:endToEndTest"]
 }
 
-endToEndTests.dependsOn(mysqlComposeUp)
-endToEndTests.dependsOn(":end-to-end-tests:cleanTest")
+endToEndTests.dependsOn(":end-to-end-tests:clean")
 
 task stopServicesMySql(type: GradleBuild) {
     tasks = ["mysqlComposeDown"]
@@ -121,6 +156,7 @@ task compileAll(type: GradleBuild) {
     tasks = ["endToEndTestClasses", "componentTestClasses", "integrationTestClasses", "testClasses", "assemble"]
 }
 
-task testServices(type: GradleBuild) {
-    tasks = ["test", "integrationTest", "componentTest"]
+task testEachService(type: GradleBuild) {
+    tasks = ["test", "integrationTest", "contractTest", "componentTest"]
 }
+

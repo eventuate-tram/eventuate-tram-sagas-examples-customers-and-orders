@@ -22,8 +22,8 @@ public class CustomerServiceProxy {
 
   public CustomerServiceProxy(WebClient client, CircuitBreakerRegistry circuitBreakerRegistry, String customerServiceUrl, TimeLimiterRegistry timeLimiterRegistry) {
     this.client = client;
-    this.cb = circuitBreakerRegistry.circuitBreaker("MY_CIRCUIT_BREAKER");
-    this.timeLimiter = timeLimiterRegistry.timeLimiter("MY_TIME_LIMITER");
+    this.cb = circuitBreakerRegistry.circuitBreaker("CUSTOMER_SERVICE_CIRCUIT_BREAKER");
+    this.timeLimiter = timeLimiterRegistry.timeLimiter("CUSTOMER_SERVICE_TIME_LIMITER");
     this.customerServiceUrl = customerServiceUrl;
   }
 
@@ -40,7 +40,7 @@ public class CustomerServiceProxy {
           Mono<Optional<GetCustomerResponse>> notFound = Mono.just(Optional.empty());
           return notFound;
         default:
-          return Mono.error(new UnknownProxyException("Unknown: " + resp.statusCode()));
+          return Mono.error(UnknownProxyException.make("/customers/", resp.statusCode(), customerId));
       }
     })
     .transformDeferred(TimeLimiterOperator.of(timeLimiter))
@@ -48,4 +48,6 @@ public class CustomerServiceProxy {
     //.onErrorResume(CallNotPermittedException.class, e -> Mono.just(null))
     ;
   }
+
+
 }

@@ -10,4 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(basePackageClasses = {CustomerRepository.class})
 @EntityScan(basePackageClasses = {Customer.class})
 public class CustomerPersistenceConfiguration {
+
+
+
 }

@@ -1,7 +1,6 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.commondomain.Money;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.messaging.commands.ReserveCreditCommand;
+import io.eventuate.examples.common.money.Money;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.messaging.replies.CustomerCreditLimitExceeded;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.messaging.replies.CustomerNotFound;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.RejectionReason;
@@ -12,14 +11,14 @@ import io.eventuate.tram.commands.consumer.CommandWithDestination;
 import io.eventuate.tram.sagas.orchestration.SagaDefinition;
 import io.eventuate.tram.sagas.simpledsl.SimpleSaga;
 
-import static io.eventuate.tram.commands.consumer.CommandWithDestinationBuilder.send;
-
 public class CreateOrderSaga implements SimpleSaga<CreateOrderSagaData> {
 
   private OrderService orderService;
+  private CustomerServiceProxy customerService;
 
-  public CreateOrderSaga(OrderService orderService) {
+  public CreateOrderSaga(OrderService orderService, CustomerServiceProxy customerService) {
     this.orderService = orderService;
+    this.customerService = customerService;
   }
 
   private SagaDefinition<CreateOrderSagaData> sagaDefinition =
@@ -57,9 +56,7 @@ public class CreateOrderSaga implements SimpleSaga<CreateOrderSagaData> {
     long orderId = data.getOrderId();
     Long customerId = data.getOrderDetails().getCustomerId();
     Money orderTotal = data.getOrderDetails().getOrderTotal();
-    return send(new ReserveCreditCommand(customerId, orderId, orderTotal))
-            .to("customerService")
-            .build();
+    return customerService.reserveCredit(orderId, customerId, orderTotal);
   }
 
   private void approve(CreateOrderSagaData data) {

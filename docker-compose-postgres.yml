@@ -11,17 +11,17 @@ services:
     ports:
       - "8081:8080"
     depends_on:
-      - postgres
+      - order-service-postgres
       - kafka
       - zookeeper
-      - cdc-service
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres/eventuate
+      SPRING_DATASOURCE_URL: jdbc:postgresql://order-service-postgres/order_service
       SPRING_DATASOURCE_USERNAME: eventuate
       SPRING_DATASOURCE_PASSWORD: eventuate
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
       EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING: zookeeper:2181
+      EVENTUATE_DATABASE_SCHEMA: public
 
   customer-service:
     env_file:
@@ -34,17 +34,17 @@ services:
     ports:
       - "8082:8080"
     depends_on:
-      - postgres
+      - customer-service-postgres
       - kafka
       - zookeeper
-      - cdc-service
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres/eventuate
+      SPRING_DATASOURCE_URL: jdbc:postgresql://customer-service-postgres/customer_service
       SPRING_DATASOURCE_USERNAME: eventuate
       SPRING_DATASOURCE_PASSWORD: eventuate
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
       EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING: zookeeper:2181
+      EVENTUATE_DATABASE_SCHEMA: public
 
   api-gateway-service:
     build:
@@ -84,32 +84,64 @@ services:
       KAFKA_HEAP_OPTS: -Xmx192m
 
 
-  postgres:
-    image: eventuateio/eventuate-tram-sagas-postgres:$EVENTUATE_SAGA_VERSION
+  customer-service-postgres:
+    image: eventuateio/eventuate-vanilla-postgres:${EVENTUATE_COMMON_VERSION?}
     ports:
       - 5432:5432
     environment:
       POSTGRES_USER: eventuate
       POSTGRES_PASSWORD: eventuate
+      POSTGRES_DB: customer_service
+
+  order-service-postgres:
+    image: eventuateio/eventuate-vanilla-postgres:${EVENTUATE_COMMON_VERSION?}
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: eventuate
+      POSTGRES_PASSWORD: eventuate
+      POSTGRES_DB: order_service
+
 
   cdc-service:
-    image: eventuateio/eventuate-cdc-service:$EVENTUATE_CDC_VERSION
+    image: eventuateio/eventuate-cdc-service:${EVENTUATE_CDC_VERSION?}
     ports:
       - "8099:8080"
     depends_on:
-      - postgres
+      - customer-service-postgres
+      - order-service-postgres
       - kafka
       - zookeeper
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres/eventuate
-      SPRING_DATASOURCE_USERNAME: eventuate
-      SPRING_DATASOURCE_PASSWORD: eventuate
-      SPRING_DATASOURCE_TEST_ON_BORROW: "true"
-      SPRING_DATASOURCE_VALIDATION_QUERY: SELECT 1
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      CDC_OPTS: "--debug"
+
       EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING: zookeeper:2181
-      EVENTUATELOCAL_CDC_READER_NAME: PostgresPollingReader
-      SPRING_PROFILES_ACTIVE: EventuatePolling
-      EVENTUATE_OUTBOX_ID: 1
-      JAVA_OPTS: -Xmx64m
+
+      EVENTUATE_CDC_READER_READER1_TYPE: postgres-wal
+      EVENTUATE_CDC_READER_READER1_DATASOURCEURL: jdbc:postgresql://customer-service-postgres/customer_service
+      EVENTUATE_CDC_READER_READER1_MONITORINGSCHEMA: public
+      EVENTUATE_CDC_READER_READER1_DATASOURCEUSERNAME: eventuate
+      EVENTUATE_CDC_READER_READER1_DATASOURCEPASSWORD: eventuate
+      EVENTUATE_CDC_READER_READER1_DATASOURCEDRIVERCLASSNAME: org.postgresql.Driver
+      EVENTUATE_CDC_READER_READER1_LEADERSHIPLOCKPATH: /eventuate/cdc/leader/customer_service
+      EVENTUATE_CDC_READER_READER1_OFFSETSTORAGETOPICNAME: db.history.common
+      EVENTUATE_CDC_READER_READER1_OUTBOXID: 1
+
+      EVENTUATE_CDC_READER_READER2_TYPE: postgres-wal
+      EVENTUATE_CDC_READER_READER2_DATASOURCEURL: jdbc:postgresql://order-service-postgres/order_service
+      EVENTUATE_CDC_READER_READER2_MONITORINGSCHEMA: public
+      EVENTUATE_CDC_READER_READER2_DATASOURCEUSERNAME: eventuate
+      EVENTUATE_CDC_READER_READER2_DATASOURCEPASSWORD: eventuate
+      EVENTUATE_CDC_READER_READER2_DATASOURCEDRIVERCLASSNAME: org.postgresql.Driver
+      EVENTUATE_CDC_READER_READER2_LEADERSHIPLOCKPATH: /eventuate/cdc/leader/order_service
+      EVENTUATE_CDC_READER_READER2_OFFSETSTORAGETOPICNAME: db.history.common
+      EVENTUATE_CDC_READER_READER2_OUTBOXID: 2
+
+      EVENTUATE_CDC_PIPELINE_PIPELINE1_TYPE: eventuate-tram
+      EVENTUATE_CDC_PIPELINE_PIPELINE1_READER: reader1
+      EVENTUATE_CDC_PIPELINE_PIPELINE1_EVENTUATEDATABASESCHEMA: public
+
+      EVENTUATE_CDC_PIPELINE_PIPELINE2_TYPE: eventuate-tram
+      EVENTUATE_CDC_PIPELINE_PIPELINE2_READER: reader2
+      EVENTUATE_CDC_PIPELINE_PIPELINE2_EVENTUATEDATABASESCHEMA: public

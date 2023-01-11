@@ -1,6 +1,6 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.commondomain.Money;
+import io.eventuate.examples.common.money.Money;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;

@@ -42,7 +42,7 @@ It consists of the follow steps:
 
 . The `Order Service` creates an `Order` in a pending state
 . The `Order Service` creates a `CreateOrderSaga` to coordinate the creation of the order.
-. The `CreateOrderSaga` sends a `ReserveCredit` command to the `CustomerService`
+. The `CreateOrderSaga` sends a `reserveCredit` command to the `CustomerService`
 . The `Customer Service` receives the command and attempts to reserve credit for that `Order`. It replies with a message indicating the outcome.
 . The `CreateOrderSaga` receives the reply
 . It send either an `ApproveOrder` or a `RejectOrder` command to the `OrderService`

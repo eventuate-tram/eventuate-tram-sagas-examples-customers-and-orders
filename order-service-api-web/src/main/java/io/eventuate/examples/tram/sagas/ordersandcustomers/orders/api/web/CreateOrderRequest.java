@@ -1,7 +1,7 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web;
 
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.commondomain.Money;
+import io.eventuate.examples.common.money.Money;
 
 public class CreateOrderRequest {
   private Money orderTotal;

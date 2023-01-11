@@ -7,8 +7,6 @@ class EndToEndTestsPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
 
-    	project.apply(plugin: 'eclipse')
-
         project.sourceSets {
             endToEndTest {
                 java {
@@ -24,8 +22,6 @@ class EndToEndTestsPlugin implements Plugin<Project> {
             endToEndTestImplementation.extendsFrom testImplementation
             endToEndTestRuntime.extendsFrom testRuntime
         }
-
-		project.eclipse.classpath.plusConfigurations << project.configurations.endToEndTestImplementation
 
         project.task("endToEndTest", type: Test) {
             testClassesDirs = project.sourceSets.endToEndTest.output.classesDirs

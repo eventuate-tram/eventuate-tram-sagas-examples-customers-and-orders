@@ -3,12 +3,24 @@ apply plugin: EndToEndTestsPlugin
 dependencies {
     testImplementation project(":customer-service-api-web")
     testImplementation project(":order-service-api-web")
+    testImplementation project(":order-service-api-messaging")
     testImplementation project(":api-gateway-service-api-web")
+    testImplementation "io.eventuate.examples.common:eventuate-examples-common-money:$eventuateCommonExamplesVersion"
 
     testImplementation "org.springframework.boot:spring-boot-starter-web"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 
-    testImplementation "io.eventuate.util:eventuate-util-test:$eventuateUtilVersion"
+    testImplementation "io.eventuate.util:eventuate-util-test"
 
+    // TODO shouldn't need to do this too
+    endToEndTestImplementation "org.testcontainers:testcontainers:$testContainersVersion"
+    endToEndTestImplementation "io.eventuate.platform.testcontainer.support:eventuate-platform-testcontainer-support-service:$eventuatePlatformTestContainerSupportVersion"
+    endToEndTestImplementation "io.eventuate.cdc:eventuate-cdc-testcontainers"
+    endToEndTestImplementation "io.eventuate.common:eventuate-common-testcontainers"
+    endToEndTestImplementation "io.eventuate.messaging.kafka:eventuate-messaging-kafka-testcontainers"
 }
 
+endToEndTest.dependsOn(":customer-service-main:assemble", ":order-service-main:assemble", ":api-gateway-service:assemble")
+check.shouldRunAfter(":customer-service-main:check")
+check.shouldRunAfter(":order-service-main:check")
+check.shouldRunAfter(":api-gateway-service:check")

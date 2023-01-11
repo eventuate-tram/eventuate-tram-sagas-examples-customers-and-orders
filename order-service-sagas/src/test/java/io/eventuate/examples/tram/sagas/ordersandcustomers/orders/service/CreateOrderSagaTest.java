@@ -1,6 +1,6 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.service;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.commondomain.Money;
+import io.eventuate.examples.common.money.Money;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.messaging.commands.ReserveCreditCommand;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.messaging.replies.CustomerCreditLimitExceeded;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.OrderDetails;
@@ -11,6 +11,7 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.Order;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderRepository;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderService;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas.CreateOrderSaga;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas.CustomerServiceProxy;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.stubbing.Answer;
@@ -31,9 +32,10 @@ public class CreateOrderSagaTest {
   private Money orderTotal = new Money("12.34");
   private OrderDetails orderDetails = new OrderDetails(customerId, orderTotal);
   private Long orderId = 103L;
+  private CustomerServiceProxy customerService = new CustomerServiceProxy();
 
   private CreateOrderSaga makeCreateOrderSaga() {
-    return new CreateOrderSaga(orderService);
+    return new CreateOrderSaga(orderService, customerService);
   }
 
 

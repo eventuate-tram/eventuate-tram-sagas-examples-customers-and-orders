@@ -1,11 +1,14 @@
 
 dependencies {
-    compile project(":order-service-api-web")
-    compile project(":order-service-domain")
-    compile project(":order-service-sagas")
+    implementation project(":order-service-api-web")
+    implementation project(":order-service-domain")
+    implementation project(":order-service-sagas")
+    implementation project(":order-service-api-messaging")
+    implementation "io.eventuate.examples.common:eventuate-examples-common-money:$eventuateCommonExamplesVersion"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 
-    compile "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-web"
 
-    testCompile "junit:junit:4.12"
-    testCompile "org.mockito:mockito-core:2.23.0"
+    testImplementation "junit:junit:4.12"
+    testImplementation "org.mockito:mockito-core:2.23.0"
 }

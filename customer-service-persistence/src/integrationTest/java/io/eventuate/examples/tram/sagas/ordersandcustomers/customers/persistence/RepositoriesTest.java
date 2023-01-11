@@ -1,6 +1,9 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.customers.persistence;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.commondomain.Money;
+import io.eventuate.common.testcontainers.DatabaseContainerFactory;
+import io.eventuate.common.testcontainers.EventuateDatabaseContainer;
+import io.eventuate.common.testcontainers.PropertyProvidingContainer;
+import io.eventuate.examples.common.money.Money;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.domain.Customer;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.domain.CustomerRepository;
 import org.junit.Test;
@@ -11,6 +14,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +30,13 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class RepositoriesTest {
 
+
+  public static EventuateDatabaseContainer<?> database = DatabaseContainerFactory.makeVanillaDatabaseContainer();
+
+  @DynamicPropertySource
+  static void registerMySqlProperties(DynamicPropertyRegistry registry) {
+    PropertyProvidingContainer.startAndProvideProperties(registry, database);
+  }
 
   public static final String customerName = "Chris";
 

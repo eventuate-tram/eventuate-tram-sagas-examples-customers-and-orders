@@ -1,7 +1,7 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web;
 
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.commondomain.Money;
+import io.eventuate.examples.common.money.Money;
 
 public class GetCustomerResponse {
   private Long customerId;
