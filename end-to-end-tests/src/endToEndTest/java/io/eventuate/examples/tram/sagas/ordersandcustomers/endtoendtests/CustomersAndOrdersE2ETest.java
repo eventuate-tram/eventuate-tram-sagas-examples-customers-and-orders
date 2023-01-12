@@ -1,10 +1,5 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests;
 
-import io.eventuate.cdc.testcontainers.EventuateCdcContainer;
-import io.eventuate.common.testcontainers.DatabaseContainerFactory;
-import io.eventuate.common.testcontainers.EventuateDatabaseContainer;
-import io.eventuate.common.testcontainers.EventuateGenericContainer;
-import io.eventuate.common.testcontainers.EventuateZookeeperContainer;
 import io.eventuate.examples.common.money.Money;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.api.web.GetCustomerHistoryResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.CreateCustomerRequest;
@@ -14,9 +9,6 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.CreateOrderRequest;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.CreateOrderResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrderResponse;
-import io.eventuate.messaging.kafka.testcontainers.EventuateKafkaCluster;
-import io.eventuate.messaging.kafka.testcontainers.EventuateKafkaContainer;
-import io.eventuate.testcontainers.service.ServiceContainer;
 import io.eventuate.util.test.async.Eventually;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -32,14 +24,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import org.testcontainers.containers.output.Slf4jLogConsumer;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = CustomersAndOrdersE2ETestConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -55,96 +45,15 @@ public class CustomersAndOrdersE2ETest {
 
     private static Logger logger = LoggerFactory.getLogger(CustomersAndOrdersE2ETest.class);
 
-    public static EventuateKafkaCluster eventuateKafkaCluster = new EventuateKafkaCluster("CustomersAndOrdersE2ETest");
-
-    public static EventuateZookeeperContainer zookeeper = eventuateKafkaCluster.zookeeper;
-
-    public static EventuateKafkaContainer kafka = eventuateKafkaCluster.kafka;
-
-    public static EventuateDatabaseContainer<?> customerServiceDatabase =
-            DatabaseContainerFactory.makeVanillaDatabaseContainer()
-                    .withNetwork(eventuateKafkaCluster.network)
-                    .withNetworkAliases("customer-service-mysql")
-                    .withReuse(false);
-
-    public static EventuateDatabaseContainer<?> orderServiceDatabase =
-            DatabaseContainerFactory.makeVanillaDatabaseContainer()
-                    .withNetwork(eventuateKafkaCluster.network)
-                    .withNetworkAliases("order-service-mysql")
-                    .withReuse(false); // This results in only one DB!
+    private static ApplicationUnderTest applicationUnderTest = ApplicationUnderTest.make();
 
 
-    public static ServiceContainer customerService =
-            new ServiceContainer("../customer-service-main/Dockerfile")
-                    .withNetwork(eventuateKafkaCluster.network)
-                    .withNetworkAliases("customer-service")
-                    .withDatabase(customerServiceDatabase)
-                    .withZookeeper(zookeeper)
-                    .withKafka(kafka)
-                    .withReuse(false) // should rebuild
-            ;
-
-    public static ServiceContainer orderService =
-            new ServiceContainer("../order-service-main/Dockerfile")
-                    .withNetwork(eventuateKafkaCluster.network)
-                    .withNetworkAliases("order-service")
-                    .withDatabase(orderServiceDatabase)
-                    .withZookeeper(zookeeper)
-                    .withKafka(kafka)
-                    .withReuse(false) // should rebuild
-            ;
-    public static ServiceContainer apiGatewayService =
-            new ServiceContainer("../api-gateway-service/Dockerfile")
-                    .withNetwork(eventuateKafkaCluster.network)
-                    .withReuse(false) // should rebuild
-                    .withExposedPorts(8080)
-                    .withEnv("ORDER_DESTINATIONS_ORDERSERVICEURL", "http://order-service:8080")
-                    .withEnv("CUSTOMER_DESTINATIONS_CUSTOMERSERVICEURL", "http://customer-service:8080")
-                    .withEnv("SPRING_SLEUTH_ENABLED", "true")
-                    .withEnv("SPRING_SLEUTH_SAMPLER_PROBABILITY", "1")
-                    .withEnv("SPRING_ZIPKIN_BASE_URL", "http://zipkin:9411/")
-                    .withEnv("JAVA_OPTS", "-Ddebug")
-                    .withEnv("APIGATEWAY_TIMEOUT_MILLIS", "1000");
-
-
-    public static EventuateCdcContainer cdc = new EventuateCdcContainer()
-            .withKafkaCluster(eventuateKafkaCluster)
-            .withTramPipeline(customerServiceDatabase)
-            .withTramPipeline(orderServiceDatabase)
-            .withReuse(false)
-            // State for deleted databases is persisted in Kafka
-            ;
 
     @BeforeClass
     public static void startContainers() {
-
-        startContainer(zookeeper);
-
-        startContainer(kafka);
-
-        startContainer(customerServiceDatabase);
-
-        startContainer(orderServiceDatabase);
-
-        startContainer(customerService);
-
-        startContainer(orderService);
-
-        startContainer(cdc);
-
-        startContainer(apiGatewayService);
+        applicationUnderTest.start();
     }
 
-    private static void startContainer(EventuateGenericContainer<?> container) {
-        String name = container.getFirstNetworkAlias();
-
-        Slf4jLogConsumer logConsumer2 = new Slf4jLogConsumer(logger).withPrefix("SVC " + name + ":");
-        System.out.println("============ Starting " + container.getClass().getSimpleName() + "," + container);
-        container.start();
-        System.out.println("============ Started " + container.getClass().getSimpleName() + "," + container);
-        container.followOutput(logConsumer2);
-
-    }
 
 
     private static final String CUSTOMER_NAME = "John";
@@ -152,33 +61,15 @@ public class CustomersAndOrdersE2ETest {
     @Value("${host.name}")
     private String hostName;
 
-    private String baseUrl(String path, String... pathElements) {
-        assertNotNull("host", hostName);
-
-        StringBuilder sb = new StringBuilder("http://");
-        sb.append(hostName);
-        sb.append(":");
-        sb.append(apiGatewayService.getFirstMappedPort());
-        sb.append("/");
-        sb.append(path);
-
-        for (String pe : pathElements) {
-            sb.append("/");
-            sb.append(pe);
-        }
-        String s = sb.toString();
-        return s;
-    }
-
     @Autowired
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
     @Test
     public void shouldApprove() {
-        CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(baseUrl("customers"),
+        CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "customers"),
                 new CreateCustomerRequest(CUSTOMER_NAME, new Money("15.00")), CreateCustomerResponse.class);
 
-        CreateOrderResponse createOrderResponse = restTemplate.postForObject(baseUrl("orders"),
+        CreateOrderResponse createOrderResponse = restTemplate.postForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "orders"),
                 new CreateOrderRequest(createCustomerResponse.getCustomerId(), new Money("12.34")), CreateOrderResponse.class);
 
         assertOrderState(createOrderResponse.getOrderId(), OrderState.APPROVED, null);
@@ -186,10 +77,10 @@ public class CustomersAndOrdersE2ETest {
 
     @Test
     public void shouldRejectBecauseOfInsufficientCredit() {
-        CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(baseUrl("customers"),
+        CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "customers"),
                 new CreateCustomerRequest(CUSTOMER_NAME, new Money("15.00")), CreateCustomerResponse.class);
 
-        CreateOrderResponse createOrderResponse = restTemplate.postForObject(baseUrl("orders"),
+        CreateOrderResponse createOrderResponse = restTemplate.postForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "orders"),
                 new CreateOrderRequest(createCustomerResponse.getCustomerId(), new Money("123.40")), CreateOrderResponse.class);
 
         assertOrderState(createOrderResponse.getOrderId(), OrderState.REJECTED, RejectionReason.INSUFFICIENT_CREDIT);
@@ -198,7 +89,7 @@ public class CustomersAndOrdersE2ETest {
     @Test
     public void shouldRejectBecauseOfUnknownCustomer() {
 
-        CreateOrderResponse createOrderResponse = restTemplate.postForObject(baseUrl("orders"),
+        CreateOrderResponse createOrderResponse = restTemplate.postForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "orders"),
                 new CreateOrderRequest(Long.MAX_VALUE, new Money("123.40")), CreateOrderResponse.class);
 
         assertOrderState(createOrderResponse.getOrderId(), OrderState.REJECTED, RejectionReason.UNKNOWN_CUSTOMER);
@@ -206,16 +97,16 @@ public class CustomersAndOrdersE2ETest {
 
     @Test
     public void shouldSupportOrderHistory() {
-        CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(baseUrl("customers"),
+        CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "customers"),
                 new CreateCustomerRequest(CUSTOMER_NAME, new Money("1000.00")), CreateCustomerResponse.class);
 
-        CreateOrderResponse createOrderResponse = restTemplate.postForObject(baseUrl("orders"),
+        CreateOrderResponse createOrderResponse = restTemplate.postForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "orders"),
                 new CreateOrderRequest(createCustomerResponse.getCustomerId(), new Money("100.00")),
                 CreateOrderResponse.class);
 
         Eventually.eventually(() -> {
             ResponseEntity<GetCustomerHistoryResponse> customerResponseEntity =
-                    restTemplate.getForEntity(baseUrl("customers", Long.toString(createCustomerResponse.getCustomerId()), "orderhistory"),
+                    restTemplate.getForEntity(applicationUnderTest.apiGatewayBaseUrl(hostName, "customers", Long.toString(createCustomerResponse.getCustomerId()), "orderhistory"),
                             GetCustomerHistoryResponse.class);
 
             assertEquals(HttpStatus.OK, customerResponseEntity.getStatusCode());
@@ -233,7 +124,7 @@ public class CustomersAndOrdersE2ETest {
 
     private void assertOrderState(Long id, OrderState expectedState, RejectionReason expectedRejectionReason) {
         Eventually.eventually(() -> {
-            ResponseEntity<GetOrderResponse> getOrderResponseEntity = restTemplate.getForEntity(baseUrl("orders/" + id), GetOrderResponse.class);
+            ResponseEntity<GetOrderResponse> getOrderResponseEntity = restTemplate.getForEntity(applicationUnderTest.apiGatewayBaseUrl(hostName, "orders/" + id), GetOrderResponse.class);
             assertEquals(HttpStatus.OK, getOrderResponseEntity.getStatusCode());
             GetOrderResponse order = getOrderResponseEntity.getBody();
             assertEquals(expectedState, order.getOrderState());
@@ -243,15 +134,15 @@ public class CustomersAndOrdersE2ETest {
 
     @Test(expected = HttpClientErrorException.NotFound.class)
     public void shouldHandleOrderHistoryQueryForUnknownCustomer() {
-        restTemplate.getForEntity(baseUrl("customers", Long.toString(System.currentTimeMillis()), "orderhistory"),
+        restTemplate.getForEntity(applicationUnderTest.apiGatewayBaseUrl(hostName, "customers", Long.toString(System.currentTimeMillis()), "orderhistory"),
                 GetCustomerHistoryResponse.class);
     }
 
     @Test
     public void testSwaggerUiUrls() throws IOException {
-        testSwaggerUiUrl(customerService.getFirstMappedPort());
-        testSwaggerUiUrl(orderService.getFirstMappedPort());
-        testSwaggerUiUrl(apiGatewayService.getFirstMappedPort());
+        testSwaggerUiUrl(applicationUnderTest.getCustomerServicePort());
+        testSwaggerUiUrl(applicationUnderTest.getOrderServicePort());
+        testSwaggerUiUrl(applicationUnderTest.getApigatewayPort());
     }
 
     private void testSwaggerUiUrl(int port) throws IOException {

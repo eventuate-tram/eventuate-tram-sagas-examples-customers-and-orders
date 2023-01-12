@@ -24,3 +24,9 @@ endToEndTest.dependsOn(":customer-service-main:assemble", ":order-service-main:a
 check.shouldRunAfter(":customer-service-main:check")
 check.shouldRunAfter(":order-service-main:check")
 check.shouldRunAfter(":api-gateway-service:check")
+
+endToEndTest {
+    if (project.hasProperty('endToEndTest.use.dockerCompose'))
+        systemProperty "endToEndTest.use.dockerCompose", true
+
+}

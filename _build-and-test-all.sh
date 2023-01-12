@@ -23,3 +23,5 @@ ${dockerall}Down
 
 ./gradlew build
 
+./gradlew ${DATABASE?}ComposeDown ${DATABASE?}ComposeUp endToEndTestsUsingDockerCompose
+./gradlew ${DATABASE?}ComposeDown

@@ -89,7 +89,7 @@ dockerCompose {
         projectName = null
         useComposeFiles = ["docker-compose-mysql.yml"]
 
-        startedServices = project.hasProperty('startedServices') ? project.ext.startedServices.split(',') : ["order-service", "customer-service", "api-gateway-service", "cdc-service"]
+        startedServices = project.hasProperty('startedServices') ? project.ext.startedServices.split(',') : ["zookeeper", "kafka", "order-service", "customer-service", "api-gateway-service", "cdc-service"]
     }
 
     mysqlShardedOutboxes {
@@ -112,7 +112,7 @@ dockerCompose {
     postgres {
         projectName = null
         useComposeFiles = ["docker-compose-postgres.yml"]
-        startedServices = project.hasProperty('startedServices') ? project.ext.startedServices.split(',') : ["order-service", "customer-service", "api-gateway-service", "cdc-service"]
+        startedServices = project.hasProperty('startedServices') ? project.ext.startedServices.split(',') : ["zookeeper", "kafka", "order-service", "customer-service", "api-gateway-service", "cdc-service"]
     }
     postgresOnly {
         projectName = null
@@ -144,6 +144,12 @@ task buildAndStartServicesMySql(type: GradleBuild) {
 
 task endToEndTests(type: GradleBuild) {
     tasks = [":end-to-end-tests:endToEndTest"]
+}
+
+task endToEndTestsUsingDockerCompose(type: GradleBuild) {
+    startParameter.projectProperties.put("endToEndTest.use.dockerCompose", "true")
+    tasks = [":end-to-end-tests:endToEndTest"]
+    dependsOn(":end-to-end-tests:clean")
 }
 
 endToEndTests.dependsOn(":end-to-end-tests:clean")
