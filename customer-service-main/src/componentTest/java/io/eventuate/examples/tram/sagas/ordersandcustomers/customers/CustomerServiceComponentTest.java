@@ -9,6 +9,7 @@ import io.eventuate.messaging.kafka.testcontainers.EventuateKafkaContainer;
 import io.eventuate.testcontainers.service.ServiceContainer;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.testcontainers.lifecycle.Startables;
 
 public class CustomerServiceComponentTest {
 
@@ -16,7 +17,7 @@ public class CustomerServiceComponentTest {
 
     public static EventuateZookeeperContainer zookeeper = eventuateKafkaCluster.zookeeper;
 
-    public static EventuateKafkaContainer kafka = eventuateKafkaCluster.kafka;
+    public static EventuateKafkaContainer kafka = eventuateKafkaCluster.kafka.dependsOn(zookeeper);
 
     public static EventuateDatabaseContainer<?> database =
             DatabaseContainerFactory.makeVanillaDatabaseContainer()
@@ -31,15 +32,13 @@ public class CustomerServiceComponentTest {
                     .withDatabase(database)
                     .withZookeeper(zookeeper)
                     .withKafka(kafka)
+                    .dependsOn(kafka, database)
                     .withReuse(false) // should rebuild
             ;
 
     @BeforeClass
     public static void startContainers() {
-        zookeeper.start();
-        kafka.start();
-        database.start();
-        service.start();
+        Startables.deepStart(service).join();
     }
 
     @Test

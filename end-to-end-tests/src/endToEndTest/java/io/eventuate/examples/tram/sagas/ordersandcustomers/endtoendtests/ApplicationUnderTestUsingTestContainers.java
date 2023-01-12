@@ -9,6 +9,7 @@ import io.eventuate.messaging.kafka.testcontainers.EventuateKafkaCluster;
 import io.eventuate.messaging.kafka.testcontainers.EventuateKafkaContainer;
 import io.eventuate.testcontainers.service.ServiceContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
+import org.testcontainers.lifecycle.Startables;
 
 public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTest {
   private final EventuateZookeeperContainer zookeeper;
@@ -28,8 +29,10 @@ public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTes
 
   public ApplicationUnderTestUsingTestContainers() {
     EventuateKafkaCluster eventuateKafkaCluster = new EventuateKafkaCluster("CustomersAndOrdersE2ETest");
+
     zookeeper = eventuateKafkaCluster.zookeeper;
-    kafka = eventuateKafkaCluster.kafka;
+    kafka = eventuateKafkaCluster.kafka.dependsOn(zookeeper);
+
     customerServiceDatabase = DatabaseContainerFactory.makeVanillaDatabaseContainer()
             .withNetwork(eventuateKafkaCluster.network)
             .withNetworkAliases("customer-service-mysql")
@@ -44,6 +47,7 @@ public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTes
             .withDatabase(customerServiceDatabase)
             .withZookeeper(zookeeper)
             .withKafka(kafka)
+            .dependsOn(customerServiceDatabase, kafka)
             .withReuse(false);
     orderService = new ServiceContainer("../order-service-main/Dockerfile")
             .withNetwork(eventuateKafkaCluster.network)
@@ -51,6 +55,7 @@ public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTes
             .withDatabase(orderServiceDatabase)
             .withZookeeper(zookeeper)
             .withKafka(kafka)
+            .dependsOn(orderServiceDatabase, kafka)
             .withReuse(false);
     apiGatewayService = new ServiceContainer("../api-gateway-service/Dockerfile")
             .withNetwork(eventuateKafkaCluster.network)
@@ -67,27 +72,13 @@ public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTes
             .withKafkaCluster(eventuateKafkaCluster)
             .withTramPipeline(customerServiceDatabase)
             .withTramPipeline(orderServiceDatabase)
+            .dependsOn(customerService, orderService)
             .withReuse(false);
   }
 
   @Override
   public void start() {
-
-    startContainer(zookeeper);
-
-    startContainer(kafka);
-
-    startContainer(customerServiceDatabase);
-
-    startContainer(orderServiceDatabase);
-
-    startContainer(customerService);
-
-    startContainer(orderService);
-
-    startContainer(cdc);
-
-    startContainer(apiGatewayService);
+    Startables.deepStart(cdc, apiGatewayService).join();
   }
 
   private void startContainer(EventuateGenericContainer<?> container) {

@@ -2,7 +2,6 @@ package io.eventuate.examples.tram.sagas.ordersandcustomers.customers.messaging;
 
 import io.eventuate.common.testcontainers.DatabaseContainerFactory;
 import io.eventuate.common.testcontainers.EventuateDatabaseContainer;
-import io.eventuate.common.testcontainers.PropertyProvidingContainer;
 import io.eventuate.examples.common.money.Money;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.messaging.commands.ReserveCreditCommand;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.domain.CustomerService;
@@ -24,8 +23,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.testcontainers.lifecycle.Startables;
 
 import java.util.Collections;
+import java.util.stream.Stream;
 
 import static org.mockito.Mockito.verify;
 
@@ -39,8 +40,12 @@ public class CustomerCommandHandlerIntegrationTest {
 
   @DynamicPropertySource
   static void registerMySqlProperties(DynamicPropertyRegistry registry) {
-    PropertyProvidingContainer.startAndProvideProperties(registry, database, eventuateKafkaCluster.zookeeper,
-            eventuateKafkaCluster.kafka);
+    eventuateKafkaCluster.kafka.dependsOn(eventuateKafkaCluster.zookeeper);
+    Startables.deepStart(eventuateKafkaCluster.kafka, database).join();
+
+    Stream.of(database, eventuateKafkaCluster.zookeeper, eventuateKafkaCluster.kafka).forEach(container -> {
+      container.registerProperties(registry::add);
+    });
   }
 
   // TODO - autoconfigure?? EventuateTramFlywayMigrationConfiguration
