@@ -26,7 +26,7 @@ check.shouldRunAfter(":order-service-main:check")
 check.shouldRunAfter(":api-gateway-service:check")
 
 endToEndTest {
-    if (project.hasProperty('endToEndTest.use.dockerCompose'))
-        systemProperty "endToEndTest.use.dockerCompose", true
+    if (project.hasProperty('endToEndTestMode'))
+        systemProperty "endToEndTestMode", endToEndTestMode
 
 }

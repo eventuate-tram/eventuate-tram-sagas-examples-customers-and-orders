@@ -1,28 +1,28 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests;
 
-public class ApplicationUnderTestUsingDockerCompose extends ApplicationUnderTest {
+public class ApplicationUnderTestUsingKind extends ApplicationUnderTest {
   @Override
   public void start() {
-    // Do nothing
-  }
 
-  @Override
-  int getCustomerServicePort() {
-    return 8081;
   }
 
   @Override
   int getApigatewayPort() {
-    return 8083;
+    return 80;
+  }
+
+  @Override
+  int getCustomerServicePort() {
+    throw new UnsupportedOperationException();
   }
 
   @Override
   int getOrderServicePort() {
-    return 8081;
+    throw new UnsupportedOperationException();
   }
 
   @Override
   boolean exposesSwaggerUiForBackendServices() {
-    return true;
+    return false;
   }
 }

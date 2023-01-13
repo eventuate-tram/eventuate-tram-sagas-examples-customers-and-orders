@@ -32,8 +32,8 @@ import java.net.URL;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = CustomersAndOrdersE2ETestConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
-public class CustomersAndOrdersE2ETest {
+@SpringBootTest(classes = CustomersAndOrdersEndToEndTestConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
+public class CustomersAndOrdersEndToEndTest {
 
     // Service
     /// Outbox/producer properties:
@@ -43,7 +43,7 @@ public class CustomersAndOrdersE2ETest {
 
     // CDC Polling configuration
 
-    private static Logger logger = LoggerFactory.getLogger(CustomersAndOrdersE2ETest.class);
+    private static Logger logger = LoggerFactory.getLogger(CustomersAndOrdersEndToEndTest.class);
 
     private static ApplicationUnderTest applicationUnderTest = ApplicationUnderTest.make();
 
@@ -140,9 +140,12 @@ public class CustomersAndOrdersE2ETest {
 
     @Test
     public void testSwaggerUiUrls() throws IOException {
-        testSwaggerUiUrl(applicationUnderTest.getCustomerServicePort());
-        testSwaggerUiUrl(applicationUnderTest.getOrderServicePort());
         testSwaggerUiUrl(applicationUnderTest.getApigatewayPort());
+
+        if (applicationUnderTest.exposesSwaggerUiForBackendServices()) {
+            testSwaggerUiUrl(applicationUnderTest.getCustomerServicePort());
+            testSwaggerUiUrl(applicationUnderTest.getOrderServicePort());
+        }
     }
 
     private void testSwaggerUiUrl(int port) throws IOException {

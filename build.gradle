@@ -147,7 +147,7 @@ task endToEndTests(type: GradleBuild) {
 }
 
 task endToEndTestsUsingDockerCompose(type: GradleBuild) {
-    startParameter.projectProperties.put("endToEndTest.use.dockerCompose", "true")
+    startParameter.projectProperties.put("endToEndTestMode", "DockerCompose")
     tasks = [":end-to-end-tests:endToEndTest"]
     dependsOn(":end-to-end-tests:clean")
 }
