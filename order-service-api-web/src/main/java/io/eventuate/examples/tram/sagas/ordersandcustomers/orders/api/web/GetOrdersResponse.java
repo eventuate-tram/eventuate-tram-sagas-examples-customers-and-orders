@@ -1,21 +1,23 @@
-package io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web;
+package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web;
 
 import java.util.List;
 
-public class GetCustomersResponse {
+public class GetOrdersResponse {
 
-  private List<GetCustomerResponse> customers;
+  private List<GetOrderResponse> orders;
 
-
-  public GetCustomersResponse(List<GetCustomerResponse> customers) {
-    this.customers = customers;
+  public GetOrdersResponse() {
   }
 
-  public List<GetCustomerResponse> getCustomers() {
-    return customers;
+  public GetOrdersResponse(List<GetOrderResponse> orders) {
+    this.orders = orders;
   }
 
-  public void setCustomers(List<GetCustomerResponse> customers) {
-    this.customers = customers;
+  public List<GetOrderResponse> getOrders() {
+    return orders;
+  }
+
+  public void setOrders(List<GetOrderResponse> orders) {
+    this.orders = orders;
   }
 }

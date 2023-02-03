@@ -4,11 +4,14 @@ import io.eventuate.examples.common.money.Money;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.api.web.GetCustomerHistoryResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.CreateCustomerRequest;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.CreateCustomerResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.GetCustomerResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.GetCustomersResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.OrderState;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.RejectionReason;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.CreateOrderRequest;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.CreateOrderResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrderResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrdersResponse;
 import io.eventuate.util.test.async.Eventually;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -30,6 +33,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = CustomersAndOrdersEndToEndTestConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -46,7 +50,7 @@ public class CustomersAndOrdersEndToEndTest {
     private static Logger logger = LoggerFactory.getLogger(CustomersAndOrdersEndToEndTest.class);
 
     private static ApplicationUnderTest applicationUnderTest = ApplicationUnderTest.make();
-
+    private Money creditLimit = new Money("15.00");
 
 
     @BeforeClass
@@ -65,14 +69,32 @@ public class CustomersAndOrdersEndToEndTest {
     private RestTemplate restTemplate;
 
     @Test
+    public void shouldGetCustomers() {
+        GetCustomersResponse customers = restTemplate.getForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "customers"), GetCustomersResponse.class);
+        assertNotNull(customers);
+    }
+    @Test
+    public void shouldGetOrder() {
+        GetOrdersResponse orders = restTemplate.getForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "orders"), GetOrdersResponse.class);
+        assertNotNull(orders);
+    }
+    @Test
     public void shouldApprove() {
         CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "customers"),
-                new CreateCustomerRequest(CUSTOMER_NAME, new Money("15.00")), CreateCustomerResponse.class);
+                new CreateCustomerRequest(CUSTOMER_NAME, creditLimit), CreateCustomerResponse.class);
+
+        assertCustomerState(createCustomerResponse.getCustomerId());
 
         CreateOrderResponse createOrderResponse = restTemplate.postForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "orders"),
                 new CreateOrderRequest(createCustomerResponse.getCustomerId(), new Money("12.34")), CreateOrderResponse.class);
 
         assertOrderState(createOrderResponse.getOrderId(), OrderState.APPROVED, null);
+    }
+
+    private void assertCustomerState(long id) {
+        GetCustomerResponse customer = restTemplate.getForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "customers/" + id), GetCustomerResponse.class);
+        assertEquals(creditLimit, customer.getCreditLimit());
+
     }
 
     @Test
