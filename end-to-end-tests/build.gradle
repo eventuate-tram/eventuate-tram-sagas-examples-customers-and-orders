@@ -20,10 +20,10 @@ dependencies {
     endToEndTestImplementation "io.eventuate.messaging.kafka:eventuate-messaging-kafka-testcontainers"
 }
 
-endToEndTest.dependsOn(":customer-service-main:assemble", ":order-service-main:assemble", ":api-gateway-service:assemble")
+endToEndTest.dependsOn(":customer-service-main:assemble", ":order-service-main:assemble", ":api-gateway-service-main:assemble")
 check.shouldRunAfter(":customer-service-main:check")
 check.shouldRunAfter(":order-service-main:check")
-check.shouldRunAfter(":api-gateway-service:check")
+check.shouldRunAfter(":api-gateway-service-main:check")
 
 endToEndTest {
     if (project.hasProperty('endToEndTestMode'))

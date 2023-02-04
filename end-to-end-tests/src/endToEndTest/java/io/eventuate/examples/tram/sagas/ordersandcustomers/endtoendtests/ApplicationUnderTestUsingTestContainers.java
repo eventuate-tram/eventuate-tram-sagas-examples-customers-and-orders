@@ -57,7 +57,7 @@ public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTes
             .withKafka(kafka)
             .dependsOn(orderServiceDatabase, kafka)
             .withReuse(false);
-    apiGatewayService = new ServiceContainer("../api-gateway-service/Dockerfile")
+    apiGatewayService = new ServiceContainer("../api-gateway-service-main/Dockerfile")
             .withNetwork(eventuateKafkaCluster.network)
             .withReuse(false) // should rebuild
             .withExposedPorts(8080)

@@ -1,10 +1,7 @@
 rootProject.name = "eventuate-tram-sagas-examples-customers-and-orders"
 
-include 'common'
-
 include 'customer-service-api-web'
 include 'customer-service-api-messaging'
-
 include 'customer-service-domain'
 include 'customer-service-web'
 include 'customer-service-main'
@@ -20,6 +17,6 @@ include 'order-service-persistence'
 include 'order-service-main'
 
 include 'api-gateway-service-api-web'
-include 'api-gateway-service'
+include 'api-gateway-service-main'
 
 include 'end-to-end-tests'
