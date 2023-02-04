@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.NONE)
-@AutoConfigureStubRunner(ids = {"eventuate-tram-sagas-examples-customers-and-orders:customer-service-web"})
+@AutoConfigureStubRunner(ids = {"eventuate-tram-sagas-examples-customers-and-orders.customer-service:customer-service-web"})
 @DirtiesContext
 public class CustomerServiceProxyTest {
 

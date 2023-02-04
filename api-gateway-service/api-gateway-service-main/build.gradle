@@ -36,7 +36,7 @@ dependencies {
 
     testImplementation "org.springframework.cloud:spring-cloud-contract-wiremock"
     testImplementation "org.springframework.cloud:spring-cloud-starter-contract-stub-runner"
-    testImplementation "eventuate-tram-sagas-examples-customers-and-orders:customer-service-web-stubs:0.1.0-SNAPSHOT:stubs"
+    testImplementation "eventuate-tram-sagas-examples-customers-and-orders.customer-service:customer-service-web-stubs:0.1.0-SNAPSHOT:stubs"
 
     implementation group: 'io.netty', name: 'netty-resolver-dns-native-macos', version: '4.1.75.Final', classifier: 'osx-aarch_64'
 }

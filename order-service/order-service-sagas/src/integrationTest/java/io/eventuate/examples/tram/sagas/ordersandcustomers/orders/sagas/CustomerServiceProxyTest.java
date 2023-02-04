@@ -31,7 +31,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes= CustomerServiceProxyTest.TestConfiguration.class,
         webEnvironment= SpringBootTest.WebEnvironment.NONE)
-@AutoConfigureStubRunner(ids = {"eventuate-tram-sagas-examples-customers-and-orders:customer-service-messaging"})
+@AutoConfigureStubRunner(ids = {"eventuate-tram-sagas-examples-customers-and-orders.customer-service:customer-service-messaging"})
 @DirtiesContext
 public class CustomerServiceProxyTest {
 
