@@ -1,10 +1,10 @@
 apply plugin: EndToEndTestsPlugin
 
 dependencies {
-    testImplementation project(":customer-service-api-web")
-    testImplementation project(":order-service-api-web")
-    testImplementation project(":order-service-api-messaging")
-    testImplementation project(":api-gateway-service-api-web")
+    testImplementation project(":customer-service:customer-service-api-web")
+    testImplementation project(":order-service:order-service-api-web")
+    testImplementation project(":order-service:order-service-api-messaging")
+    testImplementation project(":api-gateway-service:api-gateway-service-api-web")
     testImplementation "io.eventuate.examples.common:eventuate-examples-common-money:$eventuateCommonExamplesVersion"
 
     testImplementation "org.springframework.boot:spring-boot-starter-web"
@@ -20,10 +20,10 @@ dependencies {
     endToEndTestImplementation "io.eventuate.messaging.kafka:eventuate-messaging-kafka-testcontainers"
 }
 
-endToEndTest.dependsOn(":customer-service-main:assemble", ":order-service-main:assemble", ":api-gateway-service-main:assemble")
-check.shouldRunAfter(":customer-service-main:check")
-check.shouldRunAfter(":order-service-main:check")
-check.shouldRunAfter(":api-gateway-service-main:check")
+endToEndTest.dependsOn(":customer-service:customer-service-main:assemble", ":order-service:order-service-main:assemble", ":api-gateway-service:api-gateway-service-main:assemble")
+check.shouldRunAfter(":customer-service:customer-service-main:check")
+check.shouldRunAfter(":order-service:order-service-main:check")
+check.shouldRunAfter(":api-gateway-service:api-gateway-service-main:check")
 
 endToEndTest {
     if (project.hasProperty('endToEndTestMode'))

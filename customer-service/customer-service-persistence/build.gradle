@@ -1,0 +1,30 @@
+apply plugin: IntegrationTestsPlugin
+
+dependencies {
+    implementation project(":customer-service:customer-service-domain")
+
+    //implementation "io.eventuate.common:eventuate-common-jdbc"
+
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+
+    implementation 'mysql:mysql-connector-java:8.0.21'
+    implementation 'org.postgresql:postgresql:9.4-1200-jdbc41'
+
+
+    integrationTestImplementation "io.eventuate.common:eventuate-common-testcontainers"
+    // TODO shouldn't need to do this too
+    integrationTestImplementation "org.testcontainers:testcontainers:$testContainersVersion"
+
+}
+
+task("postgresIntegrationTest", type: Test) {
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    shouldRunAfter test
+}
+
+check.dependsOn postgresIntegrationTest
+
+postgresIntegrationTest {
+    systemProperty "spring.profiles.active", "postgres"
+}

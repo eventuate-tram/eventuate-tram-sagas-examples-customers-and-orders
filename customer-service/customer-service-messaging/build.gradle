@@ -1,0 +1,76 @@
+apply plugin: IntegrationTestsPlugin
+apply plugin: 'spring-cloud-contract'
+
+apply plugin: 'maven-publish'
+
+contracts {
+    packageWithBaseClasses = 'io.eventuate.examples.tram.sagas.ordersandcustomers.customers.messaging'
+}
+
+// Automatically added by plugin:
+// copyContracts - copies contracts to the output folder from which JAR will be created
+// verifierStubsJar - JAR with a provided stub suffix
+
+publishing {
+    repositories {
+        maven { url "${project.rootDir}/build/repo" }
+    }
+    publications {
+        stubs(MavenPublication) {
+            artifactId "${project.name}-stubs"
+            artifact verifierStubsJar
+
+            pom {
+                packaging "jar"
+            }
+        }
+    }
+}
+
+contractTest {
+    useJUnitPlatform()
+}
+
+dependencies {
+    implementation "io.eventuate.examples.common:eventuate-examples-common-money:$eventuateCommonExamplesVersion"
+    implementation project(":customer-service:customer-service-api-messaging")
+    implementation project(":customer-service:customer-service-domain")
+
+    implementation "io.eventuate.tram.core:eventuate-tram-spring-flyway"
+    runtimeOnly "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-flyway"
+
+
+    implementation "io.eventuate.tram.core:eventuate-tram-spring-jdbc-kafka"
+    implementation "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-participant-starter"
+    implementation "io.eventuate.tram.core:eventuate-tram-spring-optimistic-locking"
+
+
+//    testImplementation(platform("org.springframework.cloud:spring-cloud-contract-dependencies:$springCloudContractDependenciesVersion"))
+//    testImplementation "org.springframework.cloud:spring-cloud-starter-contract-verifier"
+//    testImplementation "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-in-memory"
+    testImplementation "io.eventuate.tram.core:eventuate-tram-spring-testing-support-cloud-contract"
+    testImplementation "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-in-memory"
+
+    testImplementation "io.eventuate.messaging.kafka:eventuate-messaging-kafka-spring-producer"
+    testImplementation "io.eventuate.tram.core:eventuate-tram-spring-logging"
+
+
+    // TODO shouldn't need to do this too
+    testImplementation "org.testcontainers:testcontainers:$testContainersVersion"
+
+    integrationTestImplementation "io.eventuate.common:eventuate-common-testcontainers"
+    integrationTestImplementation "io.eventuate.messaging.kafka:eventuate-messaging-kafka-testcontainers"
+
+    integrationTestImplementation project(":customer-service:customer-service-persistence")
+    testImplementation "io.eventuate.util:eventuate-util-test"
+    testImplementation "org.assertj:assertj-core:$assertjVersion"
+
+    integrationTestImplementation "io.eventuate.tram.core:eventuate-tram-spring-testing-support-kafka-producer"
+    integrationTestImplementation "io.eventuate.tram.core:eventuate-tram-spring-testing-support-outbox-commands"
+
+
+
+}
+
+
+check.dependsOn(contractTest)

@@ -41,7 +41,7 @@ public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTes
             .withNetwork(eventuateKafkaCluster.network)
             .withNetworkAliases("order-service-mysql")
             .withReuse(false);
-    customerService = new ServiceContainer("../customer-service-main/Dockerfile")
+    customerService = new ServiceContainer("../customer-service/customer-service-main/Dockerfile", "../gradle.properties")
             .withNetwork(eventuateKafkaCluster.network)
             .withNetworkAliases("customer-service")
             .withDatabase(customerServiceDatabase)
@@ -49,7 +49,7 @@ public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTes
             .withKafka(kafka)
             .dependsOn(customerServiceDatabase, kafka)
             .withReuse(false);
-    orderService = new ServiceContainer("../order-service-main/Dockerfile")
+    orderService = new ServiceContainer("../order-service/order-service-main/Dockerfile", "../gradle.properties")
             .withNetwork(eventuateKafkaCluster.network)
             .withNetworkAliases("order-service")
             .withDatabase(orderServiceDatabase)
@@ -57,7 +57,7 @@ public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTes
             .withKafka(kafka)
             .dependsOn(orderServiceDatabase, kafka)
             .withReuse(false);
-    apiGatewayService = new ServiceContainer("../api-gateway-service-main/Dockerfile")
+    apiGatewayService = new ServiceContainer("../api-gateway-service/api-gateway-service-main/Dockerfile", "../gradle.properties")
             .withNetwork(eventuateKafkaCluster.network)
             .withReuse(false) // should rebuild
             .withExposedPorts(8080)

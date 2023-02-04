@@ -1,0 +1,10 @@
+
+dependencies {
+    implementation project(":order-service:order-service-api-messaging")
+    implementation "io.eventuate.examples.common:eventuate-examples-common-money:$eventuateCommonExamplesVersion"
+
+    compileOnly "org.springframework.boot:spring-boot-starter-data-jpa"
+
+    testImplementation "junit:junit:4.12"
+    testImplementation "org.mockito:mockito-core:2.23.0"
+}

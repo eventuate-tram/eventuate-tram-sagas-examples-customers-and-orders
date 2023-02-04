@@ -1,0 +1,5 @@
+dependencies {
+    api project(":customer-service:customer-service-api-web")
+    api project(":order-service:order-service-api-web")
+    api "io.eventuate.examples.common:eventuate-examples-common-money:$eventuateCommonExamplesVersion"
+}

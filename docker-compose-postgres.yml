@@ -4,7 +4,7 @@ services:
     env_file:
       - ${ENV_FILE:-docker-compose-env-files/empty.env}
     build:
-      context: ./order-service-main/
+      context: ./order-service/order-service-main/
       args:
         serviceImageVersion: ${SERVICE_IMAGE_VERSION}
         baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION}
@@ -27,7 +27,7 @@ services:
     env_file:
       - ${ENV_FILE:-docker-compose-env-files/empty.env}
     build:
-      context: ./customer-service-main/
+      context: ./customer-service/customer-service-main/
       args:
         serviceImageVersion: ${SERVICE_IMAGE_VERSION}
         baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION}
@@ -48,7 +48,7 @@ services:
 
   api-gateway-service:
     build:
-      context: ./api-gateway-service/
+      context: ./api-gateway-service/api-gateway-service-main/
       args:
         serviceImageVersion: ${SERVICE_IMAGE_VERSION}
         baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION}

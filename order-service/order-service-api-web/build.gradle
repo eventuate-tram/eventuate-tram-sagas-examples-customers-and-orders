@@ -1,0 +1,6 @@
+dependencies {
+    implementation "io.eventuate.examples.common:eventuate-examples-common-money:$eventuateCommonExamplesVersion"
+    implementation project(":order-service:order-service-api-messaging")
+}
+
+
