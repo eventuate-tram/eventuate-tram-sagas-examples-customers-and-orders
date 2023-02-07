@@ -144,6 +144,7 @@ task buildAndStartServicesMySql(type: GradleBuild) {
 
 task endToEndTests(type: GradleBuild) {
     tasks = [":end-to-end-tests:endToEndTest"]
+    dependsOn(":end-to-end-tests:clean")
 }
 
 task endToEndTestsUsingDockerCompose(type: GradleBuild) {
@@ -152,7 +153,12 @@ task endToEndTestsUsingDockerCompose(type: GradleBuild) {
     dependsOn(":end-to-end-tests:clean")
 }
 
-endToEndTests.dependsOn(":end-to-end-tests:clean")
+task endToEndTestsUsingKind(type: GradleBuild) {
+    startParameter.projectProperties.put("endToEndTestMode", "Kind")
+    tasks = [":end-to-end-tests:endToEndTest"]
+    dependsOn(":end-to-end-tests:clean")
+}
+
 
 task stopServicesMySql(type: GradleBuild) {
     tasks = ["mysqlComposeDown"]
