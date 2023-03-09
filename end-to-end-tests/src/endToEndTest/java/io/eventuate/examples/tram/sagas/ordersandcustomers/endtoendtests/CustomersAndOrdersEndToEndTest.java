@@ -13,6 +13,7 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.Create
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrderResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrdersResponse;
 import io.eventuate.util.test.async.Eventually;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -50,6 +51,8 @@ public class CustomersAndOrdersEndToEndTest {
     private static Logger logger = LoggerFactory.getLogger(CustomersAndOrdersEndToEndTest.class);
 
     private static ApplicationUnderTest applicationUnderTest = ApplicationUnderTest.make();
+    private final Money orderTotalUnderCreditLimit = new Money("12.34");
+    private final Money orderTotalOverCreditLimit = new Money("123.40");
     private Money creditLimit = new Money("15.00");
 
 
@@ -80,18 +83,28 @@ public class CustomersAndOrdersEndToEndTest {
     }
     @Test
     public void shouldApprove() {
-        CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "customers"),
-                new CreateCustomerRequest(CUSTOMER_NAME, creditLimit), CreateCustomerResponse.class);
+        CreateCustomerResponse createCustomerResponse = createCustomer();
 
-        assertCustomerState(createCustomerResponse.getCustomerId());
+        assertCustomerHasCreditLimit(createCustomerResponse.getCustomerId());
 
-        CreateOrderResponse createOrderResponse = restTemplate.postForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "orders"),
-                new CreateOrderRequest(createCustomerResponse.getCustomerId(), new Money("12.34")), CreateOrderResponse.class);
+        CreateOrderResponse createOrderResponse = createOrder(createCustomerResponse.getCustomerId(), orderTotalUnderCreditLimit);
 
         assertOrderState(createOrderResponse.getOrderId(), OrderState.APPROVED, null);
     }
 
-    private void assertCustomerState(long id) {
+    @Nullable
+    private CreateOrderResponse createOrder(Long customerId, Money orderTotal) {
+        return restTemplate.postForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "orders"),
+                new CreateOrderRequest(customerId, orderTotal), CreateOrderResponse.class);
+    }
+
+    @Nullable
+    private CreateCustomerResponse createCustomer() {
+        return restTemplate.postForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "customers"),
+                new CreateCustomerRequest(CUSTOMER_NAME, creditLimit), CreateCustomerResponse.class);
+    }
+
+    private void assertCustomerHasCreditLimit(long id) {
         GetCustomerResponse customer = restTemplate.getForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "customers/" + id), GetCustomerResponse.class);
         assertEquals(creditLimit, customer.getCreditLimit());
 
@@ -99,11 +112,9 @@ public class CustomersAndOrdersEndToEndTest {
 
     @Test
     public void shouldRejectBecauseOfInsufficientCredit() {
-        CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "customers"),
-                new CreateCustomerRequest(CUSTOMER_NAME, new Money("15.00")), CreateCustomerResponse.class);
+        CreateCustomerResponse createCustomerResponse = createCustomer();
 
-        CreateOrderResponse createOrderResponse = restTemplate.postForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "orders"),
-                new CreateOrderRequest(createCustomerResponse.getCustomerId(), new Money("123.40")), CreateOrderResponse.class);
+        CreateOrderResponse createOrderResponse = createOrder(createCustomerResponse.getCustomerId(), orderTotalOverCreditLimit);
 
         assertOrderState(createOrderResponse.getOrderId(), OrderState.REJECTED, RejectionReason.INSUFFICIENT_CREDIT);
     }
@@ -111,37 +122,40 @@ public class CustomersAndOrdersEndToEndTest {
     @Test
     public void shouldRejectBecauseOfUnknownCustomer() {
 
-        CreateOrderResponse createOrderResponse = restTemplate.postForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "orders"),
-                new CreateOrderRequest(Long.MAX_VALUE, new Money("123.40")), CreateOrderResponse.class);
+        CreateOrderResponse createOrderResponse = createOrder(Long.MAX_VALUE, new Money("123.40"));
 
         assertOrderState(createOrderResponse.getOrderId(), OrderState.REJECTED, RejectionReason.UNKNOWN_CUSTOMER);
     }
 
     @Test
     public void shouldSupportOrderHistory() {
-        CreateCustomerResponse createCustomerResponse = restTemplate.postForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "customers"),
-                new CreateCustomerRequest(CUSTOMER_NAME, new Money("1000.00")), CreateCustomerResponse.class);
 
-        CreateOrderResponse createOrderResponse = restTemplate.postForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "orders"),
-                new CreateOrderRequest(createCustomerResponse.getCustomerId(), new Money("100.00")),
-                CreateOrderResponse.class);
+        CreateCustomerResponse createCustomerResponse = createCustomer();
+
+        CreateOrderResponse createOrderResponse = createOrder(createCustomerResponse.getCustomerId(), orderTotalUnderCreditLimit);
 
         Eventually.eventually(() -> {
-            ResponseEntity<GetCustomerHistoryResponse> customerResponseEntity =
-                    restTemplate.getForEntity(applicationUnderTest.apiGatewayBaseUrl(hostName, "customers", Long.toString(createCustomerResponse.getCustomerId()), "orderhistory"),
-                            GetCustomerHistoryResponse.class);
+            GetCustomerHistoryResponse customerResponse = getOrderHistory(createCustomerResponse.getCustomerId());
 
-            assertEquals(HttpStatus.OK, customerResponseEntity.getStatusCode());
-
-            GetCustomerHistoryResponse customerResponse = customerResponseEntity.getBody();
-
-            assertEquals(new Money("1000.00").getAmount().setScale(2), customerResponse.getCreditLimit().getAmount().setScale(2));
+            assertEquals(creditLimit.getAmount().setScale(2), customerResponse.getCreditLimit().getAmount().setScale(2));
             assertEquals(createCustomerResponse.getCustomerId(), customerResponse.getCustomerId());
             assertEquals(CUSTOMER_NAME, customerResponse.getName());
             assertEquals(1, customerResponse.getOrders().size());
+
             assertEquals((Long) createOrderResponse.getOrderId(), customerResponse.getOrders().get(0).getOrderId());
             assertEquals(OrderState.APPROVED, customerResponse.getOrders().get(0).getOrderState());
         });
+    }
+
+    @Nullable
+    private GetCustomerHistoryResponse getOrderHistory(Long customerId) {
+        ResponseEntity<GetCustomerHistoryResponse> customerResponseEntity =
+                restTemplate.getForEntity(applicationUnderTest.apiGatewayBaseUrl(hostName, "customers", Long.toString(customerId), "orderhistory"),
+                        GetCustomerHistoryResponse.class);
+
+        assertEquals(HttpStatus.OK, customerResponseEntity.getStatusCode());
+
+        return customerResponseEntity.getBody();
     }
 
     private void assertOrderState(Long id, OrderState expectedState, RejectionReason expectedRejectionReason) {
@@ -156,8 +170,7 @@ public class CustomersAndOrdersEndToEndTest {
 
     @Test(expected = HttpClientErrorException.NotFound.class)
     public void shouldHandleOrderHistoryQueryForUnknownCustomer() {
-        restTemplate.getForEntity(applicationUnderTest.apiGatewayBaseUrl(hostName, "customers", Long.toString(System.currentTimeMillis()), "orderhistory"),
-                GetCustomerHistoryResponse.class);
+        getOrderHistory(System.currentTimeMillis());
     }
 
     @Test
