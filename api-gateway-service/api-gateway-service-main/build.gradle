@@ -28,8 +28,12 @@ dependencies {
     implementation "org.apache.commons:commons-lang3"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
 
-    implementation "org.springframework.cloud:spring-cloud-starter-sleuth"
-    implementation "org.springframework.cloud:spring-cloud-sleuth-zipkin"
+
+    if (!springBootVersion.startsWith("3")) {
+
+        implementation "org.springframework.cloud:spring-cloud-starter-sleuth"
+        implementation "org.springframework.cloud:spring-cloud-sleuth-zipkin"
+    }
 
     testImplementation "org.springframework.cloud:spring-cloud-contract-wiremock"
     testImplementation "org.springframework.boot:spring-boot-starter-test"

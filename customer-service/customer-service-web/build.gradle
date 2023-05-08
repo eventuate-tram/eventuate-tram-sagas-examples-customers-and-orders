@@ -1,30 +1,34 @@
-apply plugin: 'spring-cloud-contract'
 
 apply plugin: 'maven-publish'
 
-contracts {
-    packageWithBaseClasses = 'io.eventuate.examples.tram.sagas.ordersandcustomers.customers.web'
-}
-
-publishing {
-    repositories {
-        maven { url "${project.rootDir}/build/repo" }
+if (!springBootVersion.startsWith("3")) {
+    apply plugin: 'spring-cloud-contract'
+    contractTest {
+        useJUnitPlatform()
+        packageWithBaseClasses = 'io.eventuate.examples.tram.sagas.ordersandcustomers.customers.web'
     }
-    publications {
-        stubs(MavenPublication) {
-            artifactId "${project.name}-stubs"
-            artifact verifierStubsJar
 
-            pom {
-                packaging "jar"
+    publishing {
+        repositories {
+            maven { url "${project.rootDir}/build/repo" }
+        }
+        publications {
+            stubs(MavenPublication) {
+                artifactId "${project.name}-stubs"
+                artifact verifierStubsJar
+
+                pom {
+                    packaging "jar"
+                }
             }
         }
     }
+
+
+    check.dependsOn(contractTest)
 }
 
-contractTest {
-    useJUnitPlatform()
-}
+
 
 dependencies {
     implementation "io.eventuate.examples.common:eventuate-examples-common-money:$eventuateCommonExamplesVersion"
@@ -38,5 +42,3 @@ dependencies {
     testImplementation "io.rest-assured:spring-mock-mvc"
 
 }
-
-check.dependsOn(contractTest)

@@ -1,35 +1,38 @@
 apply plugin: IntegrationTestsPlugin
-apply plugin: 'spring-cloud-contract'
 
 apply plugin: 'maven-publish'
 
-contracts {
-    packageWithBaseClasses = 'io.eventuate.examples.tram.sagas.ordersandcustomers.customers.messaging'
+if (!springBootVersion.startsWith("3")) {
+    apply plugin: 'spring-cloud-contract'
+    contractTest {
+        useJUnitPlatform()
+        packageWithBaseClasses = 'io.eventuate.examples.tram.sagas.ordersandcustomers.customers.messaging'
+    }
+    publishing {
+        repositories {
+            maven { url "${project.rootDir}/build/repo" }
+        }
+        publications {
+            stubs(MavenPublication) {
+                artifactId "${project.name}-stubs"
+                artifact verifierStubsJar
+
+                pom {
+                    packaging "jar"
+                }
+            }
+        }
+    }
+
+    check.dependsOn(contractTest)
 }
+
 
 // Automatically added by plugin:
 // copyContracts - copies contracts to the output folder from which JAR will be created
 // verifierStubsJar - JAR with a provided stub suffix
 
-publishing {
-    repositories {
-        maven { url "${project.rootDir}/build/repo" }
-    }
-    publications {
-        stubs(MavenPublication) {
-            artifactId "${project.name}-stubs"
-            artifact verifierStubsJar
 
-            pom {
-                packaging "jar"
-            }
-        }
-    }
-}
-
-contractTest {
-    useJUnitPlatform()
-}
 
 dependencies {
     implementation "io.eventuate.examples.common:eventuate-examples-common-money:$eventuateCommonExamplesVersion"
@@ -72,5 +75,3 @@ dependencies {
 
 }
 
-
-check.dependsOn(contractTest)
