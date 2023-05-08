@@ -2,7 +2,7 @@ package io.eventuate.examples.tram.sagas.ordersandcustomers.customers.domain;
 
 import io.eventuate.examples.common.money.Money;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Collections;
 import java.util.Map;
 
