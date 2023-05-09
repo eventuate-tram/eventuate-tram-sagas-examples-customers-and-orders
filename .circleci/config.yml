@@ -9,17 +9,17 @@ workflows:
           name: mysql-intel
           resource_class: large
           script: ./build-and-test-all-mysql.sh
-          java_version_to_install: 17
+          java_version_to_install: '17'
       - eventuate-gradle-build-and-test/build-and-test:
           name: mysql-arm
           resource_class: arm.large
           script: ./.circleci/build-and-test-arm.sh
-          java_version_to_install: 17
+          java_version_to_install: '17'
       - eventuate-gradle-build-and-test/build-and-test:
           name: postgres
           resource_class: large
           script: ./build-and-test-all-postgres.sh
-          java_version_to_install: 17
+          java_version_to_install: '17'
 #      - eventuate-gradle-build-and-test/build-and-test:
 #          name: mysql-sharded-outbox
 #          script: ./build-and-test-all-mysql-sharded-outbox.sh
