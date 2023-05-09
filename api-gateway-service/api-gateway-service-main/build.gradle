@@ -24,7 +24,6 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-webflux"
     implementation "org.springframework.cloud:spring-cloud-starter-gateway"
     implementation "org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j"
-    implementation "io.github.resilience4j:resilience4j-spring-boot2"
     implementation "org.apache.commons:commons-lang3"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
 
@@ -41,11 +40,15 @@ dependencies {
 
 if (!springBootVersion.startsWith("3")) {
     dependencies {
+        implementation "io.github.resilience4j:resilience4j-spring-boot2"
         implementation "org.springframework.cloud:spring-cloud-starter-sleuth"
         implementation "org.springframework.cloud:spring-cloud-sleuth-zipkin"
         testImplementation "eventuate-tram-sagas-examples-customers-and-orders.customer-service:customer-service-web-stubs:0.1.0-SNAPSHOT:stubs"
     }
 } else {
+    dependencies {
+        implementation "io.github.resilience4j:resilience4j-spring-boot3"
+    }
     integrationTest {
         exclude '**/CustomerServiceProxyTest.class'
     }
