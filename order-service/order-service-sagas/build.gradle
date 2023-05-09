@@ -27,7 +27,9 @@ dependencies {
     testImplementation "org.springframework.cloud:spring-cloud-starter-contract-stub-runner"
     testImplementation "io.eventuate.tram.core:eventuate-tram-spring-testing-support-cloud-contract"
 
-    testImplementation "eventuate-tram-sagas-examples-customers-and-orders.customer-service:customer-service-messaging-stubs:0.1.0-SNAPSHOT:stubs"
+    if (!springBootVersion.startsWith("3")) {
+        testImplementation "eventuate-tram-sagas-examples-customers-and-orders.customer-service:customer-service-messaging-stubs:0.1.0-SNAPSHOT:stubs"
+    }
 
     // testImplementation project(path: ':customer-service-messaging', classifier: "stubs")
 
