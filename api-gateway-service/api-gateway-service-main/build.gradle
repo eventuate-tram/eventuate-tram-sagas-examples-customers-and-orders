@@ -29,12 +29,6 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-actuator"
 
 
-    if (!springBootVersion.startsWith("3")) {
-
-        implementation "org.springframework.cloud:spring-cloud-starter-sleuth"
-        implementation "org.springframework.cloud:spring-cloud-sleuth-zipkin"
-        testImplementation "eventuate-tram-sagas-examples-customers-and-orders.customer-service:customer-service-web-stubs:0.1.0-SNAPSHOT:stubs"
-    }
 
     testImplementation "org.springframework.cloud:spring-cloud-contract-wiremock"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
@@ -43,6 +37,18 @@ dependencies {
     testImplementation "org.springframework.cloud:spring-cloud-starter-contract-stub-runner"
 
     implementation group: 'io.netty', name: 'netty-resolver-dns-native-macos', version: '4.1.75.Final', classifier: 'osx-aarch_64'
+}
+
+if (!springBootVersion.startsWith("3")) {
+    dependencies {
+        implementation "org.springframework.cloud:spring-cloud-starter-sleuth"
+        implementation "org.springframework.cloud:spring-cloud-sleuth-zipkin"
+        testImplementation "eventuate-tram-sagas-examples-customers-and-orders.customer-service:customer-service-web-stubs:0.1.0-SNAPSHOT:stubs"
+    }
+} else {
+    integrationTest {
+        exclude '**/CustomerServiceProxyTest.class'
+    }
 }
 
 compileTestJava.dependsOn(":customer-service:customer-service-web:publish")
