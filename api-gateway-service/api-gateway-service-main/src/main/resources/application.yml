@@ -40,14 +40,14 @@ spring:
         - id: get_customers
           uri: ${customer.destinations.customerServiceUrl}
           predicates:
-            - Method=get
+            - Method=GET
             - Path=/customers
           filters:
             - CircuitBreaker=myCircuitBreaker
         - id: get_customer
           uri: ${customer.destinations.customerServiceUrl}
           predicates:
-            - Method=get
+            - Method=GET
             - Path=/customers
           filters:
             - CircuitBreaker=myCircuitBreaker
@@ -61,14 +61,14 @@ spring:
         - id: get_order
           uri: ${order.destinations.orderServiceUrl}
           predicates:
-            - Method=get
+            - Method=GET
             - Path=/orders/{orderId}
           filters:
             - CircuitBreaker=myCircuitBreaker
         - id: get_orders
           uri: ${order.destinations.orderServiceUrl}
           predicates:
-            - Method=get
+            - Method=GET
             - Path=/orders
           filters:
             - CircuitBreaker=myCircuitBreaker
