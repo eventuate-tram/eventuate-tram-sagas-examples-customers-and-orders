@@ -16,7 +16,7 @@ class ServicePlugin implements Plugin<Project> {
                 implementation "io.eventuate.tram.springcloudsleuth:eventuate-tram-spring-cloud-sleuth-tram-starter"
             }
 
-            implementation "org.springdoc:springdoc-openapi-ui"
+            implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
 
         }
 
