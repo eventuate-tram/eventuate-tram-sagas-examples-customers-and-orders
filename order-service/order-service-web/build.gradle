@@ -4,7 +4,7 @@ dependencies {
     implementation project(":order-service:order-service-domain")
     implementation project(":order-service:order-service-sagas")
     implementation project(":order-service:order-service-api-messaging")
-    implementation "io.eventuate.examples.common:eventuate-examples-common-money:$eventuateCommonExamplesVersion"
+    implementation "io.eventuate.examples.common:eventuate-examples-common-money-jakarta9:$eventuateCommonExamplesVersion"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 
     implementation "org.springframework.boot:spring-boot-starter-web"

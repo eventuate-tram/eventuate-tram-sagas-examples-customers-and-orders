@@ -5,7 +5,7 @@ dependencies {
     testImplementation project(":order-service:order-service-api-web")
     testImplementation project(":order-service:order-service-api-messaging")
     testImplementation project(":api-gateway-service:api-gateway-service-api-web")
-    testImplementation "io.eventuate.examples.common:eventuate-examples-common-money:$eventuateCommonExamplesVersion"
+    testImplementation "io.eventuate.examples.common:eventuate-examples-common-money-jakarta9:$eventuateCommonExamplesVersion"
 
     testImplementation "org.springframework.boot:spring-boot-starter-web"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
