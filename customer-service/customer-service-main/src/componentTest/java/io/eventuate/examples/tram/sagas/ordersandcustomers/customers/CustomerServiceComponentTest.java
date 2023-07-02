@@ -27,7 +27,7 @@ public class CustomerServiceComponentTest {
 
 
     public static ServiceContainer service =
-            new ServiceContainer("./Dockerfile", "../../gradle.properties")
+            ServiceContainer.makeFromDockerfileOnClasspath()
                     .withNetwork(eventuateKafkaCluster.network)
                     .withDatabase(database)
                     .withZookeeper(zookeeper)

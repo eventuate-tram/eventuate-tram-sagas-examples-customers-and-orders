@@ -1,5 +1,19 @@
 apply plugin: EndToEndTestsPlugin
 
+def copyDockerfiles = tasks.register("copyDockerfiles", Copy) {
+    from(project.rootDir)
+    include("customer-service/customer-service-main/Dockerfile", "order-service/order-service-main/Dockerfile", "api-gateway-service/api-gateway-service-main/Dockerfile")
+    into(project.layout.buildDirectory.dir("generated/sources/dockerfiles"))
+}
+
+// Create a dependency on the Dockerfiles without using them
+
+sourceSets {
+    endToEndTest {
+        resources.srcDir copyDockerfiles
+    }
+}
+
 dependencies {
     testImplementation project(":customer-service:customer-service-api-web")
     testImplementation project(":order-service:order-service-api-web")
