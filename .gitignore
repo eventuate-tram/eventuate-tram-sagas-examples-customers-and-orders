@@ -6,3 +6,4 @@ build/
 tmp-migration
 
 out
+bin
