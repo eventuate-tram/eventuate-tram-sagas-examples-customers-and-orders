@@ -41,7 +41,7 @@ compose="docker-compose -f docker-compose-${DATABASE}.yml "
 
 $compose stop cdc-service api-gateway-service
 
-curl -s https://raw.githubusercontent.com/eventuate-foundation/eventuate-common/master/migration/db-id/migration.sh &> /dev/stdout | bash
+curl -s https://raw.githubusercontent.com/eventuate-foundation/eventuate-common/$EVENTUATE_COMMON_VERSION/migration/db-id/migration.sh &> /dev/stdout | bash
 
 echo === $compose cdc-service
 
