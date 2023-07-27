@@ -1,4 +1,6 @@
-#! /bin/bash -e -o pipefail
+#!/bin/bash 
+
+set -e -o pipefail
 
 #./gradlew build
 
