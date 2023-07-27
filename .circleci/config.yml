@@ -8,15 +8,11 @@ workflows:
       - eventuate-gradle-build-and-test/build-and-test:
           name: mysql-intel
           resource_class: large
-          script: ./build-and-test-all-mysql.sh
+          script: ./.circleci/build-and-test-intel.sh
       - eventuate-gradle-build-and-test/build-and-test:
           name: mysql-arm
           resource_class: arm.large
           script: ./.circleci/build-and-test-arm.sh
-      - eventuate-gradle-build-and-test/build-and-test:
-          name: postgres
-          resource_class: large
-          script: ./build-and-test-all-postgres.sh
 #      - eventuate-gradle-build-and-test/build-and-test:
 #          name: mysql-sharded-outbox
 #          script: ./build-and-test-all-mysql-sharded-outbox.sh

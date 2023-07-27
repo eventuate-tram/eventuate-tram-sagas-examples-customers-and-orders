@@ -4,4 +4,4 @@
 
 docker run --privileged --rm tonistiigi/binfmt --install amd64
 
-./build-and-test-all-mysql.sh
+./build-and-test-all.sh
