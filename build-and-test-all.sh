@@ -2,7 +2,7 @@
 
 set -e -o pipefail
 
-#./gradlew build
+./gradlew build
 
 ./gradlew mysqlOnlyComposeUp postgresOnlyComposeUp
 
