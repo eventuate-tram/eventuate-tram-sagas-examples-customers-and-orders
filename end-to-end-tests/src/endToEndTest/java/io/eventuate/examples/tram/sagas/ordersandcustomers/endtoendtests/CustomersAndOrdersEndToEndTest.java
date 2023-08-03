@@ -77,7 +77,7 @@ public class CustomersAndOrdersEndToEndTest {
         assertNotNull(customers);
     }
     @Test
-    public void shouldGetOrder() {
+    public void shouldGetOrders() {
         GetOrdersResponse orders = restTemplate.getForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "orders"), GetOrdersResponse.class);
         assertNotNull(orders);
     }
