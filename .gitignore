@@ -8,3 +8,4 @@ tmp-migration
 out
 .DS_Store
 lib
+bin
