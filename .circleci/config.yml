@@ -7,10 +7,12 @@ workflows:
     jobs:
       - eventuate-gradle-build-and-test/build-and-test:
           name: mysql-intel
+          machine_image: ubuntu-2204:2023.07.2
           resource_class: large
           script: ./.circleci/build-and-test-intel.sh
       - eventuate-gradle-build-and-test/build-and-test:
           name: mysql-arm
+          machine_image: ubuntu-2204:2023.07.2
           resource_class: arm.large
           script: ./.circleci/build-and-test-arm.sh
 #      - eventuate-gradle-build-and-test/build-and-test:
