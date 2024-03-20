@@ -1,0 +1,66 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "saga-walkthrough",
+  "steps": [
+    {
+      "file": "order-service/order-service-sagas/src/main/java/io/eventuate/examples/tram/sagas/ordersandcustomers/orders/sagas/CreateOrderSaga.java",
+      "description": "Here's the heart of the `CreateOrderSaga`, which defines the saga's steps.",
+      "line": 24
+    },
+    {
+      "file": "order-service/order-service-sagas/src/main/java/io/eventuate/examples/tram/sagas/ordersandcustomers/orders/sagas/OrderSagaService.java",
+      "description": "In the `Order Service` the `createOrder()` method instantiates the saga.",
+      "line": 25
+    },
+    {
+      "file": "order-service/order-service-sagas/src/main/java/io/eventuate/examples/tram/sagas/ordersandcustomers/orders/sagas/CreateOrderSaga.java",
+      "description": "The first step of the saga executes locally within the `Order Service`.",
+      "line": 26
+    },
+    {
+      "file": "order-service/order-service-sagas/src/main/java/io/eventuate/examples/tram/sagas/ordersandcustomers/orders/sagas/CreateOrderSaga.java",
+      "description": "The `create()` method creates and persists an `Order`. The `order ID` is saved in the Saga data",
+      "line": 50
+    },
+    {
+      "file": "order-service/order-service-sagas/src/main/java/io/eventuate/examples/tram/sagas/ordersandcustomers/orders/sagas/CreateOrderSaga.java",
+      "description": "The second step of the saga is then executed. It invokes the `reserveCredit()` method, which returns the message to send to the `Customer Service`",
+      "line": 29
+    },
+    {
+      "file": "order-service/order-service-sagas/src/main/java/io/eventuate/examples/tram/sagas/ordersandcustomers/orders/sagas/CreateOrderSaga.java",
+      "description": "This method returns the `CommandWithDestination`, which contains a message and the destination channel.",
+      "line": 55
+    },
+    {
+      "file": "order-service/order-service-sagas/src/main/java/io/eventuate/examples/tram/sagas/ordersandcustomers/orders/sagas/OrderSagaService.java",
+      "description": "The `createOrder()` method retrieves and returns the `Order`. Since the service uses the Transaction Outbox pattern, when this method returns, the message to send to the `Customer Service` to reserve credit is committed to the database.",
+      "line": 28
+    },
+    {
+      "file": "docker-compose-mysql.yml",
+      "description": "The `CDC service` retrieves the message from the outbox table and sends it to Apache Kafka",
+      "line": 122
+    },
+    {
+      "file": "customer-service/customer-service-messaging/src/main/java/io/eventuate/examples/tram/sagas/ordersandcustomers/customers/messaging/CustomerCommandHandler.java",
+      "description": "Here's how the `Customer Service` configures a command handler for the `ReserveCreditCommand`",
+      "line": 29
+    },
+    {
+      "file": "customer-service/customer-service-messaging/src/main/java/io/eventuate/examples/tram/sagas/ordersandcustomers/customers/messaging/CustomerCommandHandler.java",
+      "description": "On the happy path, the `reserveCredit()` method replies with a success reply indicating the credit was reserved",
+      "line": 37
+    },
+    {
+      "file": "order-service/order-service-sagas/src/main/java/io/eventuate/examples/tram/sagas/ordersandcustomers/orders/sagas/CreateOrderSaga.java",
+      "description": "Back in the `Order Service`: if the credit was successfully reserved (as indicated by a success reply), the third step of the saga is executed. It invokes the local `approve()` method.",
+      "line": 33
+    },
+    {
+      "file": "order-service/order-service-sagas/src/main/java/io/eventuate/examples/tram/sagas/ordersandcustomers/orders/sagas/CreateOrderSaga.java",
+      "description": "The `approve()` method approves the `Order`.",
+      "line": 63
+    }
+  ]
+}
