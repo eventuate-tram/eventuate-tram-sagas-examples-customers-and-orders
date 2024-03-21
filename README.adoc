@@ -165,8 +165,9 @@ I've configured a https://marketplace.visualstudio.com/items?itemName=vsls-contr
 
 === In Visual Studio Code
 
-1. If necessary, install the Code Tour extension from the Visual Studio Code Marketplace.
-2. Use the `CodeTour: Start Tour` command from the command palette to start the tour.
+1. https://codespaces.new/eventuate-tram/eventuate-tram-sagas-examples-customers-and-orders/tree/development[Create the codespace]
+2. Install the Code Tour extension from the Visual Studio Code Marketplace
+3. Use the `CodeTour: Start Tour` command from the command palette to start the tour
 
 === In a Github Codespace
 
