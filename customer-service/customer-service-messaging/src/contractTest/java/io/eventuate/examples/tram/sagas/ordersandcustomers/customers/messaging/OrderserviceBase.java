@@ -5,6 +5,8 @@ import io.eventuate.tram.commands.common.CommandNameMapping;
 import io.eventuate.tram.commands.common.DefaultCommandNameMapping;
 import io.eventuate.tram.messaging.common.ChannelMapping;
 import io.eventuate.tram.messaging.common.DefaultChannelMapping;
+import io.eventuate.tram.messaging.consumer.DefaultSubscriberMapping;
+import io.eventuate.tram.messaging.consumer.SubscriberMapping;
 import io.eventuate.tram.sagas.spring.inmemory.TramSagaInMemoryConfiguration;
 import io.eventuate.tram.sagas.spring.participant.SagaParticipantConfiguration;
 import io.eventuate.tram.spring.cloudcontractsupport.EventuateContractVerifierConfiguration;
@@ -17,6 +19,8 @@ import org.springframework.cloud.contract.verifier.messaging.boot.AutoConfigureM
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import io.eventuate.tram.messaging.consumer.DefaultSubscriberMapping;
+import io.eventuate.tram.messaging.consumer.SubscriberMapping;
 
 @SpringBootTest(classes = OrderserviceBase.TestConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @AutoConfigureMessageVerifier
@@ -41,6 +45,11 @@ public abstract class OrderserviceBase {
     public CommandNameMapping commandNameMapping() {
       return new DefaultCommandNameMapping();
     }
+
+  @Bean
+  public SubscriberMapping subscriberMapping() {
+    return new DefaultSubscriberMapping();
+  }
 
 
   }

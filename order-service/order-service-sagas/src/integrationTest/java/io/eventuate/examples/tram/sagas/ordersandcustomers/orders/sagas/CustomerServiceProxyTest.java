@@ -7,6 +7,8 @@ import io.eventuate.tram.commands.common.CommandNameMapping;
 import io.eventuate.tram.commands.common.DefaultCommandNameMapping;
 import io.eventuate.tram.messaging.common.ChannelMapping;
 import io.eventuate.tram.messaging.common.DefaultChannelMapping;
+import io.eventuate.tram.messaging.consumer.DefaultSubscriberMapping;
+import io.eventuate.tram.messaging.consumer.SubscriberMapping;
 import io.eventuate.tram.sagas.orchestration.SagaCommandProducer;
 import io.eventuate.tram.sagas.spring.inmemory.TramSagaInMemoryConfiguration;
 import io.eventuate.tram.sagas.spring.orchestration.SagaOrchestratorConfiguration;
@@ -25,6 +27,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
+import io.eventuate.tram.messaging.consumer.DefaultSubscriberMapping;
+import io.eventuate.tram.messaging.consumer.SubscriberMapping;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -49,6 +53,12 @@ public class CustomerServiceProxyTest {
     @Bean
     public CommandNameMapping commandNameMapping() {
       return new DefaultCommandNameMapping();
+    }
+
+
+    @Bean
+    public SubscriberMapping subscriberMapping() {
+      return new DefaultSubscriberMapping();
     }
 
     @Bean
