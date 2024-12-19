@@ -55,7 +55,6 @@ task runApplication(type: JavaExec) {
     systemProperty "eventuate.servicecontainer.serviceimage.version", version
     systemProperty "eventuate.servicecontainer.baseimage.version", eventuateExamplesBaseImageVersion
     systemProperty "server.port", "0"
-    systemProperty "endToEndTestMode", "Stubbed"
 }
 
 runApplication.dependsOn(":customer-service:customer-service-main:assemble", ":order-service:order-service-main:assemble", ":api-gateway-service:api-gateway-service-main:assemble")

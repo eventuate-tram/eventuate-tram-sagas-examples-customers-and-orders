@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class CustomersAndOrdersMain {
 
 
-    private static ApplicationUnderTest application =ApplicationUnderTest.make(); //
+    private static final ApplicationUnderTest application =ApplicationUnderTest.make(); //
 
 
     @RequestMapping(path = "/")
