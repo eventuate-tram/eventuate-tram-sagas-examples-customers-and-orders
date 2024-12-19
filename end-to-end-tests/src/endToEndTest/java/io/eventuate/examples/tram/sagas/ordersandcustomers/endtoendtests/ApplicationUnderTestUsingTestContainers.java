@@ -11,6 +11,8 @@ import io.eventuate.testcontainers.service.ServiceContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.lifecycle.Startables;
 
+import java.util.List;
+
 public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTest {
   private final EventuateZookeeperContainer zookeeper;
   private final EventuateKafkaContainer kafka;
@@ -79,6 +81,10 @@ public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTes
   @Override
   public void start() {
     Startables.deepStart(cdc, apiGatewayService).join();
+//      for (EventuateGenericContainer<? extends EventuateGenericContainer<?>> container : List.of(zookeeper, kafka, customerServiceDatabase, orderServiceDatabase, customerService, orderService, apiGatewayService, cdc)) {
+//          System.out.println("Starting " + container.getClass().getSimpleName() + "," + container);
+//          startContainer(container);
+//      }
   }
 
   private void startContainer(EventuateGenericContainer<?> container) {
@@ -93,17 +99,17 @@ public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTes
   }
 
   @Override
-  int getCustomerServicePort() {
+  public int getCustomerServicePort() {
       return customerService.getFirstMappedPort();
   }
 
   @Override
-  int getApigatewayPort() {
+  public int getApigatewayPort() {
       return apiGatewayService.getFirstMappedPort();
   }
 
   @Override
-  int getOrderServicePort() {
+  public int getOrderServicePort() {
       return orderService.getFirstMappedPort();
   }
 

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Customers and Orders</title>
+</head>
+<body>
+<h1>Welcome to Customers and Orders Application</h1>
+
+<h2>API endpoints</h2>
+<ul>
+    <li>
+        API Gateway:&nbsp;<a th:href="${apiGatewayUrl}"><span th:text="${apiGatewayUrl}"></span></a>
+    </li>
+    <li>
+        Customer Service:&nbsp;<a th:href="${customerServiceUrl}"><span th:text="${customerServiceUrl}"></span></a>
+    </li>
+    <li>
+        Order Service:&nbsp;<a th:href="${orderServiceUrl}"><span th:text="${orderServiceUrl}"></span></a>
+    </li>
+</ul>
+
+<h2 >Swagger UI</h2>
+
+<ul>
+<li>
+    <a th:href="${customerServiceUrl} + '/swagger-ui/index.html'">Customer Service Swagger UI</a>
+</li>
+<li>
+    <a th:href="${orderServiceUrl} + '/swagger-ui/index.html'">Order Service Swagger UI</a>
+</li>
+</ul>
+
+
+</body>
+</html>

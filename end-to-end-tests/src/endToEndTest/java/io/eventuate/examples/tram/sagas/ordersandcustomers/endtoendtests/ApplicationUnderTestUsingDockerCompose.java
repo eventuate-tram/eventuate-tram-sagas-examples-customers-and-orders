@@ -7,17 +7,17 @@ public class ApplicationUnderTestUsingDockerCompose extends ApplicationUnderTest
   }
 
   @Override
-  int getCustomerServicePort() {
+  public int getCustomerServicePort() {
     return 8081;
   }
 
   @Override
-  int getApigatewayPort() {
+  public int getApigatewayPort() {
     return 8083;
   }
 
   @Override
-  int getOrderServicePort() {
+  public int getOrderServicePort() {
     return 8081;
   }
 

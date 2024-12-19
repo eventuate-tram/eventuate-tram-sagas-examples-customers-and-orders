@@ -32,6 +32,7 @@ dependencies {
     endToEndTestImplementation "io.eventuate.cdc:eventuate-cdc-testcontainers"
     endToEndTestImplementation "io.eventuate.common:eventuate-common-testcontainers"
     endToEndTestImplementation "io.eventuate.messaging.kafka:eventuate-messaging-kafka-testcontainers"
+    endToEndTestImplementation "org.springframework.boot:spring-boot-starter-thymeleaf"
 }
 
 endToEndTest.dependsOn(":customer-service:customer-service-main:assemble", ":order-service:order-service-main:assemble", ":api-gateway-service:api-gateway-service-main:assemble")
@@ -44,3 +45,17 @@ endToEndTest {
         systemProperty "endToEndTestMode", endToEndTestMode
 
 }
+
+task runApplication(type: JavaExec) {
+    group = "Execution"
+    description = "Run the application"
+    classpath = sourceSets.endToEndTest.runtimeClasspath
+    mainClass = "io.eventuate.examples.tram.sagas.ordersandcustomers.application.CustomersAndOrdersMain"
+    systemProperty "logback.debug", "true"
+    systemProperty "eventuate.servicecontainer.serviceimage.version", version
+    systemProperty "eventuate.servicecontainer.baseimage.version", eventuateExamplesBaseImageVersion
+    systemProperty "server.port", "0"
+    systemProperty "endToEndTestMode", "Stubbed"
+}
+
+runApplication.dependsOn(":customer-service:customer-service-main:assemble", ":order-service:order-service-main:assemble", ":api-gateway-service:api-gateway-service-main:assemble")

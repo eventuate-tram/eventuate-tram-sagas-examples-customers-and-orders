@@ -7,17 +7,17 @@ public class ApplicationUnderTestUsingKind extends ApplicationUnderTest {
   }
 
   @Override
-  int getApigatewayPort() {
+  public int getApigatewayPort() {
     return 80;
   }
 
   @Override
-  int getCustomerServicePort() {
+  public int getCustomerServicePort() {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  int getOrderServicePort() {
+  public int getOrderServicePort() {
     throw new UnsupportedOperationException();
   }
 

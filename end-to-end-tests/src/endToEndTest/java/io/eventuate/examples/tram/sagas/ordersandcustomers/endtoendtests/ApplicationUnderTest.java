@@ -4,14 +4,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ClassUtils;
 
+import java.lang.reflect.InvocationTargetException;
+
 public abstract class ApplicationUnderTest {
 
   protected Logger logger = LoggerFactory.getLogger(getClass());
 
   public static ApplicationUnderTest make() {
     try {
-      return (ApplicationUnderTest) ClassUtils.forName(ApplicationUnderTest.class.getName() + "Using" + System.getProperty("endToEndTestMode", "TestContainers"), ApplicationUnderTest.class.getClassLoader()).newInstance();
-    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+      String className = ApplicationUnderTest.class.getName() + "Using" + System.getProperty("endToEndTestMode", "TestContainers");
+      Class<?> clazz = ClassUtils.forName(className, ApplicationUnderTest.class.getClassLoader());
+      return (ApplicationUnderTest) clazz. getDeclaredConstructor().newInstance();
+    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException |
+             InvocationTargetException e) {
       throw new RuntimeException(e);
     }
   }
@@ -22,9 +27,9 @@ public abstract class ApplicationUnderTest {
   public String apiGatewayBaseUrl(String hostName, String path, String... pathElements) {
     return BaseUrlUtils.baseUrl(hostName, path, getApigatewayPort(), pathElements);
   }
-  abstract int getApigatewayPort();
-  abstract int getCustomerServicePort();
-  abstract int getOrderServicePort();
+  public abstract int getApigatewayPort();
+  public abstract int getCustomerServicePort();
+  public abstract int getOrderServicePort();
   abstract boolean exposesSwaggerUiForBackendServices();
 
 }
