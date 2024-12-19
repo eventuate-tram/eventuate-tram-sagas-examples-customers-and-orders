@@ -11,13 +11,7 @@ import io.eventuate.testcontainers.service.ServiceContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.lifecycle.Startables;
 
-import java.util.List;
-
 public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTest {
-  private final EventuateZookeeperContainer zookeeper;
-  private final EventuateKafkaContainer kafka;
-  private final EventuateDatabaseContainer<?> customerServiceDatabase;
-  private final EventuateDatabaseContainer<?> orderServiceDatabase; // This results in only one DB!
   private final ServiceContainer customerService
           // should rebuild
           ;
@@ -32,17 +26,18 @@ public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTes
   public ApplicationUnderTestUsingTestContainers() {
     EventuateKafkaCluster eventuateKafkaCluster = new EventuateKafkaCluster("CustomersAndOrdersE2ETest");
 
-    zookeeper = eventuateKafkaCluster.zookeeper;
-    kafka = eventuateKafkaCluster.kafka.dependsOn(zookeeper);
+    EventuateZookeeperContainer zookeeper = eventuateKafkaCluster.zookeeper;
+    EventuateKafkaContainer kafka = eventuateKafkaCluster.kafka.dependsOn(zookeeper);
 
-    customerServiceDatabase = DatabaseContainerFactory.makeVanillaDatabaseContainer()
-            .withNetwork(eventuateKafkaCluster.network)
-            .withNetworkAliases("customer-service-mysql")
-            .withReuse(false);
-    orderServiceDatabase = DatabaseContainerFactory.makeVanillaDatabaseContainer()
-            .withNetwork(eventuateKafkaCluster.network)
-            .withNetworkAliases("order-service-mysql")
-            .withReuse(false);
+    EventuateDatabaseContainer<?> customerServiceDatabase = DatabaseContainerFactory.makeVanillaDatabaseContainer()
+        .withNetwork(eventuateKafkaCluster.network)
+        .withNetworkAliases("customer-service-mysql")
+        .withReuse(false);
+    // This results in only one DB!
+    EventuateDatabaseContainer<?> orderServiceDatabase = DatabaseContainerFactory.makeVanillaDatabaseContainer()
+        .withNetwork(eventuateKafkaCluster.network)
+        .withNetworkAliases("order-service-mysql")
+        .withReuse(false);
     customerService = ServiceContainer.makeFromDockerfileInFileSystem("../customer-service/customer-service-main/Dockerfile")
             .withNetwork(eventuateKafkaCluster.network)
             .withNetworkAliases("customer-service")
