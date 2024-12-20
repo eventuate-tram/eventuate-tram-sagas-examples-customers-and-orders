@@ -7,6 +7,7 @@ import io.github.resilience4j.reactor.circuitbreaker.operator.CircuitBreakerOper
 import io.github.resilience4j.reactor.timelimiter.TimeLimiterOperator;
 import io.github.resilience4j.timelimiter.TimeLimiter;
 import io.github.resilience4j.timelimiter.TimeLimiterRegistry;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -33,16 +34,14 @@ public class CustomerServiceProxy {
             .uri(customerServiceUrl + "/customers/{customerId}", customerId)
             .exchange();
     return response.flatMap(resp -> {
-      switch (resp.statusCode()) {
-        case OK:
-          return resp.bodyToMono(GetCustomerResponse.class).map(Optional::of);
-        case NOT_FOUND:
-          Mono<Optional<GetCustomerResponse>> notFound = Mono.just(Optional.empty());
-          return notFound;
-        default:
-          return Mono.error(UnknownProxyException.make("/customers/", resp.statusCode(), customerId));
-      }
-    })
+          if (resp.statusCode().value() == HttpStatus.OK.value())
+            return resp.bodyToMono(GetCustomerResponse.class).map(Optional::of);
+          else if (resp.statusCode().value() == HttpStatus.NOT_FOUND.value()) {
+            Mono<Optional<GetCustomerResponse>> notFound = Mono.just(Optional.empty());
+            return notFound;
+          } else
+            return Mono.error(UnknownProxyException.make("/customers/", resp.statusCode(), customerId));
+        })
     .transformDeferred(TimeLimiterOperator.of(timeLimiter))
     .transformDeferred(CircuitBreakerOperator.of(cb))
     //.onErrorResume(CallNotPermittedException.class, e -> Mono.just(null))

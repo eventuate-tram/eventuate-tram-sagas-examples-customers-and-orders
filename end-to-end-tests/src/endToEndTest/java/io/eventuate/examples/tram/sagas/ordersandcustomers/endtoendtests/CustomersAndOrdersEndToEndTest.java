@@ -14,10 +14,9 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrd
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrdersResponse;
 import io.eventuate.util.test.async.Eventually;
 import org.jetbrains.annotations.Nullable;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,10 +31,8 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = CustomersAndOrdersEndToEndTestConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class CustomersAndOrdersEndToEndTest {
 
@@ -56,7 +52,7 @@ public class CustomersAndOrdersEndToEndTest {
     private Money creditLimit = new Money("15.00");
 
 
-    @BeforeClass
+    @BeforeAll
     public static void startContainers() {
         applicationUnderTest.start();
     }
@@ -168,28 +164,29 @@ public class CustomersAndOrdersEndToEndTest {
         });
     }
 
-    @Test(expected = HttpClientErrorException.NotFound.class)
+    @Test
     public void shouldHandleOrderHistoryQueryForUnknownCustomer() {
-        getOrderHistory(System.currentTimeMillis());
+      assertThrows(HttpClientErrorException.NotFound.class, () ->
+        getOrderHistory(System.currentTimeMillis()));
     }
 
     @Test
     public void testSwaggerUiUrls() throws IOException {
-        testSwaggerUiUrl(applicationUnderTest.getApigatewayPort());
+        testSwaggerUiUrl("API Gateway", applicationUnderTest.getApigatewayPort());
 
         if (applicationUnderTest.exposesSwaggerUiForBackendServices()) {
-            testSwaggerUiUrl(applicationUnderTest.getCustomerServicePort());
-            testSwaggerUiUrl(applicationUnderTest.getOrderServicePort());
+            testSwaggerUiUrl("Customer Service", applicationUnderTest.getCustomerServicePort());
+            testSwaggerUiUrl("Order Service", applicationUnderTest.getOrderServicePort());
         }
     }
 
-    private void testSwaggerUiUrl(int port) throws IOException {
-        assertUrlStatusIsOk(String.format("http://%s:%s/swagger-ui/index.html", hostName, port));
+    private void testSwaggerUiUrl(String message, int port) throws IOException {
+        assertUrlStatusIsOk(message, "http://%s:%s/swagger-ui/index.html".formatted(hostName, port));
     }
 
-    private void assertUrlStatusIsOk(String url) throws IOException {
+    private void assertUrlStatusIsOk(String message, String url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         if (connection.getResponseCode() != 200)
-            Assert.fail(String.format("Expected 200 for %s, got %s", url, connection.getResponseCode()));
+            Assertions.fail("%s: Expected 200 for %s, got %s".formatted(message, url, connection.getResponseCode()));
     }
 }

@@ -8,7 +8,6 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrd
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.Order;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderRepository;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas.OrderSagaService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,25 +22,24 @@ public class OrderController {
   private OrderSagaService orderSagaService;
   private OrderRepository orderRepository;
 
-  @Autowired
   public OrderController(OrderSagaService orderSagaService, OrderRepository orderRepository) {
     this.orderSagaService = orderSagaService;
     this.orderRepository = orderRepository;
   }
 
-  @RequestMapping(value = "/orders", method = RequestMethod.POST)
+  @PostMapping("/orders")
   public CreateOrderResponse createOrder(@RequestBody CreateOrderRequest createOrderRequest) {
     Order order = orderSagaService.createOrder(new OrderDetails(createOrderRequest.getCustomerId(), createOrderRequest.getOrderTotal()));
     return new CreateOrderResponse(order.getId());
   }
 
-  @RequestMapping(value="/orders", method= RequestMethod.GET)
+  @GetMapping("/orders")
   public ResponseEntity<GetOrdersResponse> getAll() {
     return ResponseEntity.ok(new GetOrdersResponse(StreamSupport.stream(orderRepository.findAll().spliterator(), false)
             .map(o -> new GetOrderResponse(o.getId(), o.getState(), o.getRejectionReason())).collect(Collectors.toList())));
   }
 
-  @RequestMapping(value="/orders/{orderId}", method= RequestMethod.GET)
+  @GetMapping("/orders/{orderId}")
   public ResponseEntity<GetOrderResponse> getOrder(@PathVariable Long orderId) {
     return orderRepository
             .findById(orderId)
@@ -49,7 +47,7 @@ public class OrderController {
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
 
-  @RequestMapping(value="/orders/customer/{customerId}", method= RequestMethod.GET)
+  @GetMapping("/orders/customer/{customerId}")
   public ResponseEntity<List<GetOrderResponse>> getOrdersByCustomerId(@PathVariable Long customerId) {
     return new ResponseEntity<>(orderRepository
             .findAllByOrderDetailsCustomerId(customerId)

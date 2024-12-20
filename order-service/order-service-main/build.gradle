@@ -6,13 +6,16 @@ dependencies {
     implementation project(":order-service:order-service-persistence")
     implementation "io.eventuate.tram.core:eventuate-tram-spring-logging"
 
+    implementation "org.hamcrest:hamcrest:2.2"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-validation:3.0.13"
     implementation "org.springframework.boot:spring-boot-starter-web"
-
-    testImplementation "junit:junit:4.12"
-    testImplementation "org.mockito:mockito-core:2.23.0"
+    testImplementation "org.mockito:mockito-core:4.11.0"
 }
 
 check.shouldRunAfter(":order-service:order-service-web:check")
 check.shouldRunAfter(":order-service:order-service-persistence:check")
 check.shouldRunAfter(":order-service:order-service-sagas:check")
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}

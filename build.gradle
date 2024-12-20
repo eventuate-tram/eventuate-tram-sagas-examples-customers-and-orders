@@ -35,14 +35,20 @@ subprojects {
     dependencies {
         implementation(platform("io.eventuate.platform:eventuate-platform-dependencies:$eventuatePlatformVersion"))
 
-        implementation(platform("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"))
         implementation(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
-        implementation(platform("org.springframework.cloud:spring-cloud-contract-dependencies:$springCloudContractDependenciesVersion"))
 
-        testImplementation "junit:junit:4.13.2"
+        implementation(platform("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"))
+
+//        dependencyManagement {
+//            imports {
+//                mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+//            }
+//        }
+
+//        implementation(platform("org.springframework.cloud:spring-cloud-contract-dependencies:$springCloudContractDependenciesVersion"))
 
         constraints {
-            implementation "org.springdoc:springdoc-openapi-ui:$springDocOpenApiUiVersion"
+            implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion"
         }
 
         testImplementation "org.springframework.boot:spring-boot-starter-test"

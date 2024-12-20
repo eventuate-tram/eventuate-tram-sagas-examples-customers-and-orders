@@ -2,7 +2,7 @@ package io.eventuate.examples.tram.sagas.ordersandcustomers.customers.domain;
 
 import io.eventuate.examples.common.money.Money;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 public class CustomerService {
 

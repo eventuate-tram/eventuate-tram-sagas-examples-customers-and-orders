@@ -2,12 +2,12 @@ package io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests;
 
 import org.jetbrains.annotations.NotNull;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class BaseUrlUtils {
   @NotNull
   public static String baseUrl(String hostName, String path, int port, String[] pathElements) {
-    assertNotNull("host", hostName);
+    assertNotNull(hostName, "host");
 
     StringBuilder sb = new StringBuilder("http://");
     sb.append(hostName);

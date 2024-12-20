@@ -4,23 +4,23 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.Get
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.stream.IntStream;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = CustomerServiceProxyTest.Config.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {"customer.destinations.customerServiceUrl=http://localhost:${wiremock.server.port}", "order.destinations.orderServiceUrl=http://localhost:${wiremock.server.port}"})
@@ -35,6 +35,12 @@ public class CustomerServiceProxyTest {
 
   @Autowired
   private CustomerServiceProxy customerServiceProxy;
+
+  @LocalServerPort
+  private long port;
+
+  @Autowired
+  private WebClient webClient;
 
   @Test
   public void shouldCallCustomerService() throws JSONException {
@@ -52,7 +58,6 @@ public class CustomerServiceProxyTest {
                     .withHeader("Content-Type", "application/json")
                     .withBody(expectedResponse)));
 
-
     GetCustomerResponse customer = customerServiceProxy.findCustomerById("101").block().get();
 
     assertEquals(Long.valueOf(101L), customer.getCustomerId());
@@ -60,29 +65,31 @@ public class CustomerServiceProxyTest {
     verify(getRequestedFor(urlMatching("/customers/101")));
   }
 
-  @Test(expected = CallNotPermittedException.class)
+  @Test
   public void shouldTimeoutAndTripCircuitBreaker() {
+    assertThrows(CallNotPermittedException.class, () -> {
 
-    String expectedResponse = "{}";
+      String expectedResponse = "{}";
 
-    stubFor(get(urlEqualTo("/customers/99"))
-            .willReturn(aResponse()
-                    .withStatus(500)
-                    .withHeader("Content-Type", "application/json")
-                    .withBody(expectedResponse)));
+      stubFor(get(urlEqualTo("/customers/99"))
+              .willReturn(aResponse()
+                      .withStatus(500)
+                      .withHeader("Content-Type", "application/json")
+                      .withBody(expectedResponse)));
 
 
-    IntStream.range(0, 100).forEach(i -> {
-              try {
-                customerServiceProxy.findCustomerById("99").block();
-              } catch (CallNotPermittedException e) {
-                throw e;
-              } catch (UnknownProxyException e) {
-                //
+      IntStream.range(0, 100).forEach(i -> {
+                try {
+                  customerServiceProxy.findCustomerById("99").block();
+                } catch (CallNotPermittedException e) {
+                  throw e;
+                } catch (UnknownProxyException e) {
+                  //
+                }
               }
-            }
-    );
+      );
 
-    verify(getRequestedFor(urlMatching("/customers/99")));
+      verify(getRequestedFor(urlMatching("/customers/99")));
+    });
   }
 }

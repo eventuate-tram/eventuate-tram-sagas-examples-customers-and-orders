@@ -12,14 +12,14 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderRe
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderService;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas.CreateOrderSaga;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas.CustomerServiceProxy;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.Answer;
 
 import java.util.Optional;
 
 import static io.eventuate.tram.sagas.testing.SagaUnitTestSupport.given;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -39,7 +39,7 @@ public class CreateOrderSagaTest {
   }
 
 
-  @Before
+  @BeforeEach
   public void setUp() {
     orderRepository = mock(OrderRepository.class);
     orderService = new OrderService(orderRepository);
@@ -91,9 +91,8 @@ public class CreateOrderSagaTest {
             .andGiven()
             .failureReply(new CustomerCreditLimitExceeded())
             .expectRolledBack()
-            .assertSagaData(sd -> {
-              assertEquals(RejectionReason.INSUFFICIENT_CREDIT, sd.getRejectionReason());
-            });
+            .assertSagaData(sd ->
+              assertEquals(RejectionReason.INSUFFICIENT_CREDIT, sd.getRejectionReason()));
 
     assertEquals(OrderState.REJECTED, order.getState());
     assertEquals(RejectionReason.INSUFFICIENT_CREDIT, order.getRejectionReason());

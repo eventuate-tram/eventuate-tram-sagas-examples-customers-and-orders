@@ -3,11 +3,11 @@ package io.eventuate.examples.tram.sagas.ordersandcustomers.customers.web;
 
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.domain.CustomerRepository;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.domain.CustomerService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
 import java.util.Collections;
@@ -17,7 +17,7 @@ import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.Matchers.empty;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CustomerControllerTest {
 
   @Mock

@@ -5,20 +5,17 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.Cu
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.GetCustomerResponse;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import io.github.resilience4j.timelimiter.TimeLimiterRegistry;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.stubrunner.spring.AutoConfigureStubRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.NONE)
 @AutoConfigureStubRunner(ids = {"eventuate-tram-sagas-examples-customers-and-orders.customer-service:customer-service-web"})
 @DirtiesContext
@@ -33,10 +30,10 @@ public class CustomerServiceProxyTest {
 
   private CustomerServiceProxy customerServiceProxy;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     customerServiceProxy = new CustomerServiceProxy(WebClient.builder().build(),
-            CircuitBreakerRegistry.custom().build(), String.format("http://localhost:%s", port), TimeLimiterRegistry.ofDefaults());
+            CircuitBreakerRegistry.custom().build(), "http://localhost:%s".formatted(port), TimeLimiterRegistry.ofDefaults());
   }
   @Test
   public void shouldCallCustomerService() {

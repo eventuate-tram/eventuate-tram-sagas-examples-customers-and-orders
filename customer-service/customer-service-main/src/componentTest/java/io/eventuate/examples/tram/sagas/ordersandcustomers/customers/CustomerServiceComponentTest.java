@@ -7,11 +7,21 @@ import io.eventuate.common.testcontainers.EventuateZookeeperContainer;
 import io.eventuate.messaging.kafka.testcontainers.EventuateKafkaCluster;
 import io.eventuate.messaging.kafka.testcontainers.EventuateKafkaContainer;
 import io.eventuate.testcontainers.service.ServiceContainer;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.lifecycle.Startables;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 public class CustomerServiceComponentTest {
+
+    protected static Logger logger = LoggerFactory.getLogger(CustomerServiceComponentTest.class);
 
     public static EventuateKafkaCluster eventuateKafkaCluster = new EventuateKafkaCluster();
 
@@ -33,10 +43,11 @@ public class CustomerServiceComponentTest {
                     .withZookeeper(zookeeper)
                     .withKafka(kafka)
                     .dependsOn(kafka, database)
+                    .withLogConsumer(new Slf4jLogConsumer(logger).withPrefix("SVC customer-service:"))
                     .withReuse(false) // should rebuild
             ;
 
-    @BeforeClass
+    @BeforeAll
     public static void startContainers() {
         Startables.deepStart(service).join();
     }
@@ -45,5 +56,13 @@ public class CustomerServiceComponentTest {
     public void shouldStart() {
         // HTTP
         // Messaging
+    }
+
+    @Test
+    void shouldExposeSwaggerUI() throws IOException {
+        String url = "http://%s:%s/swagger-ui/index.html".formatted("localhost", service.getFirstMappedPort());
+        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        if (connection.getResponseCode() != 200)
+            Assertions.fail("%s: Expected 200 for %s, got %s".formatted("Customer Service", url, connection.getResponseCode()));
     }
 }

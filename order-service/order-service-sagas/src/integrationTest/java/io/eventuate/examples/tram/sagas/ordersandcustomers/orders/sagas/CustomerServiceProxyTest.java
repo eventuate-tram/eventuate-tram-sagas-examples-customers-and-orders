@@ -14,8 +14,7 @@ import io.eventuate.tram.sagas.spring.inmemory.TramSagaInMemoryConfiguration;
 import io.eventuate.tram.sagas.spring.orchestration.SagaOrchestratorConfiguration;
 import io.eventuate.tram.spring.cloudcontractsupport.EventuateContractVerifierConfiguration;
 import io.eventuate.tram.spring.cloudcontractsupport.EventuateTramRoutesConfigurer;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.AutoConfigureDataJdbc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,13 +25,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
 import io.eventuate.tram.messaging.consumer.DefaultSubscriberMapping;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import io.eventuate.tram.messaging.consumer.SubscriberMapping;
 
-import static org.junit.Assert.assertNotNull;
-
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes= CustomerServiceProxyTest.TestConfiguration.class,
         webEnvironment= SpringBootTest.WebEnvironment.NONE)
 @AutoConfigureStubRunner(ids = {"eventuate-tram-sagas-examples-customers-and-orders.customer-service:customer-service-messaging"})

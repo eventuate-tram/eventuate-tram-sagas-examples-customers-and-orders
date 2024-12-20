@@ -12,8 +12,7 @@ import io.eventuate.tram.spring.testing.kafka.producer.EventuateKafkaTestCommand
 import io.eventuate.tram.spring.testing.outbox.commands.CommandOutboxTestSupport;
 import io.eventuate.tram.spring.testing.outbox.commands.CommandOutboxTestSupportConfiguration;
 import io.eventuate.util.test.async.Eventually;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +21,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.testcontainers.lifecycle.Startables;
 
 import java.util.Collections;
@@ -30,7 +28,6 @@ import java.util.stream.Stream;
 
 import static org.mockito.Mockito.verify;
 
-@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class CustomerCommandHandlerIntegrationTest {
 
@@ -43,9 +40,8 @@ public class CustomerCommandHandlerIntegrationTest {
     eventuateKafkaCluster.kafka.dependsOn(eventuateKafkaCluster.zookeeper);
     Startables.deepStart(eventuateKafkaCluster.kafka, database).join();
 
-    Stream.of(database, eventuateKafkaCluster.zookeeper, eventuateKafkaCluster.kafka).forEach(container -> {
-      container.registerProperties(registry::add);
-    });
+    Stream.of(database, eventuateKafkaCluster.zookeeper, eventuateKafkaCluster.kafka).forEach(container ->
+      container.registerProperties(registry::add));
   }
 
   // TODO - autoconfigure?? EventuateTramFlywayMigrationConfiguration

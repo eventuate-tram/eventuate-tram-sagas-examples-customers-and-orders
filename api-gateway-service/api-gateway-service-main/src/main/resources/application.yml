@@ -2,12 +2,11 @@ spring.application.name: api-gateway
 
 logging.level.io.github.resilience4j: DEBUG
 logging.level.io.eventuate.examples: INFO
-logging.level.org.springframework.web: DEBUG
+logging.level.org.springframework.web: TRACE
 
-spring.sleuth.enabled: true
-spring.sleuth.sampler.probability: 1
+management.tracing.enabled: false
+management.tracing.sampling.probability: 1
 spring.zipkin.base.url: http://${DOCKER_HOST_IP:localhost}:9411/
-
 
 apigateway.timeout.millis: 1000
 
@@ -36,42 +35,39 @@ spring:
             - Method=POST
             - Path=/customers
           filters:
-            - CircuitBreaker=myCircuitBreaker
+            - CircuitBreaker=customerServiceCB
         - id: get_customers
           uri: ${customer.destinations.customerServiceUrl}
           predicates:
-            - Method=get
+            - Method=GET
             - Path=/customers
           filters:
-            - CircuitBreaker=myCircuitBreaker
+            - CircuitBreaker=customerServiceCB
         - id: get_customer
           uri: ${customer.destinations.customerServiceUrl}
           predicates:
-            - Method=get
+            - Method=GET
             - Path=/customers
           filters:
-            - CircuitBreaker=myCircuitBreaker
+            - CircuitBreaker=customerServiceCB
         - id: create_order
           uri: ${order.destinations.orderServiceUrl}
           predicates:
             - Method=POST
             - Path=/orders
           filters:
-            - CircuitBreaker=myCircuitBreaker
+            - CircuitBreaker=orderServiceCB
         - id: get_order
           uri: ${order.destinations.orderServiceUrl}
           predicates:
-            - Method=get
+            - Method=GET
             - Path=/orders/{orderId}
           filters:
-            - CircuitBreaker=myCircuitBreaker
+            - CircuitBreaker=orderServiceCB
         - id: get_orders
           uri: ${order.destinations.orderServiceUrl}
           predicates:
-            - Method=get
+            - Method=GET
             - Path=/orders
           filters:
-            - CircuitBreaker=myCircuitBreaker
-  web:
-    resources:
-      static-locations: classpath:/static,classpath:/META-INF/static-content
+            - CircuitBreaker=orderServiceCB

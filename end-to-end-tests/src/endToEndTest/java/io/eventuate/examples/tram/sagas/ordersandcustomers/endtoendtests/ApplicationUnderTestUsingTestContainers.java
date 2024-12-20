@@ -45,6 +45,7 @@ public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTes
             .withZookeeper(zookeeper)
             .withKafka(kafka)
             .dependsOn(customerServiceDatabase, kafka)
+            .withLogConsumer(new Slf4jLogConsumer(logger).withPrefix("SVC customer-service:"))
             .withReuse(false);
     orderService = ServiceContainer.makeFromDockerfileInFileSystem("../order-service/order-service-main/Dockerfile")
             .withNetwork(eventuateKafkaCluster.network)
@@ -53,18 +54,17 @@ public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTes
             .withZookeeper(zookeeper)
             .withKafka(kafka)
             .dependsOn(orderServiceDatabase, kafka)
+            .withLogConsumer(new Slf4jLogConsumer(logger).withPrefix("SVC order-service:"))
             .withReuse(false);
     apiGatewayService = ServiceContainer.makeFromDockerfileInFileSystem("../api-gateway-service/api-gateway-service-main/Dockerfile")
             .withNetwork(eventuateKafkaCluster.network)
-            .withReuse(false) // should rebuild
             .withExposedPorts(8080)
             .withEnv("ORDER_DESTINATIONS_ORDERSERVICEURL", "http://order-service:8080")
             .withEnv("CUSTOMER_DESTINATIONS_CUSTOMERSERVICEURL", "http://customer-service:8080")
-            .withEnv("SPRING_SLEUTH_ENABLED", "true")
-            .withEnv("SPRING_SLEUTH_SAMPLER_PROBABILITY", "1")
-            .withEnv("SPRING_ZIPKIN_BASE_URL", "http://zipkin:9411/")
             .withEnv("JAVA_OPTS", "-Ddebug")
-            .withEnv("APIGATEWAY_TIMEOUT_MILLIS", "1000");
+            .withEnv("APIGATEWAY_TIMEOUT_MILLIS", "1000")
+            .withLogConsumer(new Slf4jLogConsumer(logger).withPrefix("SVC api-gateway-service:"))
+            .withReuse(false);
     cdc = new EventuateCdcContainer()
             .withKafkaCluster(eventuateKafkaCluster)
             .withTramPipeline(customerServiceDatabase)

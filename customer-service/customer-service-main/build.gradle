@@ -7,7 +7,9 @@ dependencies {
     implementation project(":customer-service:customer-service-messaging")
     implementation "io.eventuate.tram.core:eventuate-tram-spring-logging"
 
+    implementation "org.hamcrest:hamcrest:2.2"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-validation:3.0.13"
     implementation "org.springframework.boot:spring-boot-starter-web"
 
     // TODO shouldn't need to do this too
@@ -26,3 +28,6 @@ check.shouldRunAfter(":customer-service:customer-service-web:check")
 check.shouldRunAfter(":customer-service:customer-service-persistence:check")
 check.shouldRunAfter(":customer-service:customer-service-messaging:check")
 check.shouldRunAfter(":customer-service:customer-service-messaging:check")
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
