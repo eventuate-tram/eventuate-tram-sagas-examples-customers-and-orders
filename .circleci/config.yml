@@ -13,7 +13,7 @@ workflows:
       - eventuate-gradle-build-and-test/build-and-test:
           name: mysql-arm
           resource_class: arm.large
-          java_version_to_install: "π"
+          java_version_to_install: "17"
           script: ./.circleci/build-and-test-arm.sh
 #      - eventuate-gradle-build-and-test/build-and-test:
 #          name: mysql-sharded-outbox
