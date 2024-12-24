@@ -23,6 +23,10 @@ class IntegrationTestsPlugin implements Plugin<Project> {
             integrationTestRuntime.extendsFrom testRuntime
         }
 
+        project.dependencies {
+            integrationTestRuntimeOnly "org.junit.platform:junit-platform-launcher"
+        }
+
         project.task("integrationTest", type: Test) {
             testClassesDirs = project.sourceSets.integrationTest.output.classesDirs
             classpath = project.sourceSets.integrationTest.runtimeClasspath

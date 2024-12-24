@@ -1,0 +1,57 @@
+apply plugin: 'org.springframework.cloud.contract'
+
+dependencies {
+    implementation "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-orchestration-simple-dsl-starter"
+    implementation "io.eventuate.examples.common:eventuate-examples-common-money-jakarta9:$eventuateCommonExamplesVersion"
+    implementation project(":customer-service:customer-service-api-messaging")
+
+    contractTestImplementation "io.eventuate.tram.testingsupport.springcloudcontract:eventuate-tram-spring-testing-support-cloud-contract:$eventuateTramSpringTestingSupportCloudContractVersion"
+    contractTestImplementation "org.springframework.cloud:spring-cloud-starter-contract-stub-runner"
+
+}
+
+contractTest {
+    useJUnitPlatform()
+    systemProperty "stubrunner.repositoryRoot", contractRepoUrl
+
+}
+
+ext {
+    set('contractGroupId', project.group)
+    set('contractArtifactId', "customer-service-messaging")
+    set('contractArtifactPath', "customer-service:$contractArtifactId")
+    set("contractArtifactVersion", project.version)
+}
+
+contractTest.dependsOn(":$contractArtifactPath:publishStubsPublicationToStubsRepository")
+
+
+contracts {
+
+    contractDependency {
+        groupId = contractGroupId
+        artifactId = contractArtifactId
+        classifier = "stubs"
+        version = contractArtifactVersion
+    }
+
+    contractsMode = "REMOTE"
+
+    contractRepository {
+        repositoryUrl = contractRepoUrl
+    }
+
+    contractsPath = "META-INF/${contractGroupId}/$contractArtifactId/${contractArtifactVersion}/contracts/order-service/commands"
+
+    testFramework = "JUNIT5"
+    baseClassForTests = "io.eventuate.examples.tram.sagas.ordersandcustomers.orders.proxies.customers.BaseForCustomerServiceTest"
+
+    failOnNoContracts = true
+
+}
+
+copyContracts.dependsOn(":$contractArtifactPath:publishStubsPublicationToStubsRepository")
+
+contractTest {
+    useJUnitPlatform()
+}

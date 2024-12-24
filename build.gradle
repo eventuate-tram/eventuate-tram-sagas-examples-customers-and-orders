@@ -6,16 +6,25 @@ buildscript {
         maven {
             url "https://plugins.gradle.org/m2/"
         }
+        maven {
+            url "https://snapshots.repositories.eventuate.io/repository"
+        }
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
         classpath "com.avast.gradle:gradle-docker-compose-plugin:$dockerComposePluginVersion"
         classpath "org.springframework.cloud:spring-cloud-contract-gradle-plugin:$springCloudContractDependenciesVersion"
+        classpath "io.eventuate.tram.testingsupport.springcloudcontract:eventuate-tram-spring-testing-support-cloud-contract-plugins-gradle:$eventuateTramSpringTestingSupportCloudContractVersion"
     }
 }
 
-
 apply plugin: 'docker-compose'
+
+apply plugin: "io.eventuate.tram.spring.testing.cloudcontract.plugins.gradle.ConfigureContractRepoDirPlugin"
+
+allprojects {
+    group = "io.eventuate.examples.tram.sagas.ordersandcustomers"
+}
 
 subprojects {
 
@@ -57,12 +66,17 @@ subprojects {
 
     tasks.withType(Copy).all { duplicatesStrategy 'WARN' }
 
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-parameters"
+    }
+
     if (System.getenv("GRADLE_CACHE_CHANGING_VERSIONS_IN_MINUTES") != null)
         configurations.all {
             resolutionStrategy.cacheChangingModulesFor Integer.parseInt(System.getenv("GRADLE_CACHE_CHANGING_VERSIONS_IN_MINUTES")), 'minutes'
         }
 
 }
+
 
 dockerCompose {
     environment.put "EVENTUATE_COMMON_VERSION", eventuateCommonImageVersion

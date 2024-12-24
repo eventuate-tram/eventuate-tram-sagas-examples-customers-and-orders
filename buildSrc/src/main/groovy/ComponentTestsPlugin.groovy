@@ -31,6 +31,10 @@ class ComponentTestsPlugin implements Plugin<Project> {
             componentTestRuntime.extendsFrom testRuntime
         }
 
+        project.dependencies {
+            componentTestRuntimeOnly "org.junit.platform:junit-platform-launcher"
+        }
+
         project.task("componentTest", type: Test) {
             testClassesDirs = project.sourceSets.componentTest.output.classesDirs
             classpath = project.sourceSets.componentTest.runtimeClasspath

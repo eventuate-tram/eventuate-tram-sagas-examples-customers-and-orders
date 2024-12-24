@@ -23,6 +23,10 @@ class EndToEndTestsPlugin implements Plugin<Project> {
             endToEndTestRuntime.extendsFrom testRuntime
         }
 
+        project.dependencies {
+            endToEndTestRuntimeOnly "org.junit.platform:junit-platform-launcher"
+        }
+
         project.task("endToEndTest", type: Test) {
             testClassesDirs = project.sourceSets.endToEndTest.output.classesDirs
             classpath = project.sourceSets.endToEndTest.runtimeClasspath

@@ -8,10 +8,6 @@ configurations.all {
     exclude  module: "spring-boot-starter-web"
 }
 
-repositories {
-    maven { url "${project.rootDir}/build/repo" }
-}
-
 dependencies {
     implementation "org.apache.commons:commons-lang3:3.17.0"
 
@@ -40,12 +36,18 @@ dependencies {
 
     testImplementation "org.springframework.cloud:spring-cloud-contract-wiremock"
     testImplementation "org.springframework.cloud:spring-cloud-starter-contract-stub-runner"
-    testImplementation "eventuate-tram-sagas-examples-customers-and-orders.customer-service:customer-service-web-stubs:0.1.0-SNAPSHOT:stubs"
 
     implementation group: 'io.netty', name: 'netty-resolver-dns-native-macos', version: '4.1.75.Final', classifier: 'osx-aarch_64'
+
 }
 
-compileTestJava.dependsOn(":customer-service:customer-service-web:publish")
+integrationTest {
+    systemProperty "stubrunner.repositoryRoot", contractRepoUrl
+    dependsOn(":customer-service:customer-service-web:publishStubsPublicationToStubsRepository")
+    useJUnitPlatform()
+}
+
+
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }

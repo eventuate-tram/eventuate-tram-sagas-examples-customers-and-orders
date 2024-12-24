@@ -9,6 +9,7 @@ dependencies {
     implementation project(":order-service:order-service-domain")
     implementation "io.eventuate.examples.common:eventuate-examples-common-money-jakarta9:$eventuateCommonExamplesVersion"
     implementation project(":customer-service:customer-service-api-messaging")
+    implementation project(":order-service:order-service-proxies-customer-service")
     implementation project(":order-service:order-service-api-messaging")
 
     implementation "io.eventuate.tram.core:eventuate-tram-spring-optimistic-locking"

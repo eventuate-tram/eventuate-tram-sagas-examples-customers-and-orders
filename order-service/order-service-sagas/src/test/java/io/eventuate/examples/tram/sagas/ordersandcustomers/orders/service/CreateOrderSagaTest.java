@@ -10,8 +10,8 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.Order;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderRepository;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderService;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.proxies.customers.CustomerServiceProxy;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas.CreateOrderSaga;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas.CustomerServiceProxy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.Answer;

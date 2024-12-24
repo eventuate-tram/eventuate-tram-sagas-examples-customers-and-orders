@@ -7,6 +7,7 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.sagas.createorder.CreateOrderSagaData;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.Order;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderService;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.proxies.customers.CustomerServiceProxy;
 import io.eventuate.tram.commands.consumer.CommandWithDestination;
 import io.eventuate.tram.sagas.orchestration.SagaDefinition;
 import io.eventuate.tram.sagas.simpledsl.SimpleSaga;
@@ -27,8 +28,8 @@ public class CreateOrderSaga implements SimpleSaga<CreateOrderSagaData> {
             .withCompensation(this::reject)
           .step()
             .invokeParticipant(this::reserveCredit)
-            .onReply(CustomerNotFound.class, this::handleCustomerNotFound)
-            .onReply(CustomerCreditLimitExceeded.class, this::handleCustomerCreditLimitExceeded)
+            .onReply(CustomerServiceProxy.customerNotFoundReply, this::handleCustomerNotFound)
+            .onReply(CustomerServiceProxy.creditLimitExceededReply, this::handleCustomerCreditLimitExceeded)
           .step()
             .invokeLocal(this::approve)
           .build();

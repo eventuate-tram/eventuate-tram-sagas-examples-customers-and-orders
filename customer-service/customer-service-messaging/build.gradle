@@ -1,4 +1,6 @@
 apply plugin: IntegrationTestsPlugin
+apply plugin: 'org.springframework.cloud.contract'
+apply plugin: io.eventuate.tram.spring.testing.cloudcontract.plugins.gradle.PublishStubsPlugin
 
 // Disable Spring Contract Testing for now - needs new Eventuate support
 //apply plugin: 'spring-cloud-contract'
@@ -75,8 +77,20 @@ dependencies {
     integrationTestImplementation "io.eventuate.tram.core:eventuate-tram-spring-testing-support-outbox-commands"
 
 
-
+    contractTestImplementation "io.eventuate.tram.testingsupport.springcloudcontract:eventuate-tram-spring-testing-support-cloud-contract:$eventuateTramSpringTestingSupportCloudContractVersion"
+    contractTestImplementation "org.springframework.cloud:spring-cloud-starter-contract-stub-runner"
 }
 
 
-// check.dependsOn(contractTest)
+contracts {
+    testFramework = "JUNIT5"
+    baseClassForTests = "io.eventuate.examples.tram.sagas.ordersandcustomers.customers.messaging.AbstractMessagingContractTest"
+    ignoredFiles = [ "**/*Command.groovy" ]
+    failOnNoContracts = true
+}
+
+contractTest {
+    useJUnitPlatform()
+}
+
+contractTest.dependsOn(publishStubsPublicationToMavenLocal)

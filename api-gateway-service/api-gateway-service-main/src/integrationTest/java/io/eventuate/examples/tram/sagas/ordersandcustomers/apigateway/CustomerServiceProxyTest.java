@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.stubrunner.spring.AutoConfigureStubRunner;
+import org.springframework.cloud.contract.stubrunner.spring.StubRunnerProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -17,7 +18,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.NONE)
-@AutoConfigureStubRunner(ids = {"eventuate-tram-sagas-examples-customers-and-orders.customer-service:customer-service-web"})
+@AutoConfigureStubRunner(ids = {"io.eventuate.examples.tram.sagas.ordersandcustomers:customer-service-web:+"},
+    stubsMode = StubRunnerProperties.StubsMode.REMOTE)
 @DirtiesContext
 public class CustomerServiceProxyTest {
 
