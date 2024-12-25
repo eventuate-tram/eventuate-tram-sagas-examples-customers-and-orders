@@ -1,8 +1,10 @@
 
 dependencies {
     implementation project(":order-service:order-service-domain")
+
     implementation "io.eventuate.tram.core:eventuate-tram-spring-flyway"
     runtimeOnly "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-flyway"
+    runtimeOnly "org.flywaydb:flyway-database-postgresql"
 
     implementation "io.eventuate.common:eventuate-common-jdbc"
 
