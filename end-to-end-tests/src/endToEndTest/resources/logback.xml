@@ -8,4 +8,8 @@
     <root level="info">
         <appender-ref ref="STDOUT" />
     </root>
+
+    <logger name="io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests" level="WARN" />
+
+
 </configuration>
