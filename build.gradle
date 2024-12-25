@@ -1,5 +1,3 @@
-import java.time.Duration
-
 buildscript {
     repositories {
         mavenCentral()
@@ -12,13 +10,11 @@ buildscript {
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
-        classpath "com.avast.gradle:gradle-docker-compose-plugin:$dockerComposePluginVersion"
         classpath "org.springframework.cloud:spring-cloud-contract-gradle-plugin:$springCloudContractDependenciesVersion"
         classpath "io.eventuate.tram.testingsupport.springcloudcontract:eventuate-tram-spring-testing-support-cloud-contract-plugins-gradle:$eventuateTramSpringTestingSupportCloudContractVersion"
     }
 }
 
-apply plugin: 'docker-compose'
 
 apply plugin: "io.eventuate.tram.spring.testing.cloudcontract.plugins.gradle.ConfigureContractRepoDirPlugin"
 
@@ -78,111 +74,16 @@ subprojects {
 }
 
 
-dockerCompose {
-    environment.put "EVENTUATE_COMMON_VERSION", eventuateCommonImageVersion
-    environment.put "EVENTUATE_CDC_VERSION", eventuateCdcImageVersion
-    environment.put "EVENTUATE_SAGA_VERSION", eventuateTramSagasImageVersion
-    environment.put "EVENTUATE_JAVA_BASE_IMAGE_VERSION", eventuateExamplesBaseImageVersion
-    environment.put "EVENTUATE_MESSAGING_KAFKA_IMAGE_VERSION", eventuateMessagingKafkaImageVersion
-    environment.put "SERVICE_IMAGE_VERSION", version
-
-    retainContainersOnStartupFailure = true
-    dockerComposeStopTimeout = Duration.ofSeconds(1)
-
-    if (project.ext.has("envFile")) {
-        environment.put "ENV_FILE", project.ext.envFile
-    }
-
-    mysqlOnly {
-        projectName = null
-        useComposeFiles = ["docker-compose-mysql.yml"]
-        startedServices= ["customer-service-mysql", "order-service-mysql"]
-    }
-
-    mysqlinfrastructure {
-        projectName = null
-        useComposeFiles = ["docker-compose-mysql.yml"]
-        startedServices = ["zipkin", "zookeeper", "kafka", "customer-service-mysql", "order-service-mysql"]
-    }
-
-    mysql {
-        projectName = null
-        useComposeFiles = ["docker-compose-mysql.yml"]
-
-        startedServices = project.hasProperty('startedServices') ? project.ext.startedServices.split(',') : ["zookeeper", "kafka", "order-service", "customer-service", "api-gateway-service", "cdc-service"]
-    }
-
-    mysqlShardedOutboxes {
-        environment.put "EVENTUATE_OUTBOX_TABLES", "8"
-        environment.put "EVENTUATE_CDC_PROFILES", "EventuatePolling"
-
-        projectName = null
-        useComposeFiles = ["docker-compose-mysql.yml"]
-
-        if (project.hasProperty('startedServices'))
-          startedServices= project.ext.startedServices.split(',')
-    }
-
-    postgresinfrastructure {
-        projectName = null
-        useComposeFiles = ["docker-compose-postgres.yml"]
-        startedServices = ["zookeeper", "kafka", "customer-service-postgres", "order-service-postgres"]
-    }
-
-    postgres {
-        projectName = null
-        useComposeFiles = ["docker-compose-postgres.yml"]
-        startedServices = project.hasProperty('startedServices') ? project.ext.startedServices.split(',') : ["zookeeper", "kafka", "order-service", "customer-service", "api-gateway-service", "cdc-service"]
-    }
-    postgresOnly {
-        projectName = null
-        useComposeFiles = ["docker-compose-postgres.yml"]
-        startedServices = ["customer-service-postgres","order-service-postgres"]
-    }
-
-}
-
-tasks*.each { t ->
-    if (t.name.endsWith("ComposeUp") || t.name.endsWith("ComposeBuild"))
-        subprojects.each {
-            if (it.name.endsWith("-service-main")) {
-                t.dependsOn(":" + it.path + ":assemble")
-            }
-        }
-}
-
-
-mysqlComposeUp.dependsOn(mysqlinfrastructureComposeUp)
-
 task clean(type:Delete) {
     delete 'build/repo'
 }
 
-task buildAndStartServicesMySql(type: GradleBuild) {
-    tasks = ["mysqlComposeUp"]
-}
 
 task endToEndTests(type: GradleBuild) {
     tasks = [":end-to-end-tests:endToEndTest"]
     dependsOn(":end-to-end-tests:clean")
 }
 
-task endToEndTestsUsingDockerCompose(type: GradleBuild) {
-    startParameter.projectProperties.put("endToEndTestMode", "DockerCompose")
-    tasks = [":end-to-end-tests:endToEndTest"]
-    dependsOn(":end-to-end-tests:clean")
-}
-
-task endToEndTestsUsingKind(type: GradleBuild) {
-    startParameter.projectProperties.put("endToEndTestMode", "Kind")
-    tasks = [":end-to-end-tests:endToEndTest"]
-    dependsOn(":end-to-end-tests:clean")
-}
-
-
-task stopServicesMySql(type: GradleBuild) {
-    tasks = ["mysqlComposeDown"]
-}
 
 task compileAll(type: GradleBuild) {
     tasks = ["endToEndTestClasses", "componentTestClasses", "integrationTestClasses", "testClasses", "assemble"]
