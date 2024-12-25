@@ -48,18 +48,21 @@ endToEndTest {
 
 }
 
-task runApplication(type: JavaExec) {
-    group = "Execution"
-    description = "Run the application"
-    classpath = sourceSets.endToEndTest.runtimeClasspath
-    mainClass = "io.eventuate.examples.tram.sagas.ordersandcustomers.application.CustomersAndOrdersMain"
-    systemProperty "logback.debug", "true"
-    systemProperty "eventuate.servicecontainer.serviceimage.version", version
-    systemProperty "eventuate.servicecontainer.baseimage.version", eventuateExamplesBaseImageVersion
-    systemProperty "server.port", "0"
+for (def dbType  in ["MySql", "Postgres"]) {
+    def springProfilesActive = dbType.toLowerCase()
+    tasks.register("runApplication${dbType}", JavaExec) {
+        description = "Run the application services and the required infrastructure services"
+        classpath = sourceSets.endToEndTest.runtimeClasspath
+        mainClass = "io.eventuate.examples.tram.sagas.ordersandcustomers.application.CustomersAndOrdersMain"
+        systemProperty "logback.debug", "true"
+        systemProperty "eventuate.servicecontainer.serviceimage.version", version
+        systemProperty "eventuate.servicecontainer.baseimage.version", eventuateExamplesBaseImageVersion
+        systemProperty "server.port", "0"
+        systemProperty "spring.profiles.active", springProfilesActive
+        dependsOn(":customer-service:customer-service-main:assemble", ":order-service:order-service-main:assemble", ":api-gateway-service:api-gateway-service-main:assemble")
+    }
 }
 
-runApplication.dependsOn(":customer-service:customer-service-main:assemble", ":order-service:order-service-main:assemble", ":api-gateway-service:api-gateway-service-main:assemble")
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
