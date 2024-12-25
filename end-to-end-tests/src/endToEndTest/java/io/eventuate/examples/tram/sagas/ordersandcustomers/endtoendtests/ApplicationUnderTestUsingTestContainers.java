@@ -24,19 +24,19 @@ public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTes
           ;
 
   public ApplicationUnderTestUsingTestContainers() {
-    EventuateKafkaCluster eventuateKafkaCluster = new EventuateKafkaCluster("CustomersAndOrdersE2ETest");
+    EventuateKafkaCluster eventuateKafkaCluster = new EventuateKafkaCluster("CustomersAndOrdersEndToEndTest");
 
     EventuateZookeeperContainer zookeeper = eventuateKafkaCluster.zookeeper;
     EventuateKafkaContainer kafka = eventuateKafkaCluster.kafka.dependsOn(zookeeper);
 
     EventuateDatabaseContainer<?> customerServiceDatabase = DatabaseContainerFactory.makeVanillaDatabaseContainer()
         .withNetwork(eventuateKafkaCluster.network)
-        .withNetworkAliases("customer-service-mysql")
+        .withNetworkAliases("customer-service-db")
         .withReuse(false);
     // This results in only one DB!
     EventuateDatabaseContainer<?> orderServiceDatabase = DatabaseContainerFactory.makeVanillaDatabaseContainer()
         .withNetwork(eventuateKafkaCluster.network)
-        .withNetworkAliases("order-service-mysql")
+        .withNetworkAliases("order-service-db")
         .withReuse(false);
     customerService = ServiceContainer.makeFromDockerfileInFileSystem("../customer-service/customer-service-main/Dockerfile")
             .withNetwork(eventuateKafkaCluster.network)
@@ -64,6 +64,7 @@ public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTes
             .withEnv("JAVA_OPTS", "-Ddebug")
             .withEnv("APIGATEWAY_TIMEOUT_MILLIS", "1000")
             .withLogConsumer(new Slf4jLogConsumer(logger).withPrefix("SVC api-gateway-service:"))
+            .withLabel("io.eventuate.name", "api-gateway-service")
             .withReuse(false);
     cdc = new EventuateCdcContainer()
             .withKafkaCluster(eventuateKafkaCluster)

@@ -1,6 +1,9 @@
 #! /bin/bash -e
 
-docker run ${1:--it} \
-   --name mysqlterm --network=${PWD##*/}_default --rm \
-   mysql/mysql-server:8.0.27-1.2.6-server \
-   sh -c 'exec mysql -horder-service-mysql  -umysqluser -pmysqlpw  -o order_service'
+IMAGE=$(docker ps --filter "network=CustomersAndOrdersEndToEndTest" --format "{{.Image}}" \
+  | grep mysql8 | head -1)
+
+docker run ${1:--it} --rm \
+   --network=CustomersAndOrdersEndToEndTest --rm \
+   "${IMAGE?}" \
+   sh -c 'exec mysql -horder-service-db  -uroot -prootpassword  -o eventuate'
