@@ -40,7 +40,6 @@ public class CustomerServiceComponentTest {
             ServiceContainer.makeFromDockerfileOnClasspath()
                     .withNetwork(eventuateKafkaCluster.network)
                     .withDatabase(database)
-                    .withZookeeper(zookeeper)
                     .withKafka(kafka)
                     .dependsOn(kafka, database)
                     .withLogConsumer(new Slf4jLogConsumer(logger).withPrefix("SVC customer-service:"))
