@@ -14,7 +14,6 @@ dependencies {
     implementation "org.flywaydb:flyway-core"
     implementation "org.flywaydb:flyway-mysql"
 
-    implementation "org.hamcrest:hamcrest:2.2"
     testImplementation "org.mockito:mockito-core:4.11.0"
 }
 tasks.withType(Test).configureEach {

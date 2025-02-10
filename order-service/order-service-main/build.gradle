@@ -6,9 +6,7 @@ dependencies {
     implementation project(":order-service:order-service-persistence")
     implementation "io.eventuate.tram.core:eventuate-tram-spring-logging"
 
-    implementation "org.hamcrest:hamcrest:2.2"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
-    implementation "org.springframework.boot:spring-boot-starter-validation:3.0.13"
     implementation "org.springframework.boot:spring-boot-starter-web"
     testImplementation "org.mockito:mockito-core:4.11.0"
 }
