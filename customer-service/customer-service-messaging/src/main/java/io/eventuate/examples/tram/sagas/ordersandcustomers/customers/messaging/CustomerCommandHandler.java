@@ -1,12 +1,12 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.customers.messaging;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.messaging.commands.ReserveCreditCommand;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.messaging.replies.CustomerCreditLimitExceeded;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.messaging.replies.CustomerCreditReserved;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.messaging.replies.CustomerNotFound;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.domain.CustomerCreditLimitExceededException;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.domain.CustomerNotFoundException;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.domain.CustomerService;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.messaging.commands.ReserveCreditCommand;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.messaging.replies.CustomerCreditLimitExceeded;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.messaging.replies.CustomerCreditReserved;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.messaging.replies.CustomerNotFound;
 import io.eventuate.tram.commands.consumer.CommandHandlers;
 import io.eventuate.tram.commands.consumer.CommandMessage;
 import io.eventuate.tram.messaging.common.Message;
@@ -33,7 +33,7 @@ public class CustomerCommandHandler {
   public Message reserveCredit(CommandMessage<ReserveCreditCommand> cm) {
     ReserveCreditCommand cmd = cm.getCommand();
     try {
-      customerService.reserveCredit(cmd.getCustomerId(), cmd.getOrderId(), cmd.getOrderTotal());
+      customerService.reserveCredit(cmd.customerId(), cmd.orderId(), cmd.orderTotal());
       return withSuccess(new CustomerCreditReserved());
     } catch (CustomerNotFoundException e) {
       return withFailure(new CustomerNotFound());

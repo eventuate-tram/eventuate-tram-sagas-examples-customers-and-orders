@@ -1,6 +1,6 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.proxies.customers;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.messaging.replies.CustomerCreditReserved;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.messaging.replies.CustomerCreditReserved;
 import io.eventuate.tram.messaging.consumer.MessageConsumer;
 import io.eventuate.tram.spring.testing.cloudcontract.EnableEventuateTramContractVerifier;
 import org.junit.jupiter.api.Test;

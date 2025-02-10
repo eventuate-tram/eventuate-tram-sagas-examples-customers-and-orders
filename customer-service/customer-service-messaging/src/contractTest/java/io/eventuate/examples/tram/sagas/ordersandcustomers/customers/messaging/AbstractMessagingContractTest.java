@@ -1,6 +1,6 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.customers.messaging;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.messaging.replies.CustomerCreditReserved;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.messaging.replies.CustomerCreditReserved;
 import io.eventuate.tram.messaging.producer.MessageProducer;
 import io.eventuate.tram.spring.testing.cloudcontract.EnableEventuateTramContractVerifier;
 import org.springframework.beans.factory.annotation.Autowired;

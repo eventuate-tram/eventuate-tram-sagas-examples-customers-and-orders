@@ -11,7 +11,7 @@ org.springframework.cloud.contract.spec.Contract.make {
         sentTo('reserveCreditReply')
         body('''{}''')
         headers {
-            header('reply_type', 'io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.messaging.replies.CustomerCreditReserved')
+            header('reply_type', 'io.eventuate.examples.tram.sagas.ordersandcustomers.customers.messaging.replies.CustomerCreditReserved')
             header('reply_outcome-type', 'SUCCESS')
         }
     }
