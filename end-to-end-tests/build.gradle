@@ -26,8 +26,6 @@ dependencies {
 
     testImplementation "io.eventuate.util:eventuate-util-test"
 
-    // TODO shouldn't need to do this too
-    endToEndTestImplementation "org.testcontainers:testcontainers:$testContainersVersion"
     endToEndTestImplementation "io.eventuate.platform.testcontainer.support:eventuate-platform-testcontainer-support-service:$eventuatePlatformTestContainerSupportVersion"
     endToEndTestImplementation "io.eventuate.cdc:eventuate-cdc-testcontainers"
     endToEndTestImplementation "io.eventuate.common:eventuate-common-testcontainers"
@@ -56,7 +54,6 @@ for (def dbType  in ["MySql", "Postgres"]) {
         mainClass = "io.eventuate.examples.tram.sagas.ordersandcustomers.application.CustomersAndOrdersMain"
         systemProperty "logback.debug", "true"
         systemProperty "eventuate.servicecontainer.serviceimage.version", version
-        systemProperty "eventuate.servicecontainer.baseimage.version", eventuateExamplesBaseImageVersion
         systemProperty "server.port", "0"
         systemProperty "spring.profiles.active", springProfilesActive
         dependsOn(":customer-service:customer-service-main:assemble", ":order-service:order-service-main:assemble", ":api-gateway-service:api-gateway-service-main:assemble")

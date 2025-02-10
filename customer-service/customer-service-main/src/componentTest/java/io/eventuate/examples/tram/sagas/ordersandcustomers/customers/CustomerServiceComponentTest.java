@@ -1,11 +1,11 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.customers;
 
 
+import io.eventuate.common.testcontainers.ContainerTestUtil;
 import io.eventuate.common.testcontainers.DatabaseContainerFactory;
 import io.eventuate.common.testcontainers.EventuateDatabaseContainer;
-import io.eventuate.common.testcontainers.EventuateZookeeperContainer;
-import io.eventuate.messaging.kafka.testcontainers.EventuateKafkaCluster;
-import io.eventuate.messaging.kafka.testcontainers.EventuateKafkaContainer;
+import io.eventuate.messaging.kafka.testcontainers.EventuateKafkaNativeCluster;
+import io.eventuate.messaging.kafka.testcontainers.EventuateKafkaNativeContainer;
 import io.eventuate.testcontainers.service.ServiceContainer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -23,17 +23,17 @@ public class CustomerServiceComponentTest {
 
     protected static Logger logger = LoggerFactory.getLogger(CustomerServiceComponentTest.class);
 
-    public static EventuateKafkaCluster eventuateKafkaCluster = new EventuateKafkaCluster();
+    public static EventuateKafkaNativeCluster eventuateKafkaCluster = new EventuateKafkaNativeCluster("customer-service-tests");
 
-    public static EventuateZookeeperContainer zookeeper = eventuateKafkaCluster.zookeeper;
+    public static EventuateKafkaNativeContainer kafka = eventuateKafkaCluster.kafka
+        .withNetworkAliases("kafka")
+        .withReuse(ContainerTestUtil.shouldReuse());
 
-    public static EventuateKafkaContainer kafka = eventuateKafkaCluster.kafka.dependsOn(zookeeper);
-
-    public static EventuateDatabaseContainer<?> database =
-            DatabaseContainerFactory.makeVanillaDatabaseContainer()
-                    .withNetwork(eventuateKafkaCluster.network)
-                    .withNetworkAliases("customer-service-mysql")
-                    .withReuse(true);
+    public static EventuateDatabaseContainer<?> database
+        = DatabaseContainerFactory.makeVanillaDatabaseContainer()
+                .withNetwork(eventuateKafkaCluster.network)
+                .withNetworkAliases("customer-service-mysql")
+                .withReuse(ContainerTestUtil.shouldReuse());
 
 
     public static ServiceContainer service =
@@ -41,7 +41,6 @@ public class CustomerServiceComponentTest {
                     .withNetwork(eventuateKafkaCluster.network)
                     .withDatabase(database)
                     .withKafka(kafka)
-                    .dependsOn(kafka, database)
                     .withLogConsumer(new Slf4jLogConsumer(logger).withPrefix("SVC customer-service:"))
                     .withReuse(false) // should rebuild
             ;

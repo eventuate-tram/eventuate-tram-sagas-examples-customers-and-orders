@@ -1,12 +1,12 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests;
 
 import io.eventuate.cdc.testcontainers.EventuateCdcContainer;
+import io.eventuate.common.testcontainers.ContainerTestUtil;
 import io.eventuate.common.testcontainers.DatabaseContainerFactory;
 import io.eventuate.common.testcontainers.EventuateDatabaseContainer;
 import io.eventuate.common.testcontainers.EventuateGenericContainer;
-import io.eventuate.common.testcontainers.EventuateZookeeperContainer;
-import io.eventuate.messaging.kafka.testcontainers.EventuateKafkaCluster;
-import io.eventuate.messaging.kafka.testcontainers.EventuateKafkaContainer;
+import io.eventuate.messaging.kafka.testcontainers.EventuateKafkaNativeCluster;
+import io.eventuate.messaging.kafka.testcontainers.EventuateKafkaNativeContainer;
 import io.eventuate.testcontainers.service.ServiceContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.lifecycle.Startables;
@@ -24,10 +24,11 @@ public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTes
           ;
 
   public ApplicationUnderTestUsingTestContainers() {
-    EventuateKafkaCluster eventuateKafkaCluster = new EventuateKafkaCluster("CustomersAndOrdersEndToEndTest");
+    EventuateKafkaNativeCluster eventuateKafkaCluster = new EventuateKafkaNativeCluster("CustomersAndOrdersEndToEndTest");
 
-    EventuateZookeeperContainer zookeeper = eventuateKafkaCluster.zookeeper;
-    EventuateKafkaContainer kafka = eventuateKafkaCluster.kafka.dependsOn(zookeeper);
+    EventuateKafkaNativeContainer kafka = eventuateKafkaCluster.kafka
+        .withReuse(ContainerTestUtil.shouldReuse())
+        .withNetworkAliases("kafka");
 
     EventuateDatabaseContainer<?> customerServiceDatabase = DatabaseContainerFactory.makeVanillaDatabaseContainer()
         .withNetwork(eventuateKafkaCluster.network)
@@ -43,7 +44,6 @@ public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTes
             .withNetworkAliases("customer-service")
             .withDatabase(customerServiceDatabase)
             .withKafka(kafka)
-            .dependsOn(customerServiceDatabase, kafka)
             .withLogConsumer(new Slf4jLogConsumer(logger).withPrefix("SVC customer-service:"))
             .withReuse(false);
     orderService = ServiceContainer.makeFromDockerfileInFileSystem("../order-service/order-service-main/Dockerfile")
@@ -51,7 +51,6 @@ public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTes
             .withNetworkAliases("order-service")
             .withDatabase(orderServiceDatabase)
             .withKafka(kafka)
-            .dependsOn(orderServiceDatabase, kafka)
             .withLogConsumer(new Slf4jLogConsumer(logger).withPrefix("SVC order-service:"))
             .withReuse(false);
     apiGatewayService = ServiceContainer.makeFromDockerfileInFileSystem("../api-gateway-service/api-gateway-service-main/Dockerfile")
@@ -65,11 +64,12 @@ public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTes
             .withLabel("io.eventuate.name", "api-gateway-service")
             .withReuse(false);
     cdc = new EventuateCdcContainer()
-            .withKafkaCluster(eventuateKafkaCluster)
-            .withTramPipeline(customerServiceDatabase)
-            .withTramPipeline(orderServiceDatabase)
-            .dependsOn(customerService, orderService)
-            .withReuse(false);
+        .withKafka(kafka)
+        .withKafkaLeadership()
+        .withTramPipeline(customerServiceDatabase)
+        .withTramPipeline(orderServiceDatabase)
+        .dependsOn(customerService, orderService)
+        .withReuse(false);
   }
 
   @Override

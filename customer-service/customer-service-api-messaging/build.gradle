@@ -1,10 +1,4 @@
 dependencies {
     implementation "io.eventuate.examples.common:eventuate-examples-common-money-jakarta9:$eventuateCommonExamplesVersion"
     implementation "io.eventuate.tram.core:eventuate-tram-spring-commands"
-    implementation "org.hamcrest:hamcrest:2.2"
-    implementation "org.springframework.boot:spring-boot-starter-validation:3.0.13"
-    implementation "org.springframework.boot:spring-boot-starter-web:3.0.13"
-}
-tasks.withType(Test).configureEach {
-    useJUnitPlatform()
 }
