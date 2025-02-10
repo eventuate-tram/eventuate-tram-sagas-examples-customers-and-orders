@@ -1,8 +1,7 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.sagas;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.OrderDetails;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.sagas.createorder.CreateOrderSagaData;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.Order;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderDetails;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderRepository;
 import io.eventuate.tram.sagas.orchestration.SagaInstanceFactory;
 import org.springframework.transaction.annotation.Transactional;

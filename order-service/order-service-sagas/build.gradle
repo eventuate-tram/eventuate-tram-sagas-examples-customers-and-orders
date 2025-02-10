@@ -5,17 +5,21 @@ repositories {
 }
 
 dependencies {
-    implementation project(":order-service:order-service-api-messaging")
     implementation project(":order-service:order-service-domain")
     implementation "io.eventuate.examples.common:eventuate-examples-common-money-jakarta9:$eventuateCommonExamplesVersion"
     implementation project(":customer-service:customer-service-api-messaging")
     implementation project(":order-service:order-service-proxies-customer-service")
-    implementation project(":order-service:order-service-api-messaging")
 
     implementation "io.eventuate.tram.core:eventuate-tram-spring-optimistic-locking"
 
     implementation "io.eventuate.tram.core:eventuate-tram-spring-jdbc-kafka"
     implementation "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-orchestration-simple-dsl-starter"
+
+    implementation "io.eventuate.tram.core:eventuate-tram-spring-flyway"
+    runtimeOnly "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-flyway"
+    runtimeOnly "org.flywaydb:flyway-database-postgresql"
+    implementation "org.flywaydb:flyway-core"
+    implementation "org.flywaydb:flyway-mysql"
 
 
     testImplementation "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-testing-support"

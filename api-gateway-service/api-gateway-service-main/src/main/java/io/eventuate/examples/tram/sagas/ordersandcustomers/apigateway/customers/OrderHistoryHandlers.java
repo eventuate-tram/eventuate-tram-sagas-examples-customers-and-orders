@@ -1,10 +1,9 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.customers;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.api.web.GetCustomerHistoryResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.customerservice.CustomerServiceProxy;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.customerservice.GetCustomerResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.orderservice.GetOrderResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.orderservice.OrderServiceProxy;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrderResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;

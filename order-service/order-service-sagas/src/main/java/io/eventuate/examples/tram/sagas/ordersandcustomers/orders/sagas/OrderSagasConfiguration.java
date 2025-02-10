@@ -5,6 +5,7 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderSe
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.proxies.customers.CustomerServiceProxy;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.proxies.customers.CustomerServiceProxyConfiguration;
 import io.eventuate.tram.sagas.orchestration.SagaInstanceFactory;
+import io.eventuate.tram.spring.flyway.EventuateTramFlywayMigrationConfiguration;
 import io.eventuate.tram.spring.optimisticlocking.OptimisticLockingDecoratorConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +16,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @EnableJpaRepositories
 @EnableAutoConfiguration
-@Import({OptimisticLockingDecoratorConfiguration.class, CustomerServiceProxyConfiguration.class})
+@Import({OptimisticLockingDecoratorConfiguration.class, CustomerServiceProxyConfiguration.class, EventuateTramFlywayMigrationConfiguration.class})
 public class OrderSagasConfiguration {
 
   @Bean

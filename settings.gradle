@@ -7,8 +7,6 @@ include 'customer-service:customer-service-main'
 include 'customer-service:customer-service-messaging'
 include 'customer-service:customer-service-persistence'
 
-include 'order-service:order-service-api-web'
-include 'order-service:order-service-api-messaging'
 include 'order-service:order-service-domain'
 include 'order-service:order-service-proxies-customer-service'
 include 'order-service:order-service-sagas'
@@ -16,7 +14,6 @@ include 'order-service:order-service-web'
 include 'order-service:order-service-persistence'
 include 'order-service:order-service-main'
 
-include 'api-gateway-service:api-gateway-service-api-web'
 include 'api-gateway-service:api-gateway-service-main'
 
 include 'end-to-end-tests'

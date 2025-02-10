@@ -12,16 +12,10 @@ import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.lifecycle.Startables;
 
 public class ApplicationUnderTestUsingTestContainers extends ApplicationUnderTest {
-  private final ServiceContainer customerService
-          // should rebuild
-          ;
-  private final ServiceContainer orderService
-          // should rebuild
-          ;
+  private final ServiceContainer customerService;
+  private final ServiceContainer orderService;
   private final ServiceContainer apiGatewayService;
-  private final EventuateCdcContainer cdc
-          // State for deleted databases is persisted in Kafka
-          ;
+  private final EventuateCdcContainer cdc;
 
   public ApplicationUnderTestUsingTestContainers() {
     EventuateKafkaNativeCluster eventuateKafkaCluster = new EventuateKafkaNativeCluster("CustomersAndOrdersEndToEndTest");

@@ -1,7 +1,5 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.OrderDetails;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.RejectionReason;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class OrderService {

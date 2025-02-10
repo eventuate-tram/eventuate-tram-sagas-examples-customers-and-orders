@@ -1,17 +1,12 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests;
 
 import io.eventuate.examples.common.money.Money;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.api.web.GetCustomerHistoryResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests.proxies.apigateway.GetCustomerHistoryResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests.proxies.customerservice.CreateCustomerRequest;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests.proxies.customerservice.CreateCustomerResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests.proxies.customerservice.GetCustomerResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests.proxies.customerservice.GetCustomersResponse;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.OrderState;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.RejectionReason;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.CreateOrderRequest;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.CreateOrderResponse;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrderResponse;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrdersResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests.proxies.orderservice.*;
 import io.eventuate.util.test.async.Eventually;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
@@ -139,8 +134,8 @@ public class CustomersAndOrdersEndToEndTest {
             assertEquals(CUSTOMER_NAME, customerResponse.getName());
             assertEquals(1, customerResponse.getOrders().size());
 
-            assertEquals((Long) createOrderResponse.getOrderId(), customerResponse.getOrders().get(0).getOrderId());
-            assertEquals(OrderState.APPROVED, customerResponse.getOrders().get(0).getOrderState());
+            assertEquals((Long) createOrderResponse.getOrderId(), customerResponse.getOrders().get(0).orderId());
+            assertEquals(OrderState.APPROVED, customerResponse.getOrders().get(0).orderState());
         });
     }
 
@@ -160,8 +155,8 @@ public class CustomersAndOrdersEndToEndTest {
             ResponseEntity<GetOrderResponse> getOrderResponseEntity = restTemplate.getForEntity(applicationUnderTest.apiGatewayBaseUrl(hostName, "orders/" + id), GetOrderResponse.class);
             assertEquals(HttpStatus.OK, getOrderResponseEntity.getStatusCode());
             GetOrderResponse order = getOrderResponseEntity.getBody();
-            assertEquals(expectedState, order.getOrderState());
-            assertEquals(expectedRejectionReason, order.getRejectionReason());
+            assertEquals(expectedState, order.orderState());
+            assertEquals(expectedRejectionReason, order.rejectionReason());
         });
     }
 

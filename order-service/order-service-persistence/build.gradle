@@ -3,17 +3,10 @@ apply plugin: IntegrationTestsPlugin
 dependencies {
     implementation project(":order-service:order-service-domain")
 
-    implementation "io.eventuate.tram.core:eventuate-tram-spring-flyway"
-    runtimeOnly "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-flyway"
-    runtimeOnly "org.flywaydb:flyway-database-postgresql"
 
     implementation "io.eventuate.common:eventuate-common-jdbc"
 
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
-    implementation "org.springframework.boot:spring-boot-starter-validation:3.0.13"
-    implementation "org.springframework.boot:spring-boot-starter-web:3.0.13"
-    implementation "org.flywaydb:flyway-core"
-    implementation "org.flywaydb:flyway-mysql"
 
     testImplementation "org.mockito:mockito-core:4.11.0"
 
@@ -21,7 +14,6 @@ dependencies {
     implementation 'org.postgresql:postgresql:9.4-1200-jdbc41'
 
 
-    integrationTestImplementation project(":order-service:order-service-api-messaging")
     integrationTestImplementation "io.eventuate.examples.common:eventuate-examples-common-money-jakarta9:$eventuateCommonExamplesVersion"
     integrationTestImplementation "io.eventuate.common:eventuate-common-testcontainers"
 

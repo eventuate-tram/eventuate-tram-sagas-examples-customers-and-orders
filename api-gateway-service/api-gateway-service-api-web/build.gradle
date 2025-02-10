@@ -1,8 +1,0 @@
-dependencies {
-    api project(":order-service:order-service-api-web")
-    api "io.eventuate.examples.common:eventuate-examples-common-money-jakarta9:$eventuateCommonExamplesVersion"
-}
-
-tasks.withType(Test).configureEach {
-    useJUnitPlatform()
-}
