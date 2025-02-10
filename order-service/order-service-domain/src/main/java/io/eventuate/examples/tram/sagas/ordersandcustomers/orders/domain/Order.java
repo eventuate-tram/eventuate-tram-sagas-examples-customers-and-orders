@@ -4,7 +4,6 @@ package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.OrderDetails;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.OrderState;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.RejectionReason;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -46,6 +45,10 @@ public class Order {
 
   public void setId(long id) {
     this.id = id;
+  }
+
+  public OrderDetails getOrderDetails() {
+    return orderDetails;
   }
 
   public void approve() {

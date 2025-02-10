@@ -1,3 +1,4 @@
+apply plugin: IntegrationTestsPlugin
 
 dependencies {
     implementation project(":order-service:order-service-domain")
@@ -15,7 +16,17 @@ dependencies {
     implementation "org.flywaydb:flyway-mysql"
 
     testImplementation "org.mockito:mockito-core:4.11.0"
+
+    implementation 'com.mysql:mysql-connector-j:8.0.33'
+    implementation 'org.postgresql:postgresql:9.4-1200-jdbc41'
+
+
+    integrationTestImplementation project(":order-service:order-service-api-messaging")
+    integrationTestImplementation "io.eventuate.examples.common:eventuate-examples-common-money-jakarta9:$eventuateCommonExamplesVersion"
+    integrationTestImplementation "io.eventuate.common:eventuate-common-testcontainers"
+
 }
+
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }

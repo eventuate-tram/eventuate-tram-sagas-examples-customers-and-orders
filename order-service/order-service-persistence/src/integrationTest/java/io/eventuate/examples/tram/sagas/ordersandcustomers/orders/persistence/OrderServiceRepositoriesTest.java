@@ -1,11 +1,14 @@
-package io.eventuate.examples.tram.sagas.ordersandcustomers.customers.persistence;
+package io.eventuate.examples.tram.sagas.ordersandcustomers.orders.persistence;
 
+import io.eventuate.common.testcontainers.ContainerTestUtil;
 import io.eventuate.common.testcontainers.DatabaseContainerFactory;
 import io.eventuate.common.testcontainers.EventuateDatabaseContainer;
 import io.eventuate.common.testcontainers.PropertyProvidingContainer;
 import io.eventuate.examples.common.money.Money;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.domain.Customer;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.domain.CustomerRepository;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.OrderDetails;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.OrderState;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.Order;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -22,57 +25,59 @@ import org.springframework.transaction.support.TransactionTemplate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
-@ContextConfiguration(classes=RepositoriesTest.Config.class)
+@ContextConfiguration(classes= OrderServiceRepositoriesTest.Config.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Transactional(propagation = Propagation.NEVER)
-public class RepositoriesTest {
+public class OrderServiceRepositoriesTest {
 
+  @Configuration
+  @Import(OrderPersistenceConfiguration.class)
+  static public class Config {
+  }
 
-  public static EventuateDatabaseContainer<?> database = DatabaseContainerFactory.makeVanillaDatabaseContainer();
+  public static EventuateDatabaseContainer<?> database =
+      DatabaseContainerFactory.makeVanillaDatabaseContainer()
+          .withReuse(ContainerTestUtil.shouldReuse());
 
   @DynamicPropertySource
   static void registerMySqlProperties(DynamicPropertyRegistry registry) {
     PropertyProvidingContainer.startAndProvideProperties(registry, database);
   }
 
-  public static final String customerName = "Chris";
-
-  @Configuration
-  @Import(CustomerPersistenceConfiguration.class)
-  static public class Config {
-  }
-
   @Autowired
-  private CustomerRepository customerRepository;
+  private OrderRepository orderRepository;
 
   @Autowired
   private TransactionTemplate transactionTemplate;
 
+
   @Test
-  public void shouldSaveAndLoadCustomer() {
-    Money creditLimit = new Money("12.34");
-    Money amount = new Money("10");
-    Money expectedAvailableCredit = creditLimit.subtract(amount);
+  public void shouldSaveAndLoadOrder() {
 
-    Customer c = new Customer(customerName, creditLimit);
+    long customerId = 123L;
+    Money orderTotal = new Money("12.34");
+    OrderDetails orderDetails = new OrderDetails(customerId, orderTotal);
 
-    transactionTemplate.executeWithoutResult( ts -> customerRepository.save(c) );
+    Order o = new Order(orderDetails);
+
+    transactionTemplate.executeWithoutResult( ts -> orderRepository.save(o) );
+
+    long orderId = o.getId();
 
     transactionTemplate.executeWithoutResult(ts -> {
-      Customer c2 = customerRepository.findById(c.getId()).get();
-      assertEquals(customerName, c2.getName());
-      assertEquals(creditLimit, c2.getCreditLimit());
-      assertEquals(creditLimit, c2.availableCredit());
+      Order o2 = orderRepository.findById(orderId).get();
+      assertEquals(orderDetails, o2.getOrderDetails());
+      assertEquals(OrderState.PENDING, o2.getState());
 
-      c2.reserveCredit(1234L, amount);
+      o2.approve();
     });
 
     transactionTemplate.executeWithoutResult(ts -> {
-      Customer c2 = customerRepository.findById(c.getId()).get();
-      assertEquals(expectedAvailableCredit, c2.availableCredit());
-
+      Order o2 = orderRepository.findById(orderId).get();
+      assertEquals(OrderState.APPROVED, o2.getState());
     });
 
 
   }
+
 }
