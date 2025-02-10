@@ -15,7 +15,6 @@ sourceSets {
 }
 
 dependencies {
-    testImplementation project(":customer-service:customer-service-api-web")
     testImplementation project(":order-service:order-service-api-web")
     testImplementation project(":order-service:order-service-api-messaging")
     testImplementation project(":api-gateway-service:api-gateway-service-api-web")

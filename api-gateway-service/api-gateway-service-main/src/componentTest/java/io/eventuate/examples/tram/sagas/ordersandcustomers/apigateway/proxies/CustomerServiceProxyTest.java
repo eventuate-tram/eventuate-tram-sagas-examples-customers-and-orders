@@ -1,6 +1,8 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.GetCustomerResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.common.UnknownProxyException;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.customerservice.CustomerServiceProxy;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.customerservice.GetCustomerResponse;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,7 +62,7 @@ public class CustomerServiceProxyTest {
 
     GetCustomerResponse customer = customerServiceProxy.findCustomerById("101").block().get();
 
-    assertEquals(Long.valueOf(101L), customer.getCustomerId());
+    assertEquals(Long.valueOf(101L), customer.customerId());
 
     verify(getRequestedFor(urlMatching("/customers/101")));
   }

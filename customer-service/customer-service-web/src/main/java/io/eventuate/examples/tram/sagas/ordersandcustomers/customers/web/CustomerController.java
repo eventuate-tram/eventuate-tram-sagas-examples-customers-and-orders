@@ -1,9 +1,5 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.customers.web;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.CreateCustomerRequest;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.CreateCustomerResponse;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.GetCustomerResponse;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.GetCustomersResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.domain.Customer;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.domain.CustomerRepository;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.domain.CustomerService;
@@ -27,7 +23,7 @@ public class CustomerController {
 
   @PostMapping("/customers")
   public CreateCustomerResponse createCustomer(@RequestBody CreateCustomerRequest createCustomerRequest) {
-    Customer customer = customerService.createCustomer(createCustomerRequest.getName(), createCustomerRequest.getCreditLimit());
+    Customer customer = customerService.createCustomer(createCustomerRequest.name(), createCustomerRequest.creditLimit());
     return new CreateCustomerResponse(customer.getId());
   }
 

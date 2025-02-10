@@ -1,4 +1,4 @@
-package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies;
+package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.common;
 
 import org.springframework.http.HttpStatusCode;
 
@@ -7,7 +7,7 @@ public class UnknownProxyException extends RuntimeException{
     super(message);
   }
 
-  static UnknownProxyException make(String path, HttpStatusCode statusCode, String param) {
+  public static UnknownProxyException make(String path, HttpStatusCode statusCode, String param) {
     return new UnknownProxyException("Unknown: " + path + param + "=" + statusCode);
   }
 }

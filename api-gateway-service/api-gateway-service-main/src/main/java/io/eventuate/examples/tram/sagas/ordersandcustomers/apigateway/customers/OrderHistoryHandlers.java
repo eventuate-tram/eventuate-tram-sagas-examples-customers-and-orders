@@ -1,9 +1,9 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.customers;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.CustomerServiceProxy;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.OrderServiceProxy;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.api.web.GetCustomerHistoryResponse;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.GetCustomerResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.customerservice.CustomerServiceProxy;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.customerservice.GetCustomerResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.orderservice.OrderServiceProxy;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.GetOrderResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -17,8 +17,8 @@ import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 
 public class OrderHistoryHandlers {
 
-  private OrderServiceProxy orderService;
-  private CustomerServiceProxy customerService;
+  private final OrderServiceProxy orderService;
+  private final CustomerServiceProxy customerService;
 
   public OrderHistoryHandlers(OrderServiceProxy orderService, CustomerServiceProxy customerService) {
     this.orderService = orderService;
@@ -37,7 +37,7 @@ public class OrderHistoryHandlers {
             .map(possibleCustomerAndOrders ->
                     possibleCustomerAndOrders.getT1().map(c -> {
                       List<GetOrderResponse> os = possibleCustomerAndOrders.getT2();
-                      return new GetCustomerHistoryResponse(c.getCustomerId(), c.getName(), c.getCreditLimit(), os);
+                      return new GetCustomerHistoryResponse(c.customerId(), c.name(), c.creditLimit(), os);
                     }));
     return map.flatMap(maybe ->
             maybe.map(c ->

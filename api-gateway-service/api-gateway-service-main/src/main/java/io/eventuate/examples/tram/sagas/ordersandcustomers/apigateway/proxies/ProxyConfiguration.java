@@ -5,6 +5,8 @@ import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.customers.
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.customers.CustomerDestinations;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.orders.OrderConfiguration;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.orders.OrderDestinations;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.customerservice.CustomerServiceProxy;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.orderservice.OrderServiceProxy;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import io.github.resilience4j.timelimiter.TimeLimiterConfig;

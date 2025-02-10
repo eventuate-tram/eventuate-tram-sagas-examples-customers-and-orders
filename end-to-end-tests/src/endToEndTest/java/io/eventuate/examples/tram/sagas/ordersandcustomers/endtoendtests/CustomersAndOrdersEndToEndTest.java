@@ -2,10 +2,10 @@ package io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests;
 
 import io.eventuate.examples.common.money.Money;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.api.web.GetCustomerHistoryResponse;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.CreateCustomerRequest;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.CreateCustomerResponse;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.GetCustomerResponse;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.GetCustomersResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests.proxies.customerservice.CreateCustomerRequest;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests.proxies.customerservice.CreateCustomerResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests.proxies.customerservice.GetCustomerResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests.proxies.customerservice.GetCustomersResponse;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.OrderState;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.messaging.common.RejectionReason;
 import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.api.web.CreateOrderRequest;
@@ -71,6 +71,7 @@ public class CustomersAndOrdersEndToEndTest {
     public void shouldGetCustomers() {
         GetCustomersResponse customers = restTemplate.getForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "customers"), GetCustomersResponse.class);
         assertNotNull(customers);
+        assertNotNull(customers.customers());
     }
     @Test
     public void shouldGetOrders() {
@@ -81,9 +82,9 @@ public class CustomersAndOrdersEndToEndTest {
     public void shouldApprove() {
         CreateCustomerResponse createCustomerResponse = createCustomer();
 
-        assertCustomerHasCreditLimit(createCustomerResponse.getCustomerId());
+        assertCustomerHasCreditLimit(createCustomerResponse.customerId());
 
-        CreateOrderResponse createOrderResponse = createOrder(createCustomerResponse.getCustomerId(), orderTotalUnderCreditLimit);
+        CreateOrderResponse createOrderResponse = createOrder(createCustomerResponse.customerId(), orderTotalUnderCreditLimit);
 
         assertOrderState(createOrderResponse.getOrderId(), OrderState.APPROVED, null);
     }
@@ -102,7 +103,7 @@ public class CustomersAndOrdersEndToEndTest {
 
     private void assertCustomerHasCreditLimit(long id) {
         GetCustomerResponse customer = restTemplate.getForObject(applicationUnderTest.apiGatewayBaseUrl(hostName, "customers/" + id), GetCustomerResponse.class);
-        assertEquals(creditLimit, customer.getCreditLimit());
+        assertEquals(creditLimit, customer.creditLimit());
 
     }
 
@@ -110,7 +111,7 @@ public class CustomersAndOrdersEndToEndTest {
     public void shouldRejectBecauseOfInsufficientCredit() {
         CreateCustomerResponse createCustomerResponse = createCustomer();
 
-        CreateOrderResponse createOrderResponse = createOrder(createCustomerResponse.getCustomerId(), orderTotalOverCreditLimit);
+        CreateOrderResponse createOrderResponse = createOrder(createCustomerResponse.customerId(), orderTotalOverCreditLimit);
 
         assertOrderState(createOrderResponse.getOrderId(), OrderState.REJECTED, RejectionReason.INSUFFICIENT_CREDIT);
     }
@@ -128,13 +129,13 @@ public class CustomersAndOrdersEndToEndTest {
 
         CreateCustomerResponse createCustomerResponse = createCustomer();
 
-        CreateOrderResponse createOrderResponse = createOrder(createCustomerResponse.getCustomerId(), orderTotalUnderCreditLimit);
+        CreateOrderResponse createOrderResponse = createOrder(createCustomerResponse.customerId(), orderTotalUnderCreditLimit);
 
         Eventually.eventually(() -> {
-            GetCustomerHistoryResponse customerResponse = getOrderHistory(createCustomerResponse.getCustomerId());
+            GetCustomerHistoryResponse customerResponse = getOrderHistory(createCustomerResponse.customerId());
 
             assertEquals(creditLimit.getAmount().setScale(2), customerResponse.getCreditLimit().getAmount().setScale(2));
-            assertEquals(createCustomerResponse.getCustomerId(), customerResponse.getCustomerId());
+            assertEquals(createCustomerResponse.customerId(), customerResponse.getCustomerId());
             assertEquals(CUSTOMER_NAME, customerResponse.getName());
             assertEquals(1, customerResponse.getOrders().size());
 

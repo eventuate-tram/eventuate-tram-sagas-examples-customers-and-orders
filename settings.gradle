@@ -1,6 +1,5 @@
 rootProject.name = "eventuate-tram-sagas-examples-customers-and-orders"
 
-include 'customer-service:customer-service-api-web'
 include 'customer-service:customer-service-api-messaging'
 include 'customer-service:customer-service-domain'
 include 'customer-service:customer-service-web'

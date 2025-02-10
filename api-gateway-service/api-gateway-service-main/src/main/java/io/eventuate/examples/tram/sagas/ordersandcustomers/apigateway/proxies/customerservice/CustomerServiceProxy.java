@@ -1,6 +1,6 @@
-package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies;
+package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.customerservice;
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.GetCustomerResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.common.UnknownProxyException;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import io.github.resilience4j.reactor.circuitbreaker.operator.CircuitBreakerOperator;

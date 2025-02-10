@@ -1,8 +1,8 @@
 package io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway;
 
 import io.eventuate.examples.common.money.Money;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.CustomerServiceProxy;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.customers.api.web.GetCustomerResponse;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.customerservice.CustomerServiceProxy;
+import io.eventuate.examples.tram.sagas.ordersandcustomers.apigateway.proxies.customerservice.GetCustomerResponse;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import io.github.resilience4j.timelimiter.TimeLimiterRegistry;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,9 +41,9 @@ public class CustomerServiceProxyTest {
   public void shouldCallCustomerService() {
     GetCustomerResponse customer = customerServiceProxy.findCustomerById("101").block().get();
 
-    assertEquals(Long.valueOf(101L), customer.getCustomerId());
-    assertEquals("Chris", customer.getName());
-    assertEquals(new Money("123.45"), customer.getCreditLimit());
+    assertEquals(Long.valueOf(101L), customer.customerId());
+    assertEquals("Chris", customer.name());
+    assertEquals(new Money("123.45"), customer.creditLimit());
 
   }
 
