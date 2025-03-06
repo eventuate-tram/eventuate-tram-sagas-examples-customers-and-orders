@@ -15,8 +15,8 @@ import java.util.stream.StreamSupport;
 @RestController
 public class OrderController {
 
-  private OrderSagaService orderSagaService;
-  private OrderRepository orderRepository;
+  private final OrderSagaService orderSagaService;
+  private final OrderRepository orderRepository;
 
   public OrderController(OrderSagaService orderSagaService, OrderRepository orderRepository) {
     this.orderSagaService = orderSagaService;

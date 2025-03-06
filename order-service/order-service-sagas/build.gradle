@@ -37,13 +37,6 @@ dependencies {
 
 }
 
-// Disable Spring Contract Testing for now - needs new Eventuate support
-// compileTestJava.dependsOn(":customer-service:customer-service-messaging:publish")
-
-integrationTest {
-    exclude '**/CustomerServiceProxyTest.class'
-}
-
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }

@@ -39,6 +39,7 @@ subprojects {
 
     dependencies {
         implementation(platform("io.eventuate.platform:eventuate-platform-dependencies:$eventuatePlatformVersion"))
+        implementation platform("io.eventuate.tram.springwolf:eventuate-tram-springwolf-support-bom:$eventuateTramSpringWolfSupportVersion")
 
         implementation(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
 
@@ -75,7 +76,7 @@ subprojects {
 
 
 task clean(type:Delete) {
-    delete 'build/repo'
+    delete 'build/repos'
 }
 
 

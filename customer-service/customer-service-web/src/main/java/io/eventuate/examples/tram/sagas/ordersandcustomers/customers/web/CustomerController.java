@@ -13,8 +13,8 @@ import java.util.stream.StreamSupport;
 @RestController
 public class CustomerController {
 
-  private CustomerService customerService;
-  private CustomerRepository customerRepository;
+  private final CustomerService customerService;
+  private final CustomerRepository customerRepository;
 
   public CustomerController(CustomerService customerService, CustomerRepository customerRepository) {
     this.customerService = customerService;

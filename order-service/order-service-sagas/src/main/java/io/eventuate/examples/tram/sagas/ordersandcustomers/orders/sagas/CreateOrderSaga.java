@@ -11,14 +11,21 @@ import io.eventuate.tram.commands.consumer.CommandWithDestination;
 import io.eventuate.tram.sagas.orchestration.SagaDefinition;
 import io.eventuate.tram.sagas.simpledsl.SimpleSaga;
 
+import java.util.List;
+
 public class CreateOrderSaga implements SimpleSaga<CreateOrderSagaData> {
 
-  private OrderService orderService;
-  private CustomerServiceProxy customerService;
+  private final OrderService orderService;
+  private final CustomerServiceProxy customerService;
 
   public CreateOrderSaga(OrderService orderService, CustomerServiceProxy customerService) {
     this.orderService = orderService;
     this.customerService = customerService;
+  }
+
+  @Override
+  public List<Object> getParticipantProxies() {
+    return List.of(customerService);
   }
 
   private SagaDefinition<CreateOrderSagaData> sagaDefinition =
@@ -54,8 +61,8 @@ public class CreateOrderSaga implements SimpleSaga<CreateOrderSagaData> {
 
   private CommandWithDestination reserveCredit(CreateOrderSagaData data) {
     long orderId = data.getOrderId();
-    Long customerId = data.getOrderDetails().getCustomerId();
-    Money orderTotal = data.getOrderDetails().getOrderTotal();
+    Long customerId = data.getOrderDetails().customerId();
+    Money orderTotal = data.getOrderDetails().orderTotal();
     return customerService.reserveCredit(orderId, customerId, orderTotal);
   }
 

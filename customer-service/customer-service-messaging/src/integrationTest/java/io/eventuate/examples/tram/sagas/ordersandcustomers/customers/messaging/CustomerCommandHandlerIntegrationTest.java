@@ -31,9 +31,9 @@ import static org.mockito.Mockito.verify;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class CustomerCommandHandlerIntegrationTest {
 
-  public static EventuateKafkaCluster eventuateKafkaCluster = new EventuateKafkaCluster();
+  private static final EventuateKafkaCluster eventuateKafkaCluster = new EventuateKafkaCluster();
 
-  public static EventuateDatabaseContainer database = DatabaseContainerFactory.makeVanillaDatabaseContainer();
+  private static final EventuateDatabaseContainer database = DatabaseContainerFactory.makeVanillaDatabaseContainer();
 
   @DynamicPropertySource
   static void registerMySqlProperties(DynamicPropertyRegistry registry) {
@@ -48,7 +48,10 @@ public class CustomerCommandHandlerIntegrationTest {
 
   @Configuration
   @EnableAutoConfiguration
-  @Import({CustomerMessagingConfiguration.class, EventuateKafkaTestCommandProducerConfiguration.class, EventuateTramFlywayMigrationConfiguration.class, CommandOutboxTestSupportConfiguration.class})
+  @Import({CustomerMessagingConfiguration.class,
+      EventuateKafkaTestCommandProducerConfiguration.class,
+      EventuateTramFlywayMigrationConfiguration.class,
+      CommandOutboxTestSupportConfiguration.class})
   static public class Config {
 
   }

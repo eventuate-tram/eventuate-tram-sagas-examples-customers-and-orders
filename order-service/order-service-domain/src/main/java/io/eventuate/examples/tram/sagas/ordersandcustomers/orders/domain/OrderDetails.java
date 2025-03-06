@@ -7,11 +7,4 @@ import jakarta.persistence.Embedded;
 @Embeddable
 public record OrderDetails(Long customerId, @Embedded Money orderTotal) {
 
-  public Long getCustomerId() {
-    return customerId();
-  }
-
-  public Money getOrderTotal() {
-    return orderTotal();
-  }
 }

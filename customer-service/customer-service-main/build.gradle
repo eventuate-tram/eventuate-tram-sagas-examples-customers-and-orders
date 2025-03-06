@@ -1,7 +1,7 @@
 apply plugin: ServicePlugin
-apply plugin: ComponentTestsPlugin
 
 dependencies {
+    implementation project(":customer-service:customer-service-domain")
     implementation project(":customer-service:customer-service-web")
     implementation project(":customer-service:customer-service-persistence")
     implementation project(":customer-service:customer-service-messaging")
@@ -15,6 +15,9 @@ dependencies {
     componentTestImplementation "io.eventuate.common:eventuate-common-testcontainers"
     componentTestImplementation "io.eventuate.messaging.kafka:eventuate-messaging-kafka-testcontainers"
     componentTestImplementation "io.eventuate.cdc:eventuate-cdc-testcontainers"
+    componentTestImplementation "io.rest-assured:rest-assured"
+    componentTestImplementation "io.eventuate.tram.core:eventuate-tram-spring-in-memory"
+    componentTestImplementation "io.eventuate.tram.springwolf:eventuate-tram-springwolf-support-testing"
 
 }
 
