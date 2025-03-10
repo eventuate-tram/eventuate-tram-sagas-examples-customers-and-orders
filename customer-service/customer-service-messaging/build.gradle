@@ -43,7 +43,7 @@ dependencies {
 
 contracts {
     testFramework = "JUNIT5"
-    baseClassForTests = "io.eventuate.examples.tram.sagas.ordersandcustomers.customers.messaging.AbstractMessagingContractTest"
+    baseClassForTests = "io.eventuate.examples.tram.sagas.customersandorders.customers.messaging.AbstractMessagingContractTest"
     ignoredFiles = [ "**/*Command.groovy" ]
     failOnNoContracts = true
 }

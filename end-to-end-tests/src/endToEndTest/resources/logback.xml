@@ -21,6 +21,6 @@
         <appender-ref ref="FILE" />
     </root>
 
-    <logger name="io.eventuate.examples.tram.sagas.ordersandcustomers.endtoendtests" level="INFO" />
+    <logger name="io.eventuate.examples.tram.sagas.customersandorders.endtoendtests" level="INFO" />
 
 </configuration>

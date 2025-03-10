@@ -1,4 +1,4 @@
-package io.eventuate.examples.tram.sagas.ordersandcustomers.migration;
+package io.eventuate.examples.tram.sagas.customersandorders.migration;
 
 import org.junit.Assert;
 import org.junit.Test;

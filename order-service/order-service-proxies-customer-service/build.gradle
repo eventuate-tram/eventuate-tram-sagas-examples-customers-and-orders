@@ -43,7 +43,7 @@ contracts {
     contractsPath = "META-INF/${contractGroupId}/$contractArtifactId/${contractArtifactVersion}/contracts/order-service/commands"
 
     testFramework = "JUNIT5"
-    baseClassForTests = "io.eventuate.examples.tram.sagas.ordersandcustomers.orders.proxies.customers.BaseForCustomerServiceTest"
+    baseClassForTests = "io.eventuate.examples.tram.sagas.customersandorders.orders.proxies.customers.BaseForCustomerServiceTest"
 
     failOnNoContracts = true
 

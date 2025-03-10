@@ -2,7 +2,7 @@ apply plugin: 'spring-cloud-contract'
 apply plugin: io.eventuate.tram.spring.testing.cloudcontract.plugins.gradle.PublishStubsPlugin
 
 contracts {
-    packageWithBaseClasses = 'io.eventuate.examples.tram.sagas.ordersandcustomers.customers.web'
+    packageWithBaseClasses = 'io.eventuate.examples.tram.sagas.customersandorders.customers.web'
 }
 
 contractTest {

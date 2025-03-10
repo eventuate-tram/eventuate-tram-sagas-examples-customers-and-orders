@@ -1,9 +1,9 @@
 package io.eventuate.examples.tram.sagas.ordersandorders.orders.web;
 
 
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderRepository;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.domain.OrderService;
-import io.eventuate.examples.tram.sagas.ordersandcustomers.orders.web.OrderController;
+import io.eventuate.examples.tram.sagas.customersandorders.orders.domain.OrderRepository;
+import io.eventuate.examples.tram.sagas.customersandorders.orders.domain.OrderService;
+import io.eventuate.examples.tram.sagas.customersandorders.orders.web.OrderController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

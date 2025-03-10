@@ -1,0 +1,20 @@
+package io.eventuate.examples.tram.sagas.customersandorders.apigateway.orders;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import jakarta.validation.constraints.NotNull;
+
+@ConfigurationProperties(prefix = "order.destinations")
+public class OrderDestinations {
+
+  @NotNull
+  private String orderServiceUrl;
+
+  public String getOrderServiceUrl() {
+    return orderServiceUrl;
+  }
+
+  public void setOrderServiceUrl(String orderServiceUrl) {
+    this.orderServiceUrl = orderServiceUrl;
+  }
+}

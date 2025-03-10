@@ -19,7 +19,7 @@ buildscript {
 apply plugin: "io.eventuate.tram.spring.testing.cloudcontract.plugins.gradle.ConfigureContractRepoDirPlugin"
 
 allprojects {
-    group = "io.eventuate.examples.tram.sagas.ordersandcustomers"
+    group = "io.eventuate.examples.tram.sagas.customersandorders"
 }
 
 subprojects {
