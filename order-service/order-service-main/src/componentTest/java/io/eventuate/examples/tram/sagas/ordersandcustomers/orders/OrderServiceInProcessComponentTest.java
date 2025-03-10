@@ -26,8 +26,6 @@ import org.springframework.context.annotation.Import;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class OrderServiceInProcessComponentTest {
 
@@ -65,7 +63,6 @@ public class OrderServiceInProcessComponentTest {
   @Test
   public void shouldExposeSpringWolf() {
     AsyncApiDocument doc = AsyncApiDocument.getSpringWolfDoc();
-    assertThat(doc).isNotNull();
 
     String createOrderSaga = CreateOrderSaga.class.getName();
 
@@ -81,4 +78,13 @@ public class OrderServiceInProcessComponentTest {
 
   }
 
+  @Test
+  public void shouldExposeSpringWolfUi() {
+
+    RestAssured.given()
+        .get("/springwolf/asyncapi-ui.html")
+        .then()
+        .statusCode(200);
+
+  }
 }
