@@ -4,7 +4,7 @@ dependencies {
     implementation project(":customer-service:customer-service-domain")
     implementation project(":customer-service:customer-service-restapi")
     implementation project(":customer-service:customer-service-persistence")
-    implementation project(":customer-service:customer-service-messaging")
+    implementation project(":customer-service:customer-service-credit-reservation-api")
     implementation "io.eventuate.tram.core:eventuate-tram-spring-logging"
 
     implementation "org.springframework.boot:spring-boot-starter-actuator"
@@ -24,8 +24,8 @@ dependencies {
 
 check.shouldRunAfter(":customer-service:customer-service-restapi:check")
 check.shouldRunAfter(":customer-service:customer-service-persistence:check")
-check.shouldRunAfter(":customer-service:customer-service-messaging:check")
-check.shouldRunAfter(":customer-service:customer-service-messaging:check")
+check.shouldRunAfter(":customer-service:customer-service-credit-reservation-api:check")
+check.shouldRunAfter(":customer-service:customer-service-credit-reservation-api:check")
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }

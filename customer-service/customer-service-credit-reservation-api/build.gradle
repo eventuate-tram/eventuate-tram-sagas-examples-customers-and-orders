@@ -1,0 +1,59 @@
+apply plugin: IntegrationTestsPlugin
+apply plugin: 'org.springframework.cloud.contract'
+apply plugin: io.eventuate.tram.spring.testing.cloudcontract.plugins.gradle.PublishStubsPlugin
+
+
+dependencies {
+
+    implementation "io.eventuate.examples.common:eventuate-examples-common-money-jakarta9:$eventuateCommonExamplesVersion"
+    implementation project(":customer-service:customer-service-domain")
+
+    implementation "io.eventuate.tram.core:eventuate-tram-spring-flyway"
+    runtimeOnly "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-flyway"
+    runtimeOnly "org.flywaydb:flyway-database-postgresql"
+
+    implementation "io.eventuate.tram.core:eventuate-tram-spring-jdbc-kafka"
+
+    implementation "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-participant-starter"
+    implementation "io.eventuate.tram.core:eventuate-tram-spring-optimistic-locking"
+
+
+    testImplementation "io.eventuate.tram.core:eventuate-tram-spring-testing-support-cloud-contract"
+    testImplementation "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-in-memory"
+
+    testImplementation "io.eventuate.messaging.kafka:eventuate-messaging-kafka-spring-producer"
+    testImplementation "io.eventuate.tram.core:eventuate-tram-spring-logging"
+
+
+    integrationTestImplementation "io.eventuate.common:eventuate-common-testcontainers"
+    integrationTestImplementation "io.eventuate.messaging.kafka:eventuate-messaging-kafka-testcontainers"
+
+    integrationTestImplementation project(":customer-service:customer-service-persistence")
+    testImplementation "io.eventuate.util:eventuate-util-test"
+    testImplementation "org.assertj:assertj-core:$assertjVersion"
+
+    integrationTestImplementation "io.eventuate.tram.core:eventuate-tram-spring-testing-support-kafka-producer"
+    integrationTestImplementation "io.eventuate.tram.core:eventuate-tram-spring-testing-support-outbox-commands"
+
+
+    contractTestImplementation "io.eventuate.tram.testingsupport.springcloudcontract:eventuate-tram-spring-testing-support-cloud-contract:$eventuateTramSpringTestingSupportCloudContractVersion"
+    contractTestImplementation "org.springframework.cloud:spring-cloud-starter-contract-stub-runner"
+}
+
+
+contracts {
+    testFramework = "JUNIT5"
+    baseClassForTests = "io.eventuate.examples.tram.sagas.customersandorders.customers.creditreservationapi.AbstractMessagingContractTest"
+    ignoredFiles = [ "**/*Command.groovy" ]
+    failOnNoContracts = true
+}
+
+contractTest {
+    useJUnitPlatform()
+}
+
+integrationTest {
+    useJUnitPlatform()
+}
+
+contractTest.dependsOn(publishStubsPublicationToMavenLocal)

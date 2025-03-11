@@ -31,9 +31,9 @@ dependencies {
     testImplementation "io.eventuate.tram.core:eventuate-tram-spring-testing-support-cloud-contract"
 
 // Disable Spring Contract Testing for now - needs new Eventuate support
-//    testImplementation "eventuate-tram-sagas-examples-customers-and-orders.customer-service:customer-service-messaging-stubs:0.1.0-SNAPSHOT:stubs"
+//    testImplementation "eventuate-tram-sagas-examples-customers-and-orders.customer-service:customer-service-credit-reservation-api-stubs:0.1.0-SNAPSHOT:stubs"
 
-    // testImplementation project(path: ':customer-service-messaging', classifier: "stubs")
+    // testImplementation project(path: ':customer-service-credit-reservation-api', classifier: "stubs")
 
 }
 

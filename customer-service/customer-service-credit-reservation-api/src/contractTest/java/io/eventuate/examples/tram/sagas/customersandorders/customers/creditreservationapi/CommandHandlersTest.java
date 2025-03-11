@@ -1,7 +1,7 @@
-package io.eventuate.examples.tram.sagas.customersandorders.orders.proxies.customers;
+package io.eventuate.examples.tram.sagas.customersandorders.customers.creditreservationapi;
 
-import io.eventuate.examples.tram.sagas.customersandorders.customers.creditreservationapi.replies.CustomerCreditReserved;
-import io.eventuate.tram.messaging.consumer.MessageConsumer;
+import io.eventuate.examples.common.money.Money;
+import io.eventuate.examples.tram.sagas.customersandorders.customers.domain.CustomerService;
 import io.eventuate.tram.spring.testing.cloudcontract.EnableEventuateTramContractVerifier;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,41 +10,41 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.stubrunner.StubFinder;
 import org.springframework.cloud.contract.stubrunner.spring.AutoConfigureStubRunner;
 import org.springframework.cloud.contract.stubrunner.spring.StubRunnerProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
+import static io.eventuate.util.test.async.Eventually.eventually;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @AutoConfigureStubRunner(ids = "io.eventuate.examples.tram.sagas.customersandorders:customer-service-credit-reservation-api:+",
-        stubsMode = StubRunnerProperties.StubsMode.REMOTE
-        )
+        stubsMode = StubRunnerProperties.StubsMode.LOCAL)
 @DirtiesContext
-public class ReplyHandlersTest {
+public class CommandHandlersTest {
 
     @Configuration
     @EnableAutoConfiguration
     @EnableEventuateTramContractVerifier
+    @Import({CustomerCommandHandlerConfiguration.class})
     public static class TestConfiguration {
 
-        @Bean
-        public TestReplyConsumer testMessageConsumer(MessageConsumer messageConsumer) {
-            return new TestReplyConsumer(ReplyHandlersTest.class.getName(), "reserveCreditReply", messageConsumer);
-        }
 
     }
 
     @Autowired
     private StubFinder stubFinder;
 
-    @Autowired
-    private TestReplyConsumer testReplyConsumer;
-
+    @MockitoBean
+    private CustomerService customerService;
 
     @Test
-    public void shouldHandleCreditReservedReply() {
-        stubFinder.trigger("creditReserved");
-
-        testReplyConsumer.assertReplyOfTypeReceived(CustomerCreditReserved.class);
+    public void shouldReserveCredit() {
+        stubFinder.trigger("reserveCredit");
+        eventually(() -> {
+            verify(customerService).reserveCredit(101L, 102L, new Money(103));
+        });
     }
 
 }

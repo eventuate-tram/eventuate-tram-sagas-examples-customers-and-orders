@@ -17,7 +17,7 @@ contractTest {
 
 ext {
     set('contractGroupId', project.group)
-    set('contractArtifactId', "customer-service-messaging")
+    set('contractArtifactId', "customer-service-credit-reservation-api")
     set('contractArtifactPath', "customer-service:$contractArtifactId")
     set("contractArtifactVersion", project.version)
 }

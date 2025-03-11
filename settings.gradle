@@ -3,7 +3,7 @@ rootProject.name = "eventuate-tram-sagas-examples-customers-and-orders"
 include 'customer-service:customer-service-domain'
 include 'customer-service:customer-service-restapi'
 include 'customer-service:customer-service-main'
-include 'customer-service:customer-service-messaging'
+include 'customer-service:customer-service-credit-reservation-api'
 include 'customer-service:customer-service-persistence'
 
 include 'order-service:order-service-domain'

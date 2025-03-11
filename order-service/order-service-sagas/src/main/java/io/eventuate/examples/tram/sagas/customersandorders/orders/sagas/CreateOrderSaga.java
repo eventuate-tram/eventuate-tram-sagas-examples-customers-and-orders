@@ -1,8 +1,8 @@
 package io.eventuate.examples.tram.sagas.customersandorders.orders.sagas;
 
 import io.eventuate.examples.common.money.Money;
-import io.eventuate.examples.tram.sagas.customersandorders.customers.messaging.replies.CustomerCreditLimitExceeded;
-import io.eventuate.examples.tram.sagas.customersandorders.customers.messaging.replies.CustomerNotFound;
+import io.eventuate.examples.tram.sagas.customersandorders.customers.creditreservationapi.replies.CustomerCreditLimitExceeded;
+import io.eventuate.examples.tram.sagas.customersandorders.customers.creditreservationapi.replies.CustomerNotFound;
 import io.eventuate.examples.tram.sagas.customersandorders.orders.domain.Order;
 import io.eventuate.examples.tram.sagas.customersandorders.orders.domain.OrderService;
 import io.eventuate.examples.tram.sagas.customersandorders.orders.domain.RejectionReason;

@@ -1,10 +1,10 @@
 package io.eventuate.examples.tram.sagas.customersandorders.orders.proxies.customers;
 
 import io.eventuate.examples.common.money.Money;
-import io.eventuate.examples.tram.sagas.customersandorders.customers.messaging.commands.ReserveCreditCommand;
-import io.eventuate.examples.tram.sagas.customersandorders.customers.messaging.replies.CustomerCreditLimitExceeded;
-import io.eventuate.examples.tram.sagas.customersandorders.customers.messaging.replies.CustomerNotFound;
-import io.eventuate.examples.tram.sagas.customersandorders.customers.messaging.replies.ReserveCreditResult;
+import io.eventuate.examples.tram.sagas.customersandorders.customers.creditreservationapi.commands.ReserveCreditCommand;
+import io.eventuate.examples.tram.sagas.customersandorders.customers.creditreservationapi.replies.CustomerCreditLimitExceeded;
+import io.eventuate.examples.tram.sagas.customersandorders.customers.creditreservationapi.replies.CustomerNotFound;
+import io.eventuate.examples.tram.sagas.customersandorders.customers.creditreservationapi.replies.ReserveCreditResult;
 import io.eventuate.tram.commands.consumer.CommandWithDestination;
 import io.eventuate.tram.commands.consumer.CommandWithDestinationBuilder;
 import io.eventuate.tram.sagas.simpledsl.annotations.SagaParticipantOperation;
