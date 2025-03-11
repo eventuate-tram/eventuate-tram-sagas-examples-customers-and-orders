@@ -18,12 +18,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.NONE)
-@AutoConfigureStubRunner(ids = {"io.eventuate.examples.tram.sagas.customersandorders:customer-service-web:+"},
+@AutoConfigureStubRunner(ids = {"io.eventuate.examples.tram.sagas.customersandorders:customer-service-restapi:+"},
     stubsMode = StubRunnerProperties.StubsMode.REMOTE)
 @DirtiesContext
 public class CustomerServiceProxyTest {
 
-  @Value("${stubrunner.runningstubs.customer-service-web.port}")
+  @Value("${stubrunner.runningstubs.customer-service-restapi.port}")
   private int port;
 
   @Configuration

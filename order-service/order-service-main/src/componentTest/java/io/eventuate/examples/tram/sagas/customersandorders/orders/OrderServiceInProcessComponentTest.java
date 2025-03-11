@@ -7,9 +7,9 @@ import io.eventuate.examples.tram.sagas.customersandorders.customers.messaging.r
 import io.eventuate.examples.tram.sagas.customersandorders.orders.domain.OrderDomainConfiguration;
 import io.eventuate.examples.tram.sagas.customersandorders.orders.persistence.OrderPersistenceConfiguration;
 import io.eventuate.examples.tram.sagas.customersandorders.orders.proxies.customers.CustomerServiceProxyConfiguration;
+import io.eventuate.examples.tram.sagas.customersandorders.orders.restapi.OrderRestApiConfiguration;
 import io.eventuate.examples.tram.sagas.customersandorders.orders.sagas.CreateOrderSaga;
 import io.eventuate.examples.tram.sagas.customersandorders.orders.sagas.OrderSagasConfiguration;
-import io.eventuate.examples.tram.sagas.customersandorders.orders.web.OrderWebConfiguration;
 import io.eventuate.tram.spring.inmemory.TramInMemoryConfiguration;
 import io.eventuate.tram.spring.springwolf.testing.AsyncApiDocument;
 import io.restassured.RestAssured;
@@ -33,7 +33,7 @@ public class OrderServiceInProcessComponentTest {
 
   @Configuration
   @EnableAutoConfiguration(exclude = FlywayAutoConfiguration.class)
-  @Import({OrderWebConfiguration.class,
+  @Import({OrderRestApiConfiguration.class,
       OrderPersistenceConfiguration.class,
       OrderDomainConfiguration.class,
       CustomerServiceProxyConfiguration.class,

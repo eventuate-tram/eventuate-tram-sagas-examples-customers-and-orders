@@ -9,7 +9,7 @@ import io.eventuate.examples.tram.sagas.customersandorders.customers.messaging.r
 import io.eventuate.examples.tram.sagas.customersandorders.customers.messaging.replies.CustomerCreditReserved;
 import io.eventuate.examples.tram.sagas.customersandorders.customers.messaging.replies.CustomerNotFound;
 import io.eventuate.examples.tram.sagas.customersandorders.customers.persistence.CustomerPersistenceConfiguration;
-import io.eventuate.examples.tram.sagas.customersandorders.customers.web.CustomerWebConfiguration;
+import io.eventuate.examples.tram.sagas.customersandorders.customers.restapi.CustomerRestApiConfiguration;
 import io.eventuate.tram.spring.inmemory.TramInMemoryConfiguration;
 import io.eventuate.tram.spring.springwolf.testing.AsyncApiDocument;
 import io.restassured.RestAssured;
@@ -33,7 +33,7 @@ public class CustomerServiceInProcessComponentTest {
 
     @Configuration
     @EnableAutoConfiguration
-    @Import({CustomerWebConfiguration.class, CustomerPersistenceConfiguration.class,
+    @Import({CustomerRestApiConfiguration.class, CustomerPersistenceConfiguration.class,
         CustomerDomainConfiguration.class,
         CustomerCommandHandlerConfiguration.class,
         TramInMemoryConfiguration.class

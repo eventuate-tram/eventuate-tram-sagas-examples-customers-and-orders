@@ -38,7 +38,7 @@ dependencies {
 
 integrationTest {
     systemProperty "stubrunner.repositoryRoot", contractRepoUrl
-    dependsOn(":customer-service:customer-service-web:publishStubsPublicationToStubsRepository")
+    dependsOn(":customer-service:customer-service-restapi:publishStubsPublicationToStubsRepository")
     useJUnitPlatform()
 }
 
