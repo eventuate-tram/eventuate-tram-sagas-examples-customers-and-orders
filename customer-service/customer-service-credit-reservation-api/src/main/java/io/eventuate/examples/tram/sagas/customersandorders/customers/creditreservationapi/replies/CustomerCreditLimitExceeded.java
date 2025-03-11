@@ -3,5 +3,4 @@ package io.eventuate.examples.tram.sagas.customersandorders.customers.creditrese
 import io.eventuate.tram.commands.consumer.annotations.FailureReply;
 
 @FailureReply
-public class CustomerCreditLimitExceeded implements ReserveCreditResult {
-}
+public class CustomerCreditLimitExceeded implements ReserveCreditResult {}

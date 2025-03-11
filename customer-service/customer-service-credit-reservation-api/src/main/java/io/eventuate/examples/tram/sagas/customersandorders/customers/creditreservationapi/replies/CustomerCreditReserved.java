@@ -3,5 +3,4 @@ package io.eventuate.examples.tram.sagas.customersandorders.customers.creditrese
 import io.eventuate.tram.commands.consumer.annotations.SuccessReply;
 
 @SuccessReply
-public class CustomerCreditReserved implements ReserveCreditResult {
-}
+public class CustomerCreditReserved implements ReserveCreditResult { }

@@ -3,5 +3,4 @@ package io.eventuate.examples.tram.sagas.customersandorders.customers.creditrese
 import io.eventuate.tram.commands.consumer.annotations.FailureReply;
 
 @FailureReply
-public class CustomerNotFound implements ReserveCreditResult {
-}
+public class CustomerNotFound implements ReserveCreditResult {}
