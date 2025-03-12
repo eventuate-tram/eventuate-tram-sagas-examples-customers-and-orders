@@ -26,6 +26,3 @@ check.dependsOn postgresIntegrationTest
 postgresIntegrationTest {
     systemProperty "spring.profiles.active", "postgres"
 }
-tasks.withType(Test).configureEach {
-    useJUnitPlatform()
-}

@@ -39,10 +39,6 @@ dependencies {
 integrationTest {
     systemProperty "stubrunner.repositoryRoot", contractRepoUrl
     dependsOn(":customer-service:customer-service-restapi:publishStubsPublicationToStubsRepository")
-    useJUnitPlatform()
 }
 
 
-tasks.withType(Test).configureEach {
-    useJUnitPlatform()
-}

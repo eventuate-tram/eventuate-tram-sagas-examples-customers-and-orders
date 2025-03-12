@@ -66,6 +66,10 @@ subprojects {
         options.compilerArgs << "-parameters"
     }
 
+    tasks.withType(Test).configureEach {
+         useJUnitPlatform()
+    }
+
     if (System.getenv("GRADLE_CACHE_CHANGING_VERSIONS_IN_MINUTES") != null)
         configurations.all {
             resolutionStrategy.cacheChangingModulesFor Integer.parseInt(System.getenv("GRADLE_CACHE_CHANGING_VERSIONS_IN_MINUTES")), 'minutes'

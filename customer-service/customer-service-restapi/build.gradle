@@ -5,10 +5,6 @@ contracts {
     packageWithBaseClasses = 'io.eventuate.examples.tram.sagas.customersandorders.customers.restapi'
 }
 
-contractTest {
-    useJUnitPlatform()
-}
-
 dependencies {
 
     implementation project(":customer-service:customer-service-domain")

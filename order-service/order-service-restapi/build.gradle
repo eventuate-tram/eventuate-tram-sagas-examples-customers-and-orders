@@ -6,10 +6,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 
     implementation "org.springframework.boot:spring-boot-starter-web"
-    testImplementation "org.mockito:mockito-core:4.11.0"
+    testImplementation "org.mockito:mockito-core"
     testImplementation "io.rest-assured:spring-mock-mvc"
 
-}
-tasks.withType(Test).configureEach {
-    useJUnitPlatform()
 }

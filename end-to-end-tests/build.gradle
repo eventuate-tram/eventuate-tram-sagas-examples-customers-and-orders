@@ -54,6 +54,3 @@ for (def dbType  in ["MySql", "Postgres"]) {
     }
 }
 
-tasks.withType(Test).configureEach {
-    useJUnitPlatform()
-}

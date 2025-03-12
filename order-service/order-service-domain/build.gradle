@@ -3,8 +3,5 @@ dependencies {
     implementation "io.eventuate.examples.common:eventuate-examples-common-money-jakarta9:$eventuateCommonExamplesVersion"
 
     compileOnly "org.springframework.boot:spring-boot-starter-data-jpa"
-    testImplementation "org.mockito:mockito-core:4.11.0"
-}
-tasks.withType(Test).configureEach {
-    useJUnitPlatform()
+    testImplementation "org.mockito:mockito-core"
 }

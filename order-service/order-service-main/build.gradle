@@ -9,7 +9,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-web"
 
-    testImplementation "org.mockito:mockito-core:4.11.0"
+    testImplementation "org.mockito:mockito-core"
 
     componentTestImplementation project(":order-service:order-service-domain")
     componentTestImplementation project(":order-service:order-service-proxies-customer-service")
@@ -28,6 +28,3 @@ dependencies {
 check.shouldRunAfter(":order-service:order-service-restapi:check")
 check.shouldRunAfter(":order-service:order-service-persistence:check")
 check.shouldRunAfter(":order-service:order-service-sagas:check")
-tasks.withType(Test).configureEach {
-    useJUnitPlatform()
-}

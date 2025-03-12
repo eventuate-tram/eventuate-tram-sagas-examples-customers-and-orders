@@ -22,21 +22,9 @@ dependencies {
 
 
     testImplementation "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-testing-support"
-    testImplementation "org.mockito:mockito-core:4.11.0"
+    testImplementation "org.mockito:mockito-core"
 
     testImplementation "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-in-memory"
 
-    testImplementation "org.springframework.cloud:spring-cloud-contract-wiremock"
-    testImplementation "org.springframework.cloud:spring-cloud-starter-contract-stub-runner"
-    testImplementation "io.eventuate.tram.core:eventuate-tram-spring-testing-support-cloud-contract"
-
-// Disable Spring Contract Testing for now - needs new Eventuate support
-//    testImplementation "eventuate-tram-sagas-examples-customers-and-orders.customer-service:customer-service-credit-reservation-api-stubs:0.1.0-SNAPSHOT:stubs"
-
-    // testImplementation project(path: ':customer-service-credit-reservation-api', classifier: "stubs")
-
 }
 
-tasks.withType(Test).configureEach {
-    useJUnitPlatform()
-}

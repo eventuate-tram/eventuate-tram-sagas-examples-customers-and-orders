@@ -10,7 +10,6 @@ dependencies {
 }
 
 contractTest {
-    useJUnitPlatform()
     systemProperty "stubrunner.repositoryRoot", contractRepoUrl
 
 }
@@ -51,6 +50,3 @@ contracts {
 
 copyContracts.dependsOn(":$contractArtifactPath:publishStubsPublicationToStubsRepository")
 
-contractTest {
-    useJUnitPlatform()
-}

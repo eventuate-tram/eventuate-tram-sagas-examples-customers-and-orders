@@ -26,6 +26,3 @@ check.shouldRunAfter(":customer-service:customer-service-restapi:check")
 check.shouldRunAfter(":customer-service:customer-service-persistence:check")
 check.shouldRunAfter(":customer-service:customer-service-credit-reservation-api:check")
 check.shouldRunAfter(":customer-service:customer-service-credit-reservation-api:check")
-tasks.withType(Test).configureEach {
-    useJUnitPlatform()
-}

@@ -48,12 +48,4 @@ contracts {
     failOnNoContracts = true
 }
 
-contractTest {
-    useJUnitPlatform()
-}
-
-integrationTest {
-    useJUnitPlatform()
-}
-
 contractTest.dependsOn(publishStubsPublicationToMavenLocal)
