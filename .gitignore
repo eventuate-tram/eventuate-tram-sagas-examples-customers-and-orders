@@ -9,3 +9,5 @@ out
 .DS_Store
 bin
 .vscode
+.claude/issues
+.claude/sessions

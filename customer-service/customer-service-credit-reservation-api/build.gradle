@@ -17,8 +17,6 @@ dependencies {
     implementation "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-participant-starter"
     implementation "io.eventuate.tram.core:eventuate-tram-spring-optimistic-locking"
 
-
-    testImplementation "io.eventuate.tram.core:eventuate-tram-spring-testing-support-cloud-contract"
     testImplementation "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-in-memory"
 
     testImplementation "io.eventuate.messaging.kafka:eventuate-messaging-kafka-spring-producer"
