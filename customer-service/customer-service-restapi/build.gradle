@@ -1,4 +1,4 @@
-apply plugin: 'spring-cloud-contract'
+apply plugin: 'org.springframework.cloud.contract'
 apply plugin: io.eventuate.tram.spring.testing.cloudcontract.plugins.gradle.PublishStubsPlugin
 
 contracts {
@@ -11,11 +11,11 @@ dependencies {
 
     implementation "io.eventuate.examples.common:eventuate-examples-common-money-jakarta9:$eventuateCommonExamplesVersion"
 
-    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-webmvc"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 
     testImplementation "org.springframework.cloud:spring-cloud-starter-contract-verifier"
-    testImplementation "io.rest-assured:spring-mock-mvc"
+    testImplementation "io.rest-assured:spring-mock-mvc:$restAssuredVersion"
 
 }
 

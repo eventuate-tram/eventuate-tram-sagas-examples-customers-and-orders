@@ -17,7 +17,7 @@ sourceSets {
 dependencies {
     testImplementation "io.eventuate.examples.common:eventuate-examples-common-money-jakarta9:$eventuateCommonExamplesVersion"
 
-    testImplementation "org.springframework.boot:spring-boot-starter-web"
+    testImplementation "org.springframework.boot:spring-boot-starter-webmvc"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 
     testImplementation "io.eventuate.util:eventuate-util-test"

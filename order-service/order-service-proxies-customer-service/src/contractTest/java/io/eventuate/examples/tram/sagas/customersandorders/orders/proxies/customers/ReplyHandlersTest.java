@@ -16,8 +16,8 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @AutoConfigureStubRunner(ids = "io.eventuate.examples.tram.sagas.customersandorders:customer-service-credit-reservation-api:+",
-        stubsMode = StubRunnerProperties.StubsMode.REMOTE
-        )
+        stubsMode = StubRunnerProperties.StubsMode.REMOTE,
+        repositoryRoot = "${contractRepoUrl}")
 @DirtiesContext
 public class ReplyHandlersTest {
 

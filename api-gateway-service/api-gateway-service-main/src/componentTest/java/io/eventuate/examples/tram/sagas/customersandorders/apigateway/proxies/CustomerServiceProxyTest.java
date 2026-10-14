@@ -9,10 +9,14 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -24,19 +28,36 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest(classes = CustomerServiceProxyTest.Config.class,
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {"customer.destinations.customerServiceUrl=http://localhost:${wiremock.server.port}", "order.destinations.orderServiceUrl=http://localhost:${wiremock.server.port}"})
-@AutoConfigureWireMock(port = 0)
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CustomerServiceProxyTest {
 
   @Configuration
-  @EnableAutoConfiguration(exclude = DataSourceAutoConfiguration.class)
+  @EnableAutoConfiguration
   @Import(ProxyConfiguration.class)
   static public class Config {
   }
 
   @Autowired
   private CustomerServiceProxy customerServiceProxy;
+
+  private static final WireMockServer wireMockServer = WireMockUtil.mockOnDynamicPort();
+
+  @DynamicPropertySource
+  static void registerWireMockProperties(DynamicPropertyRegistry registry) {
+    wireMockServer.start();
+    registry.add("customer.destinations.customerServiceUrl", WireMockUtil.makeServiceUrlSupplier(wireMockServer));
+    registry.add("order.destinations.orderServiceUrl", WireMockUtil.makeServiceUrlSupplier(wireMockServer));
+  }
+
+  @BeforeEach
+  public void configureWireMock() {
+    WireMock.configureFor(wireMockServer.port());
+  }
+
+  @AfterEach
+  public void resetWireMock() {
+    wireMockServer.resetAll();
+  }
 
   @LocalServerPort
   private long port;

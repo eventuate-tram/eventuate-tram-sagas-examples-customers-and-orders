@@ -3,7 +3,6 @@ package io.eventuate.examples.tram.sagas.customersandorders.apigateway.proxies;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +21,7 @@ public class SwaggerUiTest {
   private String hostName = "localhost";
 
   @Configuration
-  @EnableAutoConfiguration(exclude = DataSourceAutoConfiguration.class)
+  @EnableAutoConfiguration
   @Import(ProxyConfiguration.class)
   static public class Config {
   }

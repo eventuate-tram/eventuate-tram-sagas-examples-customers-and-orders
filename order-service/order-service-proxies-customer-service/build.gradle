@@ -10,7 +10,7 @@ dependencies {
 }
 
 contractTest {
-    systemProperty "stubrunner.repositoryRoot", contractRepoUrl
+    systemProperty "contractRepoUrl", contractRepoUrl
 
 }
 

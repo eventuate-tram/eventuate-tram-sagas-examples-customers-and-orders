@@ -1,7 +1,7 @@
 package io.eventuate.examples.tram.sagas.customersandorders.apigateway.proxies;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,10 +9,14 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -20,15 +24,32 @@ import org.springframework.web.reactive.function.client.WebClient;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {"customer.destinations.customerServiceUrl=http://localhost:${wiremock.server.port}", "order.destinations.orderServiceUrl=http://localhost:${wiremock.server.port}"})
-@AutoConfigureWireMock(port = 0)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ApiGatewayComponentTest {
 
   @Configuration
-  @EnableAutoConfiguration(exclude = DataSourceAutoConfiguration.class)
+  @EnableAutoConfiguration
   @Import(ProxyConfiguration.class)
   static public class Config {
+  }
+
+  private static final WireMockServer wireMockServer = WireMockUtil.mockOnDynamicPort();
+
+  @DynamicPropertySource
+  static void registerWireMockProperties(DynamicPropertyRegistry registry) {
+    wireMockServer.start();
+    registry.add("customer.destinations.customerServiceUrl", WireMockUtil.makeServiceUrlSupplier(wireMockServer));
+    registry.add("order.destinations.orderServiceUrl", WireMockUtil.makeServiceUrlSupplier(wireMockServer));
+  }
+
+  @BeforeEach
+  public void configureWireMock() {
+    WireMock.configureFor(wireMockServer.port());
+  }
+
+  @AfterEach
+  public void resetWireMock() {
+    wireMockServer.resetAll();
   }
 
   @LocalServerPort
@@ -75,7 +96,7 @@ public class ApiGatewayComponentTest {
   }
 
   @Test
-  public void shouldGetOrderHistory() throws JSONException, JsonProcessingException {
+  public void shouldGetOrderHistory() throws JSONException, JacksonException {
 
     var customerJSon = new JSONObject();
     customerJSon.put("customerId", 101);

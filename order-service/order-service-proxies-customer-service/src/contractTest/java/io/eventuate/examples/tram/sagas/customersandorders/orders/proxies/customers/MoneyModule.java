@@ -1,17 +1,15 @@
 package io.eventuate.examples.tram.sagas.customersandorders.orders.proxies.customers;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.JsonToken;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.deser.std.StdScalarDeserializer;
+import tools.jackson.databind.module.SimpleModule;
+import tools.jackson.databind.ser.std.StdScalarSerializer;
 import io.eventuate.examples.common.money.Money;
 
-import java.io.IOException;
 
 public class MoneyModule extends SimpleModule {
 
@@ -22,16 +20,16 @@ public class MoneyModule extends SimpleModule {
     }
 
     @Override
-    public Money deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-      JsonToken token = jp.getCurrentToken();
+    public Money deserialize(JsonParser jp, DeserializationContext ctxt) {
+      JsonToken token = jp.currentToken();
       if (token == JsonToken.VALUE_STRING) {
-        String str = jp.getText().trim();
+        String str = jp.getString().trim();
         if (str.isEmpty())
           return null;
         else
           return new Money(str);
       } else
-        throw ctxt.wrongTokenException(jp, getValueClass(), JsonToken.VALUE_STRING, "Expected JSON String");
+        return (Money) ctxt.handleUnexpectedToken(getValueType(), jp);
     }
   }
 
@@ -41,7 +39,7 @@ public class MoneyModule extends SimpleModule {
     }
 
     @Override
-    public void serialize(Money value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+    public void serialize(Money value, JsonGenerator jgen, SerializationContext provider) {
       jgen.writeString(value.getAmount().toString());
     }
   }

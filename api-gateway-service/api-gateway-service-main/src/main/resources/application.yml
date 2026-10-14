@@ -4,7 +4,7 @@ logging.level.io.github.resilience4j: DEBUG
 logging.level.io.eventuate.examples: INFO
 logging.level.org.springframework.web: TRACE
 
-management.tracing.enabled: false
+management.tracing.export.enabled: false
 management.tracing.sampling.probability: 1
 spring.zipkin.base.url: http://${DOCKER_HOST_IP:localhost}:9411/
 
@@ -27,7 +27,7 @@ resilience4j.circuitbreaker:
 
 spring:
   cloud:
-    gateway:
+    gateway.server.webflux:
       routes:
         - id: create_customer
           uri: ${customer.destinations.customerServiceUrl}

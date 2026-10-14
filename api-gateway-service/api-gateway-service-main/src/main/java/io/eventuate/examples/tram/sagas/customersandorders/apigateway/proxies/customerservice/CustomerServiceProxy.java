@@ -8,7 +8,6 @@ import io.github.resilience4j.reactor.timelimiter.TimeLimiterOperator;
 import io.github.resilience4j.timelimiter.TimeLimiter;
 import io.github.resilience4j.timelimiter.TimeLimiterRegistry;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -29,11 +28,10 @@ public class CustomerServiceProxy {
   }
 
   public Mono<Optional<GetCustomerResponse>> findCustomerById(String customerId) {
-    Mono<ClientResponse> response = client
+    return client
             .get()
             .uri(customerServiceUrl + "/customers/{customerId}", customerId)
-            .exchange();
-    return response.flatMap(resp -> {
+            .exchangeToMono(resp -> {
           if (resp.statusCode().value() == HttpStatus.OK.value())
             return resp.bodyToMono(GetCustomerResponse.class).map(Optional::of);
           else if (resp.statusCode().value() == HttpStatus.NOT_FOUND.value()) {

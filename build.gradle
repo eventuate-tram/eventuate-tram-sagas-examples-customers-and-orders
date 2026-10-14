@@ -11,6 +11,7 @@ buildscript {
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
         classpath "org.springframework.cloud:spring-cloud-contract-gradle-plugin:$springCloudContractDependenciesVersion"
+        classpath "org.springframework.cloud:spring-cloud-contract-stub-runner:$springCloudContractDependenciesVersion"
         classpath "io.eventuate.tram.testingsupport.springcloudcontract:eventuate-tram-spring-testing-support-cloud-contract-plugins-gradle:$eventuateTramSpringTestingSupportCloudContractVersion"
     }
 }
@@ -50,7 +51,7 @@ subprojects {
 //            }
 //        }
 
-//        implementation(platform("org.springframework.cloud:spring-cloud-contract-dependencies:$springCloudContractDependenciesVersion"))
+        implementation(platform("org.springframework.cloud:spring-cloud-contract-dependencies:$springCloudContractDependenciesVersion"))
 
         constraints {
             implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion"

@@ -7,7 +7,7 @@ dependencies {
     implementation "io.eventuate.tram.core:eventuate-tram-spring-logging"
 
     implementation "org.springframework.boot:spring-boot-starter-actuator"
-    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-webmvc"
 
     testImplementation "org.mockito:mockito-core"
 
@@ -19,7 +19,8 @@ dependencies {
     componentTestImplementation "io.eventuate.common:eventuate-common-testcontainers"
     componentTestImplementation "io.eventuate.messaging.kafka:eventuate-messaging-kafka-testcontainers"
     componentTestImplementation "io.eventuate.cdc:eventuate-cdc-testcontainers"
-    componentTestImplementation "io.rest-assured:rest-assured"
+    componentTestImplementation "io.rest-assured:rest-assured:$restAssuredVersion"
+    componentTestImplementation "org.springframework.boot:spring-boot-starter-flyway-test"
     componentTestImplementation "io.eventuate.tram.core:eventuate-tram-spring-in-memory"
     componentTestImplementation "io.eventuate.tram.springwolf:eventuate-tram-springwolf-support-testing"
 

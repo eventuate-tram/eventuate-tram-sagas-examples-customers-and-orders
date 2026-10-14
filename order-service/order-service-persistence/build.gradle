@@ -10,12 +10,13 @@ dependencies {
 
     testImplementation "org.mockito:mockito-core"
 
-    implementation 'com.mysql:mysql-connector-j:8.0.33'
-    implementation 'org.postgresql:postgresql:9.4-1200-jdbc41'
+    implementation "com.mysql:mysql-connector-j:$mysqlConnectorVersion"
+    implementation "org.postgresql:postgresql:$postgresqlVersion"
 
 
     integrationTestImplementation "io.eventuate.examples.common:eventuate-examples-common-money-jakarta9:$eventuateCommonExamplesVersion"
     integrationTestImplementation "io.eventuate.common:eventuate-common-testcontainers"
+    integrationTestImplementation "org.springframework.boot:spring-boot-starter-data-jpa-test"
 
 }
 

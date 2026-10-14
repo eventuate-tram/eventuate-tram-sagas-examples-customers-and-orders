@@ -18,7 +18,7 @@ public abstract class BaseForCustomerServiceTest {
 
     static {
         // JSonMapper.objectMapper.findAndRegisterModules() - seems useful
-        JSonMapper.objectMapper.registerModule(new MoneyModule());
+        JSonMapper.objectMapper = JSonMapper.objectMapper.rebuild().addModule(new MoneyModule()).build();
     }
 
     @Configuration
