@@ -1,7 +1,7 @@
 package io.eventuate.examples.tram.sagas.customersandorders.customers.creditreservationapi;
 
-import io.eventuate.common.testcontainers.DatabaseContainerFactory;
-import io.eventuate.common.testcontainers.EventuateDatabaseContainer;
+import io.eventuate.common.database.testcontainers.DatabaseContainerFactory;
+import io.eventuate.common.database.testcontainers.EventuateDatabaseContainer;
 import io.eventuate.examples.common.money.Money;
 import io.eventuate.examples.tram.sagas.customersandorders.customers.domain.CustomerService;
 import io.eventuate.examples.tram.sagas.customersandorders.customers.creditreservationapi.commands.ReserveCreditCommand;

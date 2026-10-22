@@ -23,10 +23,11 @@ dependencies {
     testImplementation "io.eventuate.tram.core:eventuate-tram-spring-logging"
 
 
-    integrationTestImplementation "io.eventuate.common:eventuate-common-testcontainers"
+    integrationTestImplementation "io.eventuate.common.testcontainers:eventuate-common-testcontainers"
     integrationTestImplementation "io.eventuate.messaging.kafka:eventuate-messaging-kafka-testcontainers"
 
     integrationTestImplementation project(":customer-service:customer-service-persistence")
+    integrationTestImplementation "io.eventuate.common.database:eventuate-common-database-testcontainers:$eventuateCommonDatabaseVersion"
     testImplementation "io.eventuate.util:eventuate-util-test"
     testImplementation "org.assertj:assertj-core:$assertjVersion"
 

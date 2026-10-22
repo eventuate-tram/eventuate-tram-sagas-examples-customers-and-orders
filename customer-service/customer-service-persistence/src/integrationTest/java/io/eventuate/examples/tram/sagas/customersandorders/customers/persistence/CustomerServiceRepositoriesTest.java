@@ -1,8 +1,8 @@
 package io.eventuate.examples.tram.sagas.customersandorders.customers.persistence;
 
+import io.eventuate.common.database.testcontainers.DatabaseContainerFactory;
+import io.eventuate.common.database.testcontainers.EventuateDatabaseContainer;
 import io.eventuate.common.testcontainers.ContainerTestUtil;
-import io.eventuate.common.testcontainers.DatabaseContainerFactory;
-import io.eventuate.common.testcontainers.EventuateDatabaseContainer;
 import io.eventuate.common.testcontainers.PropertyProvidingContainer;
 import io.eventuate.examples.common.money.Money;
 import io.eventuate.examples.tram.sagas.customersandorders.customers.domain.Customer;

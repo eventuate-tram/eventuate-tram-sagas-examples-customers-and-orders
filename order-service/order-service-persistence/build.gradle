@@ -4,7 +4,7 @@ dependencies {
     implementation project(":order-service:order-service-domain")
 
 
-    implementation "io.eventuate.common:eventuate-common-jdbc"
+    implementation "io.eventuate.common.database:eventuate-common-jdbc"
 
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 
@@ -15,7 +15,8 @@ dependencies {
 
 
     integrationTestImplementation "io.eventuate.examples.common:eventuate-examples-common-money-jakarta9:$eventuateCommonExamplesVersion"
-    integrationTestImplementation "io.eventuate.common:eventuate-common-testcontainers"
+    integrationTestImplementation "io.eventuate.common.database:eventuate-common-database-testcontainers:$eventuateCommonDatabaseVersion"
+    integrationTestImplementation "io.eventuate.common.testcontainers:eventuate-common-testcontainers"
     integrationTestImplementation "org.springframework.boot:spring-boot-starter-data-jpa-test"
 
 }
